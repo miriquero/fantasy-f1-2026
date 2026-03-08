@@ -79,10 +79,10 @@ def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int]
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
         if pred_colapinto == colapinto_real:
             puntos += 10
-            detalles.append(f"Colapinto: Exacto en P{pred_colapinto} (+10)")
+            detalles.append(f"Colapinto: EXACTO (+10 puntos)")
         elif abs(pred_colapinto - colapinto_real) == 1:
             puntos += 5
-            detalles.append(f"Colapinto: Diff 1 (pred P{pred_colapinto}, real P{colapinto_real}) (+5)")
+            detalles.append(f"Colapinto: diferencia de 1 (+5 puntos)")
     except (ValueError, TypeError):
         pass
     
@@ -107,7 +107,7 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
     return int(pos_str)
 
 # =========================
-# PROCESAR UNA CARRERA (ACTUALIZADO PARA DETALLES)
+# PROCESAR UNA CARRERA (ACTUALIZADO PARA MANEJAR COLAPINTO_REAL COMO STR)
 # =========================
 def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) -> pd.DataFrame:
     df = pd.read_csv(archivo_csv)
@@ -116,6 +116,13 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     resultado_carrera = resultados.get("resultado_carrera", [])
     vuelta_rapida_real = resultados.get("vuelta_rapida", "")
     colapinto_real = resultados.get("colapinto", 0)
+    
+    # Corregir si colapinto_real es str: convertir a int
+    if isinstance(colapinto_real, str):
+        try:
+            colapinto_real = convertir_posicion_a_numero(colapinto_real)
+        except:
+            colapinto_real = 0  # Si falla, default 0
     
     posiciones_reales = {piloto: i+1 for i, piloto in enumerate(resultado_carrera)}
     
@@ -137,7 +144,7 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     return ranking, df
 
 # =========================
-# GENERAR GRÁFICOS (SIN CAMBIOS)
+# GENERAR GRÁFICOS
 # =========================
 def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     if ranking_acumulado.empty:
@@ -216,7 +223,7 @@ def generar_grafico_pastel_participacion(all_dfs: List[pd.DataFrame]) -> str:
     return img_base64
 
 # =========================
-# GENERAR ESTADÍSTICAS ADICIONALES (SIN CAMBIOS)
+# GENERAR ESTADÍSTICAS ADICIONALES
 # =========================
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumulado: pd.DataFrame) -> str:
     if not all_dfs:
@@ -253,7 +260,7 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumul
     return stats_html
 
 # =========================
-# GENERAR HTML PROFESIONAL CON PESTAÑAS Y MENÚ (ACTUALIZADO PARA DETALLES)
+# GENERAR HTML PROFESIONAL CON PESTAÑAS Y MENÚ
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame, 
                  grafico_barras: str, grafico_evolucion: str, grafico_pastel: str, 
