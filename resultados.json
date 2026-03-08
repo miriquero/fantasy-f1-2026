@@ -1,18 +1,18 @@
 {
   "Australia": {
     "resultado_carrera": [
-      "Max Verstappen",
-      "Charles Leclerc",
-      "Lando Norris",
-      "Oscar Piastri",
-      "Lewis Hamilton",
       "George Russell",
-      "Fernando Alonso",
-      "Carlos Sainz",
-      "Alex Albon",
+      "Kimi Antonelli",
+      "Charles Leclerc",
+      "Lewis Hamilton",
+      "Lando Norris",
+      "Max Verstappen",
+      "Ollie Bearman",
+      "Arvid Lindblad",
+      "Gabriel Bortoletto",
       "Pierre Gasly"],
     "vuelta_rapida": "Max Verstappen",
-    "colapinto": 10
+    "colapinto": 14
   },
   "SaudiArabia": {
     "resultado_carrera": [],

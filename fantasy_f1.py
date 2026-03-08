@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import json
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
@@ -33,21 +33,24 @@ COL_PUESTOS = [
 ]
 
 # =========================
-# FUNCIÓN PUNTOS POR POSICIÓN
+# FUNCIÓN PUNTOS POR POSICIÓN (ACTUALIZADA CON NUEVA REGLA)
 # =========================
 def puntos_posicion(predicha: int, real: int) -> int:
     if predicha == real:
         return 10
     elif abs(predicha - real) == 1:
         return 5
-    return 0
+    else:
+        return 1  # +1 si el piloto está en top 10 real, pero no exacto ni diff 1
 
 # =========================
-# CALCULAR PUNTOS POR FILA
+# CALCULAR PUNTOS Y DETALLES POR FILA (ACTUALIZADO PARA DESGLOSE)
 # =========================
-def calcular_puntos(row: pd.Series, posiciones_reales: Dict[str, int], vuelta_rapida_real: str, colapinto_real: int) -> int:
+def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int], vuelta_rapida_real: str, colapinto_real: int) -> Tuple[int, str]:
     puntos = 0
+    detalles = []
     
+    # Puntos por posiciones
     for i, col in enumerate(COL_PUESTOS):
         piloto = str(row.get(col, "")).strip()
         if not piloto:
@@ -55,12 +58,20 @@ def calcular_puntos(row: pd.Series, posiciones_reales: Dict[str, int], vuelta_ra
         posicion_predicha = i + 1
         if piloto in posiciones_reales:
             posicion_real = posiciones_reales[piloto]
-            puntos += puntos_posicion(posicion_predicha, posicion_real)
+            pts = puntos_posicion(posicion_predicha, posicion_real)
+            puntos += pts
+            if pts == 10:
+                detalles.append(f"{piloto}: Exacto en P{posicion_predicha} (+10)")
+            elif pts == 5:
+                detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
+            elif pts == 1:
+                detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
     
     # Vuelta rápida
     vr = str(row.get("Vuelta Rápida", "")).strip()
     if vr == vuelta_rapida_real:
         puntos += 10
+        detalles.append(f"Vuelta rápida: {vr} (+10)")
     
     # Posición de Colapinto
     try:
@@ -68,12 +79,15 @@ def calcular_puntos(row: pd.Series, posiciones_reales: Dict[str, int], vuelta_ra
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
         if pred_colapinto == colapinto_real:
             puntos += 10
+            detalles.append(f"Colapinto: Exacto en P{pred_colapinto} (+10)")
         elif abs(pred_colapinto - colapinto_real) == 1:
             puntos += 5
+            detalles.append(f"Colapinto: Diff 1 (pred P{pred_colapinto}, real P{colapinto_real}) (+5)")
     except (ValueError, TypeError):
         pass
     
-    return puntos
+    detalle_str = "<br>".join(detalles) if detalles else "Sin puntos detallados"
+    return puntos, detalle_str
 
 # =========================
 # CONVERTIR POSICIÓN TEXTUAL A NÚMERO
@@ -93,7 +107,7 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
     return int(pos_str)
 
 # =========================
-# PROCESAR UNA CARRERA
+# PROCESAR UNA CARRERA (ACTUALIZADO PARA DETALLES)
 # =========================
 def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) -> pd.DataFrame:
     df = pd.read_csv(archivo_csv)
@@ -105,26 +119,25 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     
     posiciones_reales = {piloto: i+1 for i, piloto in enumerate(resultado_carrera)}
     
-    df["Puntos"] = df.apply(
-        lambda row: calcular_puntos(row, posiciones_reales, vuelta_rapida_real, colapinto_real),
+    df[["Puntos", "Detalles"]] = df.apply(
+        lambda row: pd.Series(calcular_puntos_y_detalles(row, posiciones_reales, vuelta_rapida_real, colapinto_real)),
         axis=1
     )
     df["Carrera"] = nombre_carrera
     
-    ranking = (
-        df.groupby("Dirección de correo electrónico", as_index=False)["Puntos"]
-        .sum()
-        .sort_values("Puntos", ascending=False)
-        .reset_index(drop=True)
-    )
+    # Ranking con detalles agregados
+    ranking = df.groupby("Dirección de correo electrónico", as_index=False).agg({
+        "Puntos": "sum",
+        "Detalles": lambda x: "<br><br>".join(x)  # Concatenar detalles si múltiples envíos
+    }).sort_values("Puntos", ascending=False).reset_index(drop=True)
     ranking["Posición"] = ranking.index + 1
-    ranking = ranking[["Posición", "Dirección de correo electrónico", "Puntos"]]
+    ranking = ranking[["Posición", "Dirección de correo electrónico", "Puntos", "Detalles"]]
     ranking["Carrera"] = nombre_carrera
     
     return ranking, df
 
 # =========================
-# GENERAR GRÁFICOS
+# GENERAR GRÁFICOS (SIN CAMBIOS)
 # =========================
 def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     if ranking_acumulado.empty:
@@ -203,7 +216,7 @@ def generar_grafico_pastel_participacion(all_dfs: List[pd.DataFrame]) -> str:
     return img_base64
 
 # =========================
-# GENERAR ESTADÍSTICAS ADICIONALES
+# GENERAR ESTADÍSTICAS ADICIONALES (SIN CAMBIOS)
 # =========================
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumulado: pd.DataFrame) -> str:
     if not all_dfs:
@@ -240,7 +253,7 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumul
     return stats_html
 
 # =========================
-# GENERAR HTML PROFESIONAL CON PESTAÑAS Y MENÚ
+# GENERAR HTML PROFESIONAL CON PESTAÑAS Y MENÚ (ACTUALIZADO PARA DETALLES)
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame, 
                  grafico_barras: str, grafico_evolucion: str, grafico_pastel: str, 
@@ -417,7 +430,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     </head>
     <body>
         <header>
-            <h1>🏁 Ranking de Predicciones F1 - Temporada 2026</h1>
+            <h1>🏁 Ranking de Predicciones F1 - Temporada 2025</h1>
         </header>
         <nav>
             <ul>
@@ -479,11 +492,26 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     rankings_por_carrera_html = ""
     for i, ranking in enumerate(rankings_por_carrera):
         carrera = ranking["Carrera"].iloc[0]
+        ranking_table = ranking.drop(columns=["Carrera", "Detalles"]).to_html(index=False, classes="ranking-table")
+        detalles_html = ""
+        for j, row in ranking.iterrows():
+            email = row["Dirección de correo electrónico"]
+            detalles = row["Detalles"]
+            detalles_html += f"""
+            <div class="accordion">
+                <button class="accordion-button" onclick="toggleAccordion('det-{i}-{j}')">Detalles para {email}</button>
+                <div id="det-{i}-{j}" class="accordion-content">
+                    <p>{detalles}</p>
+                </div>
+            </div>
+            """
         rankings_por_carrera_html += f"""
         <div class="accordion">
             <button class="accordion-button" onclick="toggleAccordion('acc-{i}')">{carrera}</button>
             <div id="acc-{i}" class="accordion-content">
-                {ranking.drop(columns=["Carrera"]).to_html(index=False, classes="ranking-table")}
+                {ranking_table}
+                <h3>Detalles por Participante</h3>
+                {detalles_html}
             </div>
         </div>
         """
@@ -524,12 +552,12 @@ def main():
                 archivo_path = os.path.join(CARPETA_RESPUESTAS, archivo)
                 ranking, df = procesar_carrera(nombre_carrera, archivo_path, resultados_por_carrera[nombre_carrera])
                 rankings_por_carrera.append(ranking)
-                all_rankings = pd.concat([all_rankings, ranking])
+                all_rankings = pd.concat([all_rankings, ranking.drop(columns=["Detalles"])])  # Sin detalles para acumulado
                 all_dfs.append(df)
             else:
                 print(f"Advertencia: No hay resultados reales completos para {nombre_carrera}")
     
-    # Calcular acumulado
+    # Calcular acumulado (sin detalles, ya que son por carrera)
     if not all_rankings.empty:
         ranking_acumulado = (
             all_rankings.groupby("Dirección de correo electrónico", as_index=False)["Puntos"]
