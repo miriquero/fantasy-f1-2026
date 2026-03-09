@@ -107,7 +107,7 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
     return int(pos_str)
 
 # =========================
-# PROCESAR UNA CARRERA (ACTUALIZADO PARA MANEJAR COLAPINTO_REAL COMO STR)
+# PROCESAR UNA CARRERA
 # =========================
 def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) -> pd.DataFrame:
     df = pd.read_csv(archivo_csv)
@@ -142,6 +142,47 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     ranking["Carrera"] = nombre_carrera
     
     return ranking, df
+
+# =========================
+# CALCULAR CAMBIO DE POSICIONES (NUEVA FUNCIÓN PARA BADGE DE RACHA)
+# =========================
+def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: pd.DataFrame) -> pd.DataFrame:
+    if len(all_rankings['Carrera'].unique()) < 2:
+        # Si solo una carrera, no hay previa
+        ranking_acumulado['Cambio'] = '-'
+        return ranking_acumulado
+    
+    # Ordenar carreras (asumiendo nombres como "Australia", pero para general, usa sorted)
+    carreras = sorted(all_rankings['Carrera'].unique())
+    
+    # Acumulado actual (última carrera)
+    acum_actual = all_rankings[all_rankings['Carrera'] == carreras[-1]].set_index('Dirección de correo electrónico')['Posición']
+    
+    # Acumulado previo (todas menos última)
+    prev_rankings = all_rankings[all_rankings['Carrera'] != carreras[-1]]
+    if prev_rankings.empty:
+        acum_prev = pd.Series()  # Vacío si no hay previas
+    else:
+        acum_prev = prev_rankings.groupby("Dirección de correo electrónico")["Puntos"].sum().sort_values(ascending=False).reset_index()
+        acum_prev["Posición"] = acum_prev.index + 1
+        acum_prev = acum_prev.set_index('Dirección de correo electrónico')['Posición']
+    
+    # Calcular cambios
+    cambios = {}
+    for email in ranking_acumulado['Dirección de correo electrónico']:
+        pos_actual = ranking_acumulado[ranking_acumulado['Dirección de correo electrónico'] == email]['Posición'].values[0]
+        pos_prev = acum_prev.get(email, float('inf'))  # Si nuevo, inf (bajada desde fuera)
+        diff = pos_prev - pos_actual
+        if diff > 0:
+            cambios[email] = f'<span style="color:green">↑{diff}</span>'
+        elif diff < 0:
+            cambios[email] = f'<span style="color:red">↓{-diff}</span>'
+        else:
+            cambios[email] = '-'
+    
+    # Agregar columna a acumulado final
+    ranking_acumulado['Cambio'] = ranking_acumulado['Dirección de correo electrónico'].map(cambios)
+    return ranking_acumulado
 
 # =========================
 # GENERAR GRÁFICOS
@@ -271,7 +312,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ranking F1 Predicciones - Temporada 2026</title>
+        <title>Ranking F1 Predicciones - Temporada 2025</title>
         <style>
             body {{
                 font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -437,7 +478,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     </head>
     <body>
         <header>
-            <h1>🏁 Ranking de Predicciones F1 - Temporada 2026</h1>
+            <h1>🏁 Ranking de Predicciones F1 - Temporada 2025</h1>
         </header>
         <nav>
             <ul>
@@ -494,7 +535,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     """
     
     # Insertar contenidos
-    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table") if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"
+    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table", escape=False) if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"  # escape=False para HTML en Cambio
     
     rankings_por_carrera_html = ""
     for i, ranking in enumerate(rankings_por_carrera):
@@ -574,8 +615,9 @@ def main():
         )
         ranking_acumulado["Posición"] = ranking_acumulado.index + 1
         ranking_acumulado = ranking_acumulado[["Posición", "Dirección de correo electrónico", "Puntos"]]
+        ranking_acumulado = calcular_cambios_posiciones(all_rankings, ranking_acumulado)  # Llamada corregida
     else:
-        ranking_acumulado = pd.DataFrame(columns=["Posición", "Dirección de correo electrónico", "Puntos"])
+        ranking_acumulado = pd.DataFrame(columns=["Posición", "Dirección de correo electrónico", "Puntos", "Cambio"])
     
     # Generar gráficos
     grafico_barras = generar_grafico_barras_acumulado(ranking_acumulado)

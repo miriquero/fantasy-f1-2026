@@ -10,14 +10,15 @@
       "Ollie Bearman",
       "Arvid Lindblad",
       "Gabriel Bortoletto",
-      "Pierre Gasly"],
+      "Pierre Gasly",
+      "Esteban Ocon"],
     "vuelta_rapida": "Max Verstappen",
     "colapinto": "Décimo Cuarto Puesto"
   },
-  "SaudiArabia": {
+  "China": {
     "resultado_carrera": [],
     "vuelta_rapida": "",
-    "colapinto": 0
+    "colapinto": ""
   },
   "Bahrein": {
     "resultado_carrera": [],
@@ -29,7 +30,7 @@
     "vuelta_rapida": "",
     "colapinto": 0
   },
-  "China": {
+  "": {
     "resultado_carrera": [],
     "vuelta_rapida": "",
     "colapinto": 0
