@@ -451,6 +451,48 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 background-color: #000;
                 margin-top: 20px;
             }}
+            @media (max-width: 768px) {{
+                body {{
+                    font-size: 0.9em;
+                    padding: 10px;
+                }}
+                table {{
+                    font-size: 0.8em;
+                    overflow-x: auto;
+                    display: block;
+                }}
+                th, td {{
+                    padding: 8px;
+                }}
+                .accordion-button {{
+                    font-size: 1em;
+                    padding: 10px;
+                }}
+                .chart-container img {{
+                    width: 100%;
+                    height: auto;
+                }}
+                .tab-buttons {{
+                    flex-direction: column;
+                }}
+                .tab-button {{
+                    flex: none;
+                }}
+                h1, h2, h3 {{
+                    font-size: 1.5em;
+                }}
+                ul, li {{
+                    padding: 5px;
+                }}
+            }}
+            @media (max-width: 480px) {{
+                h1, h2, h3 {{
+                    font-size: 1.5em;
+                }}
+                ul, li {{
+                    padding: 5px;
+                }}
+            }}
         </style>
         <script>
             function openTab(evt, tabName) {{
@@ -535,7 +577,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     """
     
     # Insertar contenidos
-    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table", escape=False) if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"  # escape=False para HTML en Cambio
+    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table") if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"
     
     rankings_por_carrera_html = ""
     for i, ranking in enumerate(rankings_por_carrera):

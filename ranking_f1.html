@@ -143,6 +143,48 @@
                 background-color: #000;
                 margin-top: 20px;
             }
+            @media (max-width: 768px) {
+                body {
+                    font-size: 0.9em;
+                    padding: 10px;
+                }
+                table {
+                    font-size: 0.8em;
+                    overflow-x: auto;
+                    display: block;
+                }
+                th, td {
+                    padding: 8px;
+                }
+                .accordion-button {
+                    font-size: 1em;
+                    padding: 10px;
+                }
+                .chart-container img {
+                    width: 100%;
+                    height: auto;
+                }
+                .tab-buttons {
+                    flex-direction: column;
+                }
+                .tab-button {
+                    flex: none;
+                }
+                h1, h2, h3 {
+                    font-size: 1.5em;
+                }
+                ul, li {
+                    padding: 5px;
+                }
+            }
+            @media (max-width: 480px) {
+                h1, h2, h3 {
+                    font-size: 1.5em;
+                }
+                ul, li {
+                    padding: 5px;
+                }
+            }
         </style>
         <script>
             function openTab(evt, tabName) {
@@ -388,7 +430,7 @@
             </div>
         </div>
         <footer>
-            <p>Generado automáticamente - 09/03/2026 10:31</p>
+            <p>Generado automáticamente - 09/03/2026 10:38</p>
         </footer>
     </body>
     </html>
