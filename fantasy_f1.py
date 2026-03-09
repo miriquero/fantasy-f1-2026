@@ -312,7 +312,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ranking F1 Predicciones - Temporada 2025</title>
+        <title>Ranking F1 Predicciones - Temporada 2026</title>
         <style>
             body {{
                 font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -478,7 +478,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     </head>
     <body>
         <header>
-            <h1>🏁 Ranking de Predicciones F1 - Temporada 2025</h1>
+            <h1>🏁 Ranking de Predicciones F1 - Temporada 2026</h1>
         </header>
         <nav>
             <ul>
