@@ -5,6 +5,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
+from datetime import datetime
 
 # =========================
 # CONFIGURACIÓN GENERAL
@@ -248,12 +249,11 @@ def generar_grafico_pastel_participacion(all_dfs: List[pd.DataFrame]) -> str:
     if not all_dfs:
         return ""
     
-    all_data = pd.concat(all_dfs)
-    participacion = all_data.groupby("Carrera")["Dirección de correo electrónico"].nunique()
-    
-    fig, ax = plt.subplots(figsize=(8, 8))
-    ax.pie(participacion, labels=participacion.index, autopct='%1.1f%%', colors=['#E10600', '#FFFFFF', '#1A1A1A', '#FFD700'])
+    participacion = pd.concat(all_dfs)['Carrera'].value_counts()
+    fig, ax = plt.subplots()
+    ax.pie(participacion, labels=participacion.index, autopct='%1.1f%%', colors=['#E10600', '#FFFFFF', '#FFD700'])
     ax.set_title('Participación por Carrera', color='white')
+    ax.set_facecolor('#1A1A1A')
     fig.patch.set_facecolor('#1A1A1A')
     
     buf = BytesIO()
@@ -263,49 +263,55 @@ def generar_grafico_pastel_participacion(all_dfs: List[pd.DataFrame]) -> str:
     plt.close(fig)
     return img_base64
 
-# =========================
-# GENERAR ESTADÍSTICAS ADICIONALES
-# =========================
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumulado: pd.DataFrame) -> str:
     if not all_dfs:
-        return ""
+        return "<p>No hay datos disponibles.</p>"
     
-    all_data = pd.concat(all_dfs)
+    df_all = pd.concat(all_dfs)
+    participantes_unicos = df_all['Dirección de correo electrónico'].nunique()
+    predicciones_totales = len(df_all)
+    puntos_totales = df_all['Puntos'].sum()
+    promedio_puntos = puntos_totales / predicciones_totales if predicciones_totales else 0
+    lider = ranking_acumulado.iloc[0]['Dirección de correo electrónico'] if not ranking_acumulado.empty else "N/A"
     
-    total_participantes = all_data["Dirección de correo electrónico"].nunique()
-    promedio_puntos = all_data["Puntos"].mean()
-    max_puntos_carrera = all_data.groupby("Carrera")["Puntos"].max().to_dict()
-    mejor_predictor = ranking_acumulado.iloc[0]["Dirección de correo electrónico"] if not ranking_acumulado.empty else "N/A"
-    total_predicciones = len(all_data)
-    puntos_totales = all_data["Puntos"].sum()
+    maximos_por_carrera = df_all.groupby('Carrera')['Puntos'].max()
+    maximos_html = "".join([f"<li>{carrera}: {puntos} puntos</li>" for carrera, puntos in maximos_por_carrera.items()])
     
-    stats_html = """
+    return f"""
     <div class="stats-container">
         <h3>Estadísticas Generales</h3>
         <ul>
-            <li>Participantes únicos: {total_participantes}</li>
-            <li>Predicciones totales: {total_predicciones}</li>
+            <li>Participantes únicos: {participantes_unicos}</li>
+            <li>Predicciones totales: {predicciones_totales}</li>
             <li>Puntos totales distribuidos: {puntos_totales}</li>
             <li>Promedio de puntos por predicción: {promedio_puntos:.2f}</li>
-            <li>Líder actual: {mejor_predictor}</li>
+            <li>Líder actual: {lider}</li>
         </ul>
         <h4>Máximos por Carrera</h4>
         <ul>
-    """.format(total_participantes=total_participantes, total_predicciones=total_predicciones, 
-               puntos_totales=puntos_totales, promedio_puntos=promedio_puntos, mejor_predictor=mejor_predictor)
-    
-    for carrera, max_pt in max_puntos_carrera.items():
-        stats_html += f"<li>{carrera}: {max_pt} puntos</li>"
-    
-    stats_html += "</ul></div>"
-    return stats_html
+            {maximos_html}
+        </ul>
+    </div>
+    """
 
 # =========================
-# GENERAR HTML PROFESIONAL CON PESTAÑAS Y MENÚ
+# GENERAR HTML (ACTUALIZADO CON CALENDARIO)
 # =========================
-def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame, 
-                 grafico_barras: str, grafico_evolucion: str, grafico_pastel: str, 
+def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame,
+                 grafico_barras: str, grafico_evolucion: str, grafico_pastel: str,
                  stats_adicionales: str) -> str:
+    
+    # Generar tabla de calendario (nuevo)
+    calendar_data = {
+        'Jornada': ['R01', 'R02', 'R03', 'R04', 'R05', 'R06', 'R07', 'R08', 'R09', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20', 'R21', 'R22', 'R23', 'R24'],
+        'Carrera': ['Australia', 'China', 'Japón', 'Bahrein', 'Arabia Saudita', 'Miami', 'Canadá', 'Mónaco', 'Barcelona', 'Austria', 'Gran Bretaña', 'Bélgica', 'Hungría', 'Países Bajos', 'Italia', 'Madrid', 'Azerbaiyán', 'Singapur', 'Austin', 'México', 'Brasil', 'Las Vegas', 'Qatar', 'Abu Dhabi'],
+        'Fecha': ['8 MAR', '15 MAR', '29 ABR', '12 ABR', '19 ABR', '03 MAY', '24 MAY', '07 JUN', '14 JUN', '28 JUN', '05 JUL', '19 JUL', '26 JUL', '23 AGO', '06 SEP', '13 SEP', '26 SEP', '11 OCT', '25 OCT', '01 NOV', '08 NOV', '21 NOV', '29 NOV', '06 DIC'],
+        'Hora Local': ['15:00', '15:00', '14:00', '18:00', '20:00', '16:00', '16:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '20:00', '15:00', '14:00', '14:00', '20:00', '19:00', '17:00'],
+        'Hora Argentina': ['01:00', '04:00', '02:00', '12:00', '14:00', '17:00', '17:00', '10:00', '10:00', '10:00', '11:00', '10:00', '10:00', '10:00', '10:00', '10:00', '08:00', '09:00', '17:00', '17:00', '14:00', '01:00', '13:00', '10:00']
+    }
+    calendar_df = pd.DataFrame(calendar_data)
+    calendar_html = calendar_df.to_html(index=False, classes='ranking-table')
+    
     html = """
     <!DOCTYPE html>
     <html lang="es">
@@ -443,12 +449,12 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             .accordion-content {{
                 display: none;
                 padding: 15px;
-                background-color: #222;
+                background-color: #282828;
             }}
             footer {{
                 text-align: center;
                 padding: 10px;
-                background-color: #000;
+                background-color: #000000;
                 margin-top: 20px;
             }}
             @media (max-width: 768px) {{
@@ -528,6 +534,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 <li><a href="#por-carrera" onclick="document.querySelector('.tab-button[onclick*=\\'por-carrera\\']').click();">Por Carrera</a></li>
                 <li><a href="#graficos" onclick="document.querySelector('.tab-button[onclick*=\\'graficos\\']').click();">Gráficos</a></li>
                 <li><a href="#estadisticas" onclick="document.querySelector('.tab-button[onclick*=\\'estadisticas\\']').click();">Estadísticas</a></li>
+                <li><a href="#calendario" onclick="document.querySelector('.tab-button[onclick*=\\'calendario\\']').click();">Calendario</a></li>
             </ul>
         </nav>
         <div class="tab-container">
@@ -536,6 +543,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 <button class="tab-button" onclick="openTab(event, 'por-carrera')">Rankings por Carrera</button>
                 <button class="tab-button" onclick="openTab(event, 'graficos')">Gráficos</button>
                 <button class="tab-button" onclick="openTab(event, 'estadisticas')">Estadísticas</button>
+                <button class="tab-button" onclick="openTab(event, 'calendario')">Calendario</button>
             </div>
             
             <div id="acumulado" class="tab-content active">
@@ -567,6 +575,12 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             <div id="estadisticas" class="tab-content">
                 <h2>Estadísticas Adicionales</h2>
                 {stats_adicionales}
+            </div>
+            
+            <div id="calendario" class="tab-content">
+                <h2>Calendario de Carreras - Temporada 2026</h2>
+                <p>Aquí tienes el horario completo de las carreras, con fechas, horas locales y ajustadas a Argentina (-03). ¡No te pierdas ninguna!</p>
+                {calendar_html}
             </div>
         </div>
         <footer>
@@ -606,7 +620,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         </div>
         """
     
-    from datetime import datetime
     fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
     
     return html.format(
@@ -616,7 +629,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         grafico_evolucion=grafico_evolucion,
         grafico_pastel=grafico_pastel,
         stats_adicionales=stats_adicionales,
-        fecha_actual=fecha_actual
+        fecha_actual=fecha_actual,
+        calendar_html=calendar_html
     )
 
 # =========================
