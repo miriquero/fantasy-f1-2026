@@ -37,12 +37,20 @@ COL_PUESTOS = [
 # FUNCIÓN PUNTOS POR POSICIÓN (ACTUALIZADA CON NUEVA REGLA)
 # =========================
 def puntos_posicion(predicha: int, real: int) -> int:
+    # Exacto
     if predicha == real:
         return 10
-    elif abs(predicha - real) == 1:
+    
+    # Diferencia de 1 posición
+    if abs(predicha - real) == 1:
         return 5
-    else:
-        return 1  # +1 si el piloto está en top 10 real, pero no exacto ni diff 1
+    
+    # Si está en el top 10 real pero no acertó exacto ni diff1
+    if real <= 10:
+        return 1
+    
+    # Si no está en el top 10
+    return 0
 
 # =========================
 # CALCULAR PUNTOS Y DETALLES POR FILA (ACTUALIZADO PARA DESGLOSE)
@@ -305,7 +313,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     calendar_data = {
         'Jornada': ['R01', 'R02', 'R03', 'R04', 'R05', 'R06', 'R07', 'R08', 'R09', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20', 'R21', 'R22', 'R23', 'R24'],
         'Carrera': ['Australia', 'China', 'Japón', 'Bahrein', 'Arabia Saudita', 'Miami', 'Canadá', 'Mónaco', 'Barcelona', 'Austria', 'Gran Bretaña', 'Bélgica', 'Hungría', 'Países Bajos', 'Italia', 'Madrid', 'Azerbaiyán', 'Singapur', 'Austin', 'México', 'Brasil', 'Las Vegas', 'Qatar', 'Abu Dhabi'],
-        'Fecha': ['8 MAR', '15 MAR', '29 ABR', '12 ABR', '19 ABR', '03 MAY', '24 MAY', '07 JUN', '14 JUN', '28 JUN', '05 JUL', '19 JUL', '26 JUL', '23 AGO', '06 SEP', '13 SEP', '26 SEP', '11 OCT', '25 OCT', '01 NOV', '08 NOV', '21 NOV', '29 NOV', '06 DIC'],
+        'Fecha': ['8 MAR', '15 MAR', '29 MAR', '12 ABR', '19 ABR', '03 MAY', '24 MAY', '07 JUN', '14 JUN', '28 JUN', '05 JUL', '19 JUL', '26 JUL', '23 AGO', '06 SEP', '13 SEP', '26 SEP', '11 OCT', '25 OCT', '01 NOV', '08 NOV', '21 NOV', '29 NOV', '06 DIC'],
         'Hora Local': ['15:00', '15:00', '14:00', '18:00', '20:00', '16:00', '16:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '20:00', '15:00', '14:00', '14:00', '20:00', '19:00', '17:00'],
         'Hora Argentina': ['01:00', '04:00', '02:00', '12:00', '14:00', '17:00', '17:00', '10:00', '10:00', '10:00', '11:00', '10:00', '10:00', '10:00', '10:00', '10:00', '08:00', '09:00', '17:00', '17:00', '14:00', '01:00', '13:00', '10:00']
     }
