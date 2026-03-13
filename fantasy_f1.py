@@ -310,6 +310,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ranking F1 Predicciones - Temporada 2026</title>
+        <!-- FAVICON OFICIAL F1 -->
+        <link rel="icon" href="https://www.formula1.com/etc/designs/f1/img/favicon.ico" type="image/x-icon">
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
             
