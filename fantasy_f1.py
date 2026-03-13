@@ -33,33 +33,52 @@ COL_PUESTOS = [
     "Noveno puesto", "Décimo puesto"
 ]
 
-# =========================
-# FUNCIÓN PUNTOS POR POSICIÓN (ACTUALIZADA CON NUEVA REGLA)
-# =========================
-def puntos_posicion(predicha: int, real: int) -> int:
-    # Exacto
-    if predicha == real:
-        return 10
-    
-    # Diferencia de 1 posición
-    if abs(predicha - real) == 1:
-        return 5
-    
-    # Si está en el top 10 real pero no acertó exacto ni diff1
-    if real <= 10:
-        return 1
-    
-    # Si no está en el top 10
-    return 0
+# Calendario de carreras 2026 (basado en la imagen proporcionada)
+CALENDARIO = [
+    {"Jornada": "R01", "Carrera": "AUSTRALIA", "Fecha": "8 MAR", "Hora Local": "15:00", "Hora Argentina": "01:00"},
+    {"Jornada": "R02", "Carrera": "CHINA", "Fecha": "15 MAR", "Hora Local": "15:00", "Hora Argentina": "04:00"},
+    {"Jornada": "R03", "Carrera": "JAPÓN", "Fecha": "29 MAR", "Hora Local": "14:00", "Hora Argentina": "02:00"},
+    {"Jornada": "R04", "Carrera": "BAHREIN", "Fecha": "12 ABR", "Hora Local": "18:00", "Hora Argentina": "12:00"},
+    {"Jornada": "R05", "Carrera": "ARABIA SAUDITA", "Fecha": "19 ABR", "Hora Local": "20:00", "Hora Argentina": "14:00"},
+    {"Jornada": "R06", "Carrera": "MIAMI", "Fecha": "03 MAY", "Hora Local": "16:00", "Hora Argentina": "17:00"},
+    {"Jornada": "R07", "Carrera": "CANADÁ", "Fecha": "24 MAY", "Hora Local": "16:00", "Hora Argentina": "17:00"},
+    {"Jornada": "R08", "Carrera": "MÓNACO", "Fecha": "07 JUN", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R09", "Carrera": "BARCELONA", "Fecha": "14 JUN", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R10", "Carrera": "AUSTRIA", "Fecha": "28 JUN", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R11", "Carrera": "GRAN BRETAÑA", "Fecha": "05 JUL", "Hora Local": "15:00", "Hora Argentina": "11:00"},
+    {"Jornada": "R12", "Carrera": "BÉLGICA", "Fecha": "19 JUL", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R13", "Carrera": "HUNGRÍA", "Fecha": "26 JUL", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R14", "Carrera": "PAÍSES BAJOS", "Fecha": "23 AGO", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R15", "Carrera": "ITALIA", "Fecha": "06 SEP", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R16", "Carrera": "MADRID", "Fecha": "13 SEP", "Hora Local": "15:00", "Hora Argentina": "10:00"},
+    {"Jornada": "R17", "Carrera": "AZERBAIYÁN", "Fecha": "26 SEP", "Hora Local": "15:00", "Hora Argentina": "08:00"},
+    {"Jornada": "R18", "Carrera": "SINGAPUR", "Fecha": "11 OCT", "Hora Local": "20:00", "Hora Argentina": "09:00"},
+    {"Jornada": "R19", "Carrera": "AUSTIN", "Fecha": "25 OCT", "Hora Local": "15:00", "Hora Argentina": "17:00"},
+    {"Jornada": "R20", "Carrera": "MÉXICO", "Fecha": "01 NOV", "Hora Local": "14:00", "Hora Argentina": "17:00"},
+    {"Jornada": "R21", "Carrera": "BRASIL", "Fecha": "08 NOV", "Hora Local": "14:00", "Hora Argentina": "14:00"},
+    {"Jornada": "R22", "Carrera": "LAS VEGAS", "Fecha": "21 NOV", "Hora Local": "20:00", "Hora Argentina": "01:00 (Domingo 22)"},
+    {"Jornada": "R23", "Carrera": "QATAR", "Fecha": "29 NOV", "Hora Local": "19:00", "Hora Argentina": "13:00"},
+    {"Jornada": "R24", "Carrera": "ABU DHABI", "Fecha": "06 DIC", "Hora Local": "17:00", "Hora Argentina": "10:00"}
+]
 
 # =========================
-# CALCULAR PUNTOS Y DETALLES POR FILA (ACTUALIZADO PARA DESGLOSE)
+# FUNCIÓN PUNTOS POR POSICIÓN
+# =========================
+def puntos_posicion(predicha: int, real: int) -> int:
+    if predicha == real:
+        return 10
+    elif abs(predicha - real) == 1:
+        return 5
+    else:
+        return 1
+
+# =========================
+# CALCULAR PUNTOS Y DETALLES
 # =========================
 def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int], vuelta_rapida_real: str, colapinto_real: int) -> Tuple[int, str]:
     puntos = 0
     detalles = []
     
-    # Puntos por posiciones
     for i, col in enumerate(COL_PUESTOS):
         piloto = str(row.get(col, "")).strip()
         if not piloto:
@@ -76,13 +95,11 @@ def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int]
             elif pts == 1:
                 detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
     
-    # Vuelta rápida
     vr = str(row.get("Vuelta Rápida", "")).strip()
     if vr == vuelta_rapida_real:
         puntos += 10
         detalles.append(f"Vuelta rápida: {vr} (+10)")
     
-    # Posición de Colapinto
     try:
         pred_colapinto_str = str(row.get("Franco Colapinto", "")).strip()
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
@@ -126,12 +143,11 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     vuelta_rapida_real = resultados.get("vuelta_rapida", "")
     colapinto_real = resultados.get("colapinto", 0)
     
-    # Corregir si colapinto_real es str: convertir a int
     if isinstance(colapinto_real, str):
         try:
             colapinto_real = convertir_posicion_a_numero(colapinto_real)
         except:
-            colapinto_real = 0  # Si falla, default 0
+            colapinto_real = 0
     
     posiciones_reales = {piloto: i+1 for i, piloto in enumerate(resultado_carrera)}
     
@@ -141,10 +157,9 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     )
     df["Carrera"] = nombre_carrera
     
-    # Ranking con detalles agregados
     ranking = df.groupby("Dirección de correo electrónico", as_index=False).agg({
         "Puntos": "sum",
-        "Detalles": lambda x: "<br><br>".join(x)  # Concatenar detalles si múltiples envíos
+        "Detalles": lambda x: "<br><br>".join(x)
     }).sort_values("Puntos", ascending=False).reset_index(drop=True)
     ranking["Posición"] = ranking.index + 1
     ranking = ranking[["Posición", "Dirección de correo electrónico", "Puntos", "Detalles"]]
@@ -153,133 +168,111 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     return ranking, df
 
 # =========================
-# CALCULAR CAMBIO DE POSICIONES (NUEVA FUNCIÓN PARA BADGE DE RACHA)
+# CALCULAR CAMBIO DE POSICIONES
 # =========================
 def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: pd.DataFrame) -> pd.DataFrame:
     if len(all_rankings['Carrera'].unique()) < 2:
-        # Si solo una carrera, no hay previa
         ranking_acumulado['Cambio'] = '-'
         return ranking_acumulado
     
-    # Ordenar carreras (asumiendo nombres como "Australia", pero para general, usa sorted)
     carreras = sorted(all_rankings['Carrera'].unique())
-    
-    # Acumulado actual (última carrera)
     acum_actual = all_rankings[all_rankings['Carrera'] == carreras[-1]].set_index('Dirección de correo electrónico')['Posición']
     
-    # Acumulado previo (todas menos última)
     prev_rankings = all_rankings[all_rankings['Carrera'] != carreras[-1]]
     if prev_rankings.empty:
-        acum_prev = pd.Series()  # Vacío si no hay previas
+        acum_prev = pd.Series()
     else:
         acum_prev = prev_rankings.groupby("Dirección de correo electrónico")["Puntos"].sum().sort_values(ascending=False).reset_index()
         acum_prev["Posición"] = acum_prev.index + 1
         acum_prev = acum_prev.set_index('Dirección de correo electrónico')['Posición']
     
-    # Calcular cambios
     cambios = {}
     for email in ranking_acumulado['Dirección de correo electrónico']:
         pos_actual = ranking_acumulado[ranking_acumulado['Dirección de correo electrónico'] == email]['Posición'].values[0]
-        pos_prev = acum_prev.get(email, float('inf'))  # Si nuevo, inf (bajada desde fuera)
+        pos_prev = acum_prev.get(email, float('inf'))
         diff = pos_prev - pos_actual
         if diff > 0:
-            cambios[email] = f'<span style="color:green">↑{diff}</span>'
+            cambios[email] = f'<span style="color:#22c55e">↑{diff}</span>'
         elif diff < 0:
-            cambios[email] = f'<span style="color:red">↓{-diff}</span>'
+            cambios[email] = f'<span style="color:#ef4444">↓{-diff}</span>'
         else:
-            cambios[email] = '-'
+            cambios[email] = '—'
     
-    # Agregar columna a acumulado final
     ranking_acumulado['Cambio'] = ranking_acumulado['Dirección de correo electrónico'].map(cambios)
     return ranking_acumulado
 
 # =========================
-# GENERAR GRÁFICOS
+# GENERAR GRÁFICOS (MEJORADOS VISUALMENTE)
 # =========================
 def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     if ranking_acumulado.empty:
         return ""
     
-    fig, ax = plt.subplots(figsize=(10, len(ranking_acumulado) * 0.3 + 1))
-    ax.barh(ranking_acumulado["Dirección de correo electrónico"], ranking_acumulado["Puntos"], color='#E10600')  # Rojo F1
-    ax.set_title('Puntos Acumulados por Participante', color='white')
-    ax.set_xlabel('Puntos', color='white')
-    ax.set_ylabel('Participante', color='white')
+    fig, ax = plt.subplots(figsize=(10, len(ranking_acumulado) * 0.35 + 1))
+    ax.barh(ranking_acumulado["Dirección de correo electrónico"], ranking_acumulado["Puntos"], color='#E10600')
+    ax.set_title('Puntos Acumulados', color='#FFFFFF', fontsize=14, pad=15)
+    ax.set_xlabel('Puntos', color='#FFFFFF')
     ax.invert_yaxis()
-    ax.tick_params(colors='white')
-    ax.set_facecolor('#1A1A1A')
-    fig.patch.set_facecolor('#1A1A1A')
-    
+    ax.tick_params(colors='#FFFFFF')
+    ax.set_facecolor('#111111')
+    fig.patch.set_facecolor('#111111')
     buf = BytesIO()
     fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
     buf.seek(0)
-    img_base64 = base64.b64encode(buf.read()).decode('utf-8')
-    plt.close(fig)
-    return img_base64
+    return base64.b64encode(buf.read()).decode('utf-8')
 
 def generar_grafico_evolucion(all_rankings: pd.DataFrame, top_n=5) -> str:
     if all_rankings.empty:
         return ""
     
-    pivot = all_rankings.pivot_table(
-        index="Dirección de correo electrónico",
-        columns="Carrera",
-        values="Puntos",
-        fill_value=0
-    ).cumsum(axis=1)
-    
+    pivot = all_rankings.pivot_table(index="Dirección de correo electrónico", columns="Carrera", values="Puntos", fill_value=0).cumsum(axis=1)
     top_emails = pivot.iloc[:, -1].nlargest(top_n).index
-    carreras_ordenadas = sorted(pivot.columns, key=lambda x: int(x.replace("Carrera", "")) if "Carrera" in x else 0)
+    carreras_ordenadas = sorted(pivot.columns)
     pivot = pivot[carreras_ordenadas]
     
     fig, ax = plt.subplots(figsize=(12, 6))
-    colors = ['#E10600', '#FFFFFF', '#FFD700', '#00FFFF', '#FF69B4']  # Colores vibrantes F1
+    colors = ['#E10600', '#00D4FF', '#FFD700', '#FF00FF', '#00FF9F']
     for i, email in enumerate(top_emails):
-        ax.plot(pivot.columns, pivot.loc[email], marker='o', label=email.split('@')[0], color=colors[i % len(colors)])
-    
-    ax.set_title(f'Evolución de Puntos - Top {top_n}', color='white')
-    ax.set_xlabel('Carreras', color='white')
-    ax.set_ylabel('Puntos Acumulados', color='white')
-    ax.legend(loc='upper left', labelcolor='white')
-    ax.grid(True, color='#333')
-    ax.tick_params(colors='white')
-    ax.set_facecolor('#1A1A1A')
-    fig.patch.set_facecolor('#1A1A1A')
-    
+        ax.plot(pivot.columns, pivot.loc[email], marker='o', linewidth=2.5, markersize=6, label=email.split('@')[0], color=colors[i % len(colors)])
+    ax.set_title('Evolución de Puntos - Top 5', color='#FFFFFF', fontsize=14)
+    ax.set_xlabel('Carreras', color='#FFFFFF')
+    ax.set_ylabel('Puntos Acumulados', color='#FFFFFF')
+    ax.legend(loc='upper left', labelcolor='#FFFFFF', frameon=False)
+    ax.grid(True, color='#333333', linestyle='--')
+    ax.tick_params(colors='#FFFFFF')
+    ax.set_facecolor('#111111')
+    fig.patch.set_facecolor('#111111')
     buf = BytesIO()
     fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
     buf.seek(0)
-    img_base64 = base64.b64encode(buf.read()).decode('utf-8')
-    plt.close(fig)
-    return img_base64
+    return base64.b64encode(buf.read()).decode('utf-8')
 
 def generar_grafico_pastel_participacion(all_dfs: List[pd.DataFrame]) -> str:
     if not all_dfs:
         return ""
     
     participacion = pd.concat(all_dfs)['Carrera'].value_counts()
-    fig, ax = plt.subplots()
-    ax.pie(participacion, labels=participacion.index, autopct='%1.1f%%', colors=['#E10600', '#FFFFFF', '#FFD700'])
-    ax.set_title('Participación por Carrera', color='white')
-    ax.set_facecolor('#1A1A1A')
-    fig.patch.set_facecolor('#1A1A1A')
-    
+    fig, ax = plt.subplots(figsize=(8, 8))
+    ax.pie(participacion, labels=participacion.index, autopct='%1.1f%%', colors=['#E10600', '#00D4FF', '#FFD700', '#FF00FF'])
+    ax.set_title('Participación por Carrera', color='#FFFFFF', fontsize=14)
+    fig.patch.set_facecolor('#111111')
     buf = BytesIO()
     fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
     buf.seek(0)
-    img_base64 = base64.b64encode(buf.read()).decode('utf-8')
-    plt.close(fig)
-    return img_base64
+    return base64.b64encode(buf.read()).decode('utf-8')
 
+# =========================
+# GENERAR ESTADÍSTICAS ADICIONALES
+# =========================
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumulado: pd.DataFrame) -> str:
     if not all_dfs:
         return "<p>No hay datos disponibles.</p>"
     
     df_all = pd.concat(all_dfs)
-    participantes_unicos = df_all['Dirección de correo electrónico'].nunique()
-    predicciones_totales = len(df_all)
+    total_participantes = df_all['Dirección de correo electrónico'].nunique()
+    total_predicciones = len(df_all)
     puntos_totales = df_all['Puntos'].sum()
-    promedio_puntos = puntos_totales / predicciones_totales if predicciones_totales else 0
+    promedio_puntos = puntos_totales / total_predicciones if total_predicciones > 0 else 0
     lider = ranking_acumulado.iloc[0]['Dirección de correo electrónico'] if not ranking_acumulado.empty else "N/A"
     
     maximos_por_carrera = df_all.groupby('Carrera')['Puntos'].max()
@@ -289,36 +282,26 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumul
     <div class="stats-container">
         <h3>Estadísticas Generales</h3>
         <ul>
-            <li>Participantes únicos: {participantes_unicos}</li>
-            <li>Predicciones totales: {predicciones_totales}</li>
+            <li>Participantes únicos: {total_participantes}</li>
+            <li>Predicciones totales: {total_predicciones}</li>
             <li>Puntos totales distribuidos: {puntos_totales}</li>
-            <li>Promedio de puntos por predicción: {promedio_puntos:.2f}</li>
+            <li>Promedio por predicción: {promedio_puntos:.2f}</li>
             <li>Líder actual: {lider}</li>
         </ul>
         <h4>Máximos por Carrera</h4>
-        <ul>
-            {maximos_html}
-        </ul>
+        <ul>{maximos_html}</ul>
     </div>
     """
 
 # =========================
-# GENERAR HTML (ACTUALIZADO CON CALENDARIO)
+# GENERAR HTML PROFESIONAL (VERSIÓN SERIA Y ELEGANTE)
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame,
                  grafico_barras: str, grafico_evolucion: str, grafico_pastel: str,
                  stats_adicionales: str) -> str:
     
-    # Generar tabla de calendario (nuevo)
-    calendar_data = {
-        'Jornada': ['R01', 'R02', 'R03', 'R04', 'R05', 'R06', 'R07', 'R08', 'R09', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20', 'R21', 'R22', 'R23', 'R24'],
-        'Carrera': ['Australia', 'China', 'Japón', 'Bahrein', 'Arabia Saudita', 'Miami', 'Canadá', 'Mónaco', 'Barcelona', 'Austria', 'Gran Bretaña', 'Bélgica', 'Hungría', 'Países Bajos', 'Italia', 'Madrid', 'Azerbaiyán', 'Singapur', 'Austin', 'México', 'Brasil', 'Las Vegas', 'Qatar', 'Abu Dhabi'],
-        'Fecha': ['8 MAR', '15 MAR', '29 MAR', '12 ABR', '19 ABR', '03 MAY', '24 MAY', '07 JUN', '14 JUN', '28 JUN', '05 JUL', '19 JUL', '26 JUL', '23 AGO', '06 SEP', '13 SEP', '26 SEP', '11 OCT', '25 OCT', '01 NOV', '08 NOV', '21 NOV', '29 NOV', '06 DIC'],
-        'Hora Local': ['15:00', '15:00', '14:00', '18:00', '20:00', '16:00', '16:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '15:00', '20:00', '15:00', '14:00', '14:00', '20:00', '19:00', '17:00'],
-        'Hora Argentina': ['01:00', '04:00', '02:00', '12:00', '14:00', '17:00', '17:00', '10:00', '10:00', '10:00', '11:00', '10:00', '10:00', '10:00', '10:00', '10:00', '08:00', '09:00', '17:00', '17:00', '14:00', '01:00', '13:00', '10:00']
-    }
-    calendar_df = pd.DataFrame(calendar_data)
-    calendar_html = calendar_df.to_html(index=False, classes='ranking-table')
+    calendario_df = pd.DataFrame(CALENDARIO)
+    calendario_html = calendario_df.to_html(index=False, classes="calendar-table")
     
     html = """
     <!DOCTYPE html>
@@ -328,207 +311,227 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ranking F1 Predicciones - Temporada 2026</title>
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            
+            :root {{
+                --primary-red: #E10600;
+                --dark-bg: #0F0F0F;
+                --card-bg: #1A1A1A;
+                --text: #FFFFFF;
+            }}
+            
             body {{
-                font-family: 'Helvetica Neue', Arial, sans-serif;
-                background-color: #1A1A1A;
-                color: #FFFFFF;
+                font-family: 'Inter', system-ui, sans-serif;
+                background-color: var(--dark-bg);
+                color: var(--text);
                 margin: 0;
                 padding: 0;
                 line-height: 1.6;
             }}
+            
             header {{
-                background-color: #E10600;
-                padding: 20px;
+                background: linear-gradient(90deg, #111111, #1F1F1F);
+                padding: 24px 0;
                 text-align: center;
+                position: relative;
+                border-bottom: 4px solid var(--primary-red);
             }}
+            
             header h1 {{
                 margin: 0;
-                font-size: 2.5em;
+                font-size: 2.4rem;
+                font-weight: 700;
+                letter-spacing: -0.5px;
             }}
+            
+            .header-flag {{
+                position: absolute;
+                left: 30px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 2.2rem;
+            }}
+            
             nav {{
-                background-color: #000000;
-                padding: 10px;
+                background-color: #111111;
+                padding: 12px 0;
+                border-bottom: 1px solid #333;
             }}
+            
             nav ul {{
                 list-style: none;
                 padding: 0;
                 margin: 0;
                 display: flex;
                 justify-content: center;
+                gap: 40px;
             }}
-            nav li {{
-                margin: 0 15px;
-            }}
+            
             nav a {{
-                color: #FFFFFF;
+                color: #CCCCCC;
                 text-decoration: none;
-                font-weight: bold;
+                font-weight: 500;
+                transition: color 0.2s;
             }}
+            
             nav a:hover {{
-                color: #E10600;
+                color: var(--primary-red);
             }}
+            
             .tab-container {{
-                max-width: 1200px;
-                margin: 20px auto;
+                max-width: 1280px;
+                margin: 40px auto;
+                padding: 0 20px;
             }}
+            
             .tab-buttons {{
                 display: flex;
-                border-bottom: 2px solid #333;
+                background: #111111;
+                border-radius: 12px;
+                padding: 6px;
+                margin-bottom: 30px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             }}
+            
             .tab-button {{
-                background-color: #333;
-                border: none;
-                color: #FFF;
-                padding: 15px 20px;
-                cursor: pointer;
-                font-size: 1em;
-                transition: background 0.3s;
                 flex: 1;
+                background: transparent;
+                border: none;
+                color: #AAAAAA;
+                padding: 14px 20px;
+                font-size: 1rem;
+                font-weight: 600;
+                border-radius: 10px;
+                transition: all 0.3s;
             }}
-            .tab-button:hover, .tab-button.active {{
-                background-color: #E10600;
+            
+            .tab-button.active {{
+                background: var(--primary-red);
+                color: white;
+                box-shadow: 0 4px 10px rgba(225,6,0,0.3);
             }}
+            
             .tab-content {{
                 display: none;
-                padding: 20px;
-                background-color: #222;
-                border-radius: 0 0 8px 8px;
+                background: var(--card-bg);
+                border-radius: 16px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             }}
+            
             .tab-content.active {{
                 display: block;
             }}
+            
             table {{
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 20px;
+                background: #111111;
+                border-radius: 12px;
+                overflow: hidden;
             }}
-            th, td {{
-                border: 1px solid #444;
-                padding: 12px;
-                text-align: left;
-            }}
+            
             th {{
-                background-color: #E10600;
+                background: var(--primary-red);
+                color: white;
+                padding: 16px 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                letter-spacing: 0.5px;
             }}
-            tr:nth-child(even) {{
-                background-color: #333;
+            
+            td {{
+                padding: 16px 12px;
+                border-bottom: 1px solid #222;
             }}
+            
+            tr:last-child td {{
+                border-bottom: none;
+            }}
+            
             tr:hover {{
-                background-color: #444;
+                background: #1F1F1F;
             }}
+            
             .chart-container {{
                 text-align: center;
-                margin: 20px 0;
-            }}
-            .chart-container img {{
-                max-width: 100%;
-                height: auto;
-                border-radius: 8px;
-            }}
-            .stats-container {{
-                background-color: #333;
+                margin: 30px 0;
+                background: #111111;
                 padding: 20px;
-                border-radius: 8px;
+                border-radius: 16px;
             }}
-            .stats-container ul {{
-                list-style: none;
-                padding: 0;
+            
+            .stats-container {{
+                background: #111111;
+                padding: 30px;
+                border-radius: 16px;
             }}
-            .stats-container li {{
-                margin-bottom: 10px;
-            }}
+            
             .accordion {{
-                margin-bottom: 20px;
+                margin-bottom: 12px;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             }}
+            
             .accordion-button {{
-                background-color: #333;
-                color: #FFF;
-                padding: 15px;
+                background: #1F1F1F;
+                color: white;
+                padding: 16px 20px;
                 width: 100%;
                 text-align: left;
                 border: none;
-                cursor: pointer;
-                font-size: 1.1em;
-                transition: background 0.3s;
+                font-weight: 500;
+                transition: background 0.2s;
             }}
+            
             .accordion-button:hover {{
-                background-color: #444;
+                background: #2A2A2A;
             }}
+            
             .accordion-content {{
+                background: #111111;
+                padding: 20px;
                 display: none;
-                padding: 15px;
-                background-color: #282828;
             }}
+            
             footer {{
                 text-align: center;
-                padding: 10px;
-                background-color: #000000;
-                margin-top: 20px;
+                padding: 20px;
+                background: #0A0A0A;
+                color: #666;
+                font-size: 0.9rem;
             }}
+            
+            /* Responsive */
             @media (max-width: 768px) {{
-                body {{
-                    font-size: 0.9em;
-                    padding: 10px;
-                }}
-                table {{
-                    font-size: 0.8em;
-                    overflow-x: auto;
-                    display: block;
-                }}
-                th, td {{
-                    padding: 8px;
-                }}
-                .accordion-button {{
-                    font-size: 1em;
-                    padding: 10px;
-                }}
-                .chart-container img {{
-                    width: 100%;
-                    height: auto;
-                }}
                 .tab-buttons {{
                     flex-direction: column;
                 }}
-                .tab-button {{
-                    flex: none;
+                table {{
+                    font-size: 0.85rem;
                 }}
-                h1, h2, h3 {{
-                    font-size: 1.5em;
-                }}
-                ul, li {{
-                    padding: 5px;
+                th, td {{
+                    padding: 12px 8px;
                 }}
             }}
-            @media (max-width: 480px) {{
-                h1, h2, h3 {{
-                    font-size: 1.5em;
-                }}
-                ul, li {{
-                    padding: 5px;
-                }}
+            
+            .calendar-table th {{
+                background: #1F1F1F;
             }}
         </style>
         <script>
             function openTab(evt, tabName) {{
-                var i, tabcontent, tabbuttons;
-                tabcontent = document.getElementsByClassName("tab-content");
-                for (i = 0; i < tabcontent.length; i++) {{
-                    tabcontent[i].classList.remove("active");
-                }}
-                tabbuttons = document.getElementsByClassName("tab-button");
-                for (i = 0; i < tabbuttons.length; i++) {{
-                    tabbuttons[i].classList.remove("active");
-                }}
-                document.getElementById(tabName).classList.add("active");
-                evt.currentTarget.classList.add("active");
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                document.getElementById(tabName).classList.add('active');
+                evt.currentTarget.classList.add('active');
             }}
+            
             function toggleAccordion(id) {{
-                var content = document.getElementById(id);
-                if (content.style.display === "block") {{
-                    content.style.display = "none";
-                }} else {{
-                    content.style.display = "block";
-                }}
+                const content = document.getElementById(id);
+                content.style.display = content.style.display === 'block' ? 'none' : 'block';
             }}
         </script>
     </head>
@@ -536,6 +539,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         <header>
             <h1>🏁 Ranking de Predicciones F1 - Temporada 2026</h1>
         </header>
+        
         <nav>
             <ul>
                 <li><a href="#acumulado" onclick="document.querySelector('.tab-button[onclick*=\\'acumulado\\']').click();">Acumulado</a></li>
@@ -545,6 +549,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 <li><a href="#calendario" onclick="document.querySelector('.tab-button[onclick*=\\'calendario\\']').click();">Calendario</a></li>
             </ul>
         </nav>
+        
         <div class="tab-container">
             <div class="tab-buttons">
                 <button class="tab-button active" onclick="openTab(event, 'acumulado')">Ranking Acumulado</button>
@@ -559,7 +564,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 {ranking_acumulado_html}
                 <div class="chart-container">
                     <h3>Gráfico de Puntos Acumulados</h3>
-                    <img src="data:image/png;base64,{grafico_barras}" alt="Gráfico de Barras Acumulado">
+                    <img src="data:image/png;base64,{grafico_barras}" alt="Gráfico Acumulado">
                 </div>
             </div>
             
@@ -572,11 +577,11 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 <h2>Gráficos y Visualizaciones</h2>
                 <div class="chart-container">
                     <h3>Evolución de Puntos (Top 5)</h3>
-                    <img src="data:image/png;base64,{grafico_evolucion}" alt="Gráfico de Evolución">
+                    <img src="data:image/png;base64,{grafico_evolucion}" alt="Evolución">
                 </div>
                 <div class="chart-container">
                     <h3>Participación por Carrera</h3>
-                    <img src="data:image/png;base64,{grafico_pastel}" alt="Gráfico de Pastel Participación">
+                    <img src="data:image/png;base64,{grafico_pastel}" alt="Pastel">
                 </div>
             </div>
             
@@ -586,20 +591,21 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             </div>
             
             <div id="calendario" class="tab-content">
-                <h2>Calendario de Carreras - Temporada 2026</h2>
-                <p>Aquí tienes el horario completo de las carreras, con fechas, horas locales y ajustadas a Argentina (-03). ¡No te pierdas ninguna!</p>
-                {calendar_html}
+                <h2>Calendario Oficial F1 2026</h2>
+                <p style="color:#AAAAAA; margin-bottom:20px;">Horarios completos con hora local y ajustada a Argentina (GMT-3)</p>
+                {calendario_html}
             </div>
         </div>
+        
         <footer>
-            <p>Generado automáticamente - {fecha_actual}</p>
+            <p>Generado automáticamente — {fecha_actual}</p>
         </footer>
     </body>
     </html>
     """
     
     # Insertar contenidos
-    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table") if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"
+    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table", escape=False) if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"
     
     rankings_por_carrera_html = ""
     for i, ranking in enumerate(rankings_por_carrera):
@@ -637,8 +643,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         grafico_evolucion=grafico_evolucion,
         grafico_pastel=grafico_pastel,
         stats_adicionales=stats_adicionales,
-        fecha_actual=fecha_actual,
-        calendar_html=calendar_html
+        calendario_html=calendario_html,
+        fecha_actual=fecha_actual
     )
 
 # =========================
@@ -664,12 +670,12 @@ def main():
                 archivo_path = os.path.join(CARPETA_RESPUESTAS, archivo)
                 ranking, df = procesar_carrera(nombre_carrera, archivo_path, resultados_por_carrera[nombre_carrera])
                 rankings_por_carrera.append(ranking)
-                all_rankings = pd.concat([all_rankings, ranking.drop(columns=["Detalles"])])  # Sin detalles para acumulado
+                all_rankings = pd.concat([all_rankings, ranking.drop(columns=["Detalles"])])
                 all_dfs.append(df)
             else:
                 print(f"Advertencia: No hay resultados reales completos para {nombre_carrera}")
     
-    # Calcular acumulado (sin detalles, ya que son por carrera)
+    # Calcular acumulado
     if not all_rankings.empty:
         ranking_acumulado = (
             all_rankings.groupby("Dirección de correo electrónico", as_index=False)["Puntos"]
@@ -679,7 +685,7 @@ def main():
         )
         ranking_acumulado["Posición"] = ranking_acumulado.index + 1
         ranking_acumulado = ranking_acumulado[["Posición", "Dirección de correo electrónico", "Puntos"]]
-        ranking_acumulado = calcular_cambios_posiciones(all_rankings, ranking_acumulado)  # Llamada corregida
+        ranking_acumulado = calcular_cambios_posiciones(all_rankings, ranking_acumulado)
     else:
         ranking_acumulado = pd.DataFrame(columns=["Posición", "Dirección de correo electrónico", "Puntos", "Cambio"])
     
