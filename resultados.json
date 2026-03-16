@@ -16,9 +16,20 @@
     "colapinto": "Décimo Cuarto Puesto"
   },
   "China": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": ""
+    "resultado_carrera": [
+      "Kimi Antonelli",
+      "George Russell",
+      "Lewis Hamilton",
+      "Charles Leclerc",
+      "Ollie Bearman",
+      "Pierre Gasly",
+      "Liam Lawson",
+      "Isack Hadjar",
+      "Carlos Sainz",
+      "Franco Colapinto"
+    ],
+    "vuelta_rapida": "Kimi Antonelli",
+    "colapinto": "10"
   },
   "Bahrein": {
     "resultado_carrera": [],
