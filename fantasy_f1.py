@@ -294,15 +294,15 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumul
     """
 
 # =========================
-# GENERAR HTML PROFESIONAL (VERSIÓN SERIA Y ELEGANTE)
+# GENERAR HTML PROFESIONAL (VERSIÓN MEJORADA PARA MÓVIL)
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame,
                  grafico_barras: str, grafico_evolucion: str, grafico_pastel: str,
                  stats_adicionales: str) -> str:
     
     calendario_df = pd.DataFrame(CALENDARIO)
-    calendario_html = calendario_df.to_html(index=False, classes="calendar-table")
     
+    # HTML base (con CSS ultra-optimizado para móviles)
     html = """
     <!DOCTYPE html>
     <html lang="es">
@@ -333,7 +333,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             
             header {{
                 background: linear-gradient(90deg, #111111, #1F1F1F);
-                padding: 24px 0;
+                padding: 20px 0;
                 text-align: center;
                 position: relative;
                 border-bottom: 4px solid var(--primary-red);
@@ -341,17 +341,9 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             
             header h1 {{
                 margin: 0;
-                font-size: 2.4rem;
+                font-size: 2rem;
                 font-weight: 700;
                 letter-spacing: -0.5px;
-            }}
-            
-            .header-flag {{
-                position: absolute;
-                left: 30px;
-                top: 50%;
-                transform: translateY(-50%);
-                font-size: 2.2rem;
             }}
             
             nav {{
@@ -366,7 +358,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 margin: 0;
                 display: flex;
                 justify-content: center;
-                gap: 40px;
+                gap: 20px;
+                flex-wrap: wrap;
             }}
             
             nav a {{
@@ -382,8 +375,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             
             .tab-container {{
                 max-width: 1280px;
-                margin: 40px auto;
-                padding: 0 20px;
+                margin: 30px auto;
+                padding: 0 15px;
             }}
             
             .tab-buttons {{
@@ -391,7 +384,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 background: #111111;
                 border-radius: 12px;
                 padding: 6px;
-                margin-bottom: 30px;
+                margin-bottom: 25px;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             }}
             
@@ -417,7 +410,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 display: none;
                 background: var(--card-bg);
                 border-radius: 16px;
-                padding: 30px;
+                padding: 25px;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             }}
             
@@ -456,17 +449,36 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 background: #1F1F1F;
             }}
             
+            .table-wrapper {{
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 20px 0;
+                border-radius: 12px;
+                background: #111111;
+            }}
+            
+            .table-wrapper table {{
+                min-width: 700px;
+                width: 100%;
+            }}
+            
             .chart-container {{
                 text-align: center;
-                margin: 30px 0;
+                margin: 25px 0;
                 background: #111111;
                 padding: 20px;
                 border-radius: 16px;
             }}
             
+            .chart-container img {{
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+            }}
+            
             .stats-container {{
                 background: #111111;
-                padding: 30px;
+                padding: 25px;
                 border-radius: 16px;
             }}
             
@@ -506,16 +518,58 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 font-size: 0.9rem;
             }}
             
-            /* Responsive */
+            /* ==================== RESPONSIVE MÓVIL ==================== */
             @media (max-width: 768px) {{
+                header h1 {{
+                    font-size: 1.65rem;
+                }}
+                
+                nav ul {{
+                    gap: 12px;
+                    justify-content: center;
+                }}
+                
+                nav a {{
+                    font-size: 0.9rem;
+                }}
+                
                 .tab-buttons {{
                     flex-direction: column;
                 }}
-                table {{
-                    font-size: 0.85rem;
+                
+                .tab-button {{
+                    padding: 14px 16px;
+                    font-size: 0.95rem;
                 }}
+                
+                .tab-content {{
+                    padding: 18px 12px;
+                }}
+                
+                .stats-container {{
+                    padding: 18px;
+                }}
+                
                 th, td {{
                     padding: 12px 8px;
+                    font-size: 0.82rem;
+                }}
+                
+                .table-wrapper {{
+                    margin: 15px 0;
+                }}
+                
+                .chart-container {{
+                    padding: 12px;
+                }}
+                
+                .accordion-button {{
+                    padding: 14px 16px;
+                    font-size: 0.95rem;
+                }}
+                
+                .accordion-content {{
+                    padding: 15px;
                 }}
             }}
             
@@ -606,13 +660,17 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     </html>
     """
     
-    # Insertar contenidos
-    ranking_acumulado_html = ranking_acumulado.to_html(index=False, classes="ranking-table", escape=False) if not ranking_acumulado.empty else "<p>No hay datos disponibles.</p>"
+    # ==================== INSERCIÓN DE CONTENIDO (CON WRAPPERS PARA MÓVIL) ====================
+    if not ranking_acumulado.empty:
+        ranking_acumulado_html = f'<div class="table-wrapper">{ranking_acumulado.to_html(index=False, classes="ranking-table", escape=False)}</div>'
+    else:
+        ranking_acumulado_html = "<p>No hay datos disponibles.</p>"
     
     rankings_por_carrera_html = ""
     for i, ranking in enumerate(rankings_por_carrera):
         carrera = ranking["Carrera"].iloc[0]
-        ranking_table = ranking.drop(columns=["Carrera", "Detalles"]).to_html(index=False, classes="ranking-table")
+        ranking_table = f'<div class="table-wrapper">{ranking.drop(columns=["Carrera", "Detalles"]).to_html(index=False, classes="ranking-table")}</div>'
+        
         detalles_html = ""
         for j, row in ranking.iterrows():
             email = row["Dirección de correo electrónico"]
@@ -625,6 +683,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
                 </div>
             </div>
             """
+        
         rankings_por_carrera_html += f"""
         <div class="accordion">
             <button class="accordion-button" onclick="toggleAccordion('acc-{i}')">{carrera}</button>
@@ -635,6 +694,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             </div>
         </div>
         """
+    
+    calendario_html = f'<div class="table-wrapper">{calendario_df.to_html(index=False, classes="calendar-table")}</div>'
     
     fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
     
@@ -699,7 +760,7 @@ def main():
     # Estadísticas
     stats_adicionales = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
     
-    # Generar HTML
+    # Generar HTML (versión móvil optimizada)
     html_content = generar_html(rankings_por_carrera, ranking_acumulado, 
                                 grafico_barras, grafico_evolucion, grafico_pastel, 
                                 stats_adicionales)
@@ -707,7 +768,7 @@ def main():
         f.write(html_content)
     
     print("🏁 HTML generado: ranking_f1.html")
-    print("Ábrelo en un navegador para ver el ranking profesional con pestañas, menús y gráficos.")
+    print("Ábrelo en un navegador (o móvil) para ver el ranking PROFESIONAL y 100% responsive.")
 
 if __name__ == "__main__":
     main()
