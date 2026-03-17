@@ -38,8 +38,8 @@ CALENDARIO = [
     {"Jornada": "R01", "Carrera": "AUSTRALIA", "Fecha": "8 MAR", "Hora Local": "15:00", "Hora Argentina": "01:00"},
     {"Jornada": "R02", "Carrera": "CHINA", "Fecha": "15 MAR", "Hora Local": "15:00", "Hora Argentina": "04:00"},
     {"Jornada": "R03", "Carrera": "JAPÓN", "Fecha": "29 MAR", "Hora Local": "14:00", "Hora Argentina": "02:00"},
-    {"Jornada": "R04", "Carrera": "BAHREIN", "Fecha": "12 ABR", "Hora Local": "18:00", "Hora Argentina": "12:00"},
-    {"Jornada": "R05", "Carrera": "ARABIA SAUDITA", "Fecha": "19 ABR", "Hora Local": "20:00", "Hora Argentina": "14:00"},
+    {"Jornada": "<s>R04</s>", "Carrera": "<s>BAHREIN</s>", "Fecha": "<s>12 ABR</s>", "Hora Local": "<s>18:00</s>", "Hora Argentina": "<s>12:00</s>"},
+    {"Jornada": "<s>R05</s>", "Carrera": "<s>ARABIA SAUDITA</s>", "Fecha": "<s>19 ABR</s>", "Hora Local": "<s>20:00</s>", "Hora Argentina": "<s>14:00</s>"},
     {"Jornada": "R06", "Carrera": "MIAMI", "Fecha": "03 MAY", "Hora Local": "16:00", "Hora Argentina": "17:00"},
     {"Jornada": "R07", "Carrera": "CANADÁ", "Fecha": "24 MAY", "Hora Local": "16:00", "Hora Argentina": "17:00"},
     {"Jornada": "R08", "Carrera": "MÓNACO", "Fecha": "07 JUN", "Hora Local": "15:00", "Hora Argentina": "10:00"},
@@ -695,8 +695,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
         </div>
         """
     
-    calendario_html = f'<div class="table-wrapper">{calendario_df.to_html(index=False, classes="calendar-table")}</div>'
-    
+    calendario_html = f'<div class="table-wrapper">{calendario_df.to_html(index=False, classes="calendar-table", escape=False)}</div>'
     fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
     
     return html.format(
