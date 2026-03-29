@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 from datetime import datetime
+import numpy as np
 
 # =========================
 # CONFIGURACIÓN GENERAL
@@ -60,6 +61,7 @@ CALENDARIO = [
     {"Jornada": "R23", "Carrera": "QATAR", "Fecha": "29 NOV", "Hora Local": "19:00", "Hora Argentina": "13:00"},
     {"Jornada": "R24", "Carrera": "ABU DHABI", "Fecha": "06 DIC", "Hora Local": "17:00", "Hora Argentina": "10:00"}
 ]
+
 
 # =========================
 # FUNCIÓN PUNTOS POR POSICIÓN
@@ -247,19 +249,88 @@ def generar_grafico_evolucion(all_rankings: pd.DataFrame, top_n=5) -> str:
     buf.seek(0)
     return base64.b64encode(buf.read()).decode('utf-8')
 
-def generar_grafico_pastel_participacion(all_dfs: List[pd.DataFrame]) -> str:
+def generar_radar_por_carrera(all_dfs: List[pd.DataFrame], top_n=5) -> List[Tuple[str, str]]:
     if not all_dfs:
-        return ""
+        return []
     
-    participacion = pd.concat(all_dfs)['Carrera'].value_counts()
-    fig, ax = plt.subplots(figsize=(8, 8))
-    ax.pie(participacion, labels=participacion.index, autopct='%1.1f%%', colors=['#E10600', '#00D4FF', '#FFD700', '#FF00FF'])
-    ax.set_title('Participación por Carrera', color='#FFFFFF', fontsize=14)
-    fig.patch.set_facecolor('#111111')
-    buf = BytesIO()
-    fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
-    buf.seek(0)
-    return base64.b64encode(buf.read()).decode('utf-8')
+    df_all = pd.concat(all_dfs)
+    categorias = ['Exactos', 'Cercanos', 'Top10', 'VueltaRapida', 'Colapinto']
+    
+    # Función auxiliar para calcular breakdown por fila
+    def breakdown_puntos(row):
+        exactos = sum(1 for d in row['Detalles'].split('<br>') if 'Exacto' in d) * 10
+        cercanos = sum(1 for d in row['Detalles'].split('<br>') if 'Diff 1' in d) * 5
+        top10 = sum(1 for d in row['Detalles'].split('<br>') if 'En top 10' in d) * 1
+        vr = 10 if 'Vuelta rápida' in row['Detalles'] else 0
+        col = 0
+        if 'Colapinto: EXACTO' in row['Detalles']:
+            col = 10
+        elif 'Colapinto: diferencia de 1' in row['Detalles']:
+            col = 5
+        return pd.Series({
+            'Exactos': exactos,
+            'Cercanos': cercanos,
+            'Top10': top10,
+            'VueltaRapida': vr,
+            'Colapinto': col
+        })
+    
+    # Aplicar breakdown
+    breakdowns = df_all.apply(breakdown_puntos, axis=1)
+    df_with_break = pd.concat([df_all[['Carrera', 'Dirección de correo electrónico', 'Puntos']], breakdowns], axis=1)
+    
+    # Por carrera: top N
+    radars = []
+    for carrera, group in df_with_break.groupby('Carrera'):
+        if group.empty:
+            continue
+        top_group = group.nlargest(top_n, 'Puntos')
+        if top_group.empty:
+            continue
+        
+        # Normalizar a % (máximo posible por categoría en teoría)
+        max_por_cat = {'Exactos': 100, 'Cercanos': 50, 'Top10': 10, 'VueltaRapida': 10, 'Colapinto': 10}
+        for cat in categorias:
+            top_group[cat] = top_group[cat] / max_por_cat[cat] * 100
+        
+        # Preparar radar
+        fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True))
+        angles = np.linspace(0, 2*np.pi, len(categorias), endpoint=False).tolist()
+        angles += angles[:1]  # cerrar polígono
+        
+        ax.set_theta_offset(np.pi / 2)
+        ax.set_theta_direction(-1)
+        
+        # Colores para top 5
+        colors = ['#E10600', '#00D4FF', '#FFD700', '#FF00FF', '#00FF9F']
+        
+        for i, (_, row) in enumerate(top_group.iterrows()):
+            values = row[categorias].tolist()
+            values += values[:1]  # cerrar
+            ax.plot(angles, values, linewidth=2, linestyle='solid', label=f"{row['Dirección de correo electrónico'].split('@')[0]} ({int(row['Puntos'])} pts)", color=colors[i % len(colors)])
+            ax.fill(angles, values, color=colors[i % len(colors)], alpha=0.15)
+        
+        ax.set_xticks(angles[:-1])
+        ax.set_xticklabels(categorias, fontsize=10, color='#FFFFFF')
+        ax.set_ylim(0, 100)
+        ax.set_yticklabels([])  # quitar números para limpiar
+        ax.tick_params(colors='#FFFFFF')
+        ax.grid(color='#333333')
+        ax.set_facecolor('#111111')
+        fig.patch.set_facecolor('#111111')
+        
+        ax.set_title(f'Perfil de Aciertos - {carrera}\n(Top {min(top_n, len(top_group))})', color='#FFFFFF', fontsize=13, pad=20)
+        ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), labelcolor='#FFFFFF', frameon=False)
+        
+        buf = BytesIO()
+        fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
+        buf.seek(0)
+        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        plt.close(fig)
+        
+        radars.append((carrera, img_base64))
+    
+    return radars
 
 # =========================
 # GENERAR ESTADÍSTICAS ADICIONALES
@@ -297,9 +368,8 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumul
 # GENERAR HTML PROFESIONAL (VERSIÓN MEJORADA PARA MÓVIL)
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame,
-                 grafico_barras: str, grafico_evolucion: str, grafico_pastel: str,
+                 grafico_barras: str, grafico_evolucion: str, radars_data: List[Tuple[str, str]],
                  stats_adicionales: str) -> str:
-    
     calendario_df = pd.DataFrame(CALENDARIO)
     
     # HTML base (con CSS ultra-optimizado para móviles)
@@ -630,14 +700,14 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
             </div>
             
             <div id="graficos" class="tab-content">
-                <h2>Gráficos y Visualizaciones</h2>
-                <div class="chart-container">
-                    <h3>Evolución de Puntos (Top 5)</h3>
-                    <img src="data:image/png;base64,{grafico_evolucion}" alt="Evolución">
+            <h2>Gráficos y Visualizaciones</h2>
+            <div class="chart-container">
+                <h3>Evolución de Puntos (Top 5)</h3>
+                <img src="data:image/png;base64,{grafico_evolucion}" alt="Evolución">
                 </div>
-                <div class="chart-container">
-                    <h3>Participación por Carrera</h3>
-                    <img src="data:image/png;base64,{grafico_pastel}" alt="Pastel">
+                <div class="chart-container" style="padding: 10px 5px;">
+                    <h3>Perfil de Aciertos por Carrera (Radar – Top 8)</h3>
+                    {radars_html}
                 </div>
             </div>
             
@@ -697,13 +767,28 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd
     
     calendario_html = f'<div class="table-wrapper">{calendario_df.to_html(index=False, classes="calendar-table", escape=False)}</div>'
     fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
+        # GENERAR HTML DINÁMICO PARA LOS RADARES (esto faltaba)
+    
+    
+    radars_html = ""
+    if radars_data:
+        for carrera, base64_img in radars_data:
+            radars_html += f"""
+            <div style="margin: 35px 0; text-align: center; background: #0F0F0F; padding: 15px; border-radius: 12px;">
+                <h4 style="color: #E10600; margin: 0 0 15px 0; font-size: 1.3rem;">{carrera}</h4>
+                <img src="data:image/png;base64,{base64_img}" alt="Radar {carrera}" 
+                     style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 6px 20px rgba(225,6,0,0.25);">
+            </div>
+            """
+    else:
+        radars_html = '<p style="text-align:center; color:#888; font-style:italic;">No hay suficientes datos para mostrar perfiles de aciertos.</p>'
     
     return html.format(
         ranking_acumulado_html=ranking_acumulado_html,
         rankings_por_carrera_html=rankings_por_carrera_html,
         grafico_barras=grafico_barras,
         grafico_evolucion=grafico_evolucion,
-        grafico_pastel=grafico_pastel,
+        radars_html=radars_html,
         stats_adicionales=stats_adicionales,
         calendario_html=calendario_html,
         fecha_actual=fecha_actual
@@ -754,14 +839,14 @@ def main():
     # Generar gráficos
     grafico_barras = generar_grafico_barras_acumulado(ranking_acumulado)
     grafico_evolucion = generar_grafico_evolucion(all_rankings)
-    grafico_pastel = generar_grafico_pastel_participacion(all_dfs)
+    radars_data = generar_radar_por_carrera(all_dfs, top_n=8)
     
     # Estadísticas
     stats_adicionales = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
     
     # Generar HTML (versión móvil optimizada)
     html_content = generar_html(rankings_por_carrera, ranking_acumulado, 
-                                grafico_barras, grafico_evolucion, grafico_pastel, 
+                                grafico_barras, grafico_evolucion, radars_data, 
                                 stats_adicionales)
     with open("ranking_f1.html", "w", encoding="utf-8") as f:
         f.write(html_content)
