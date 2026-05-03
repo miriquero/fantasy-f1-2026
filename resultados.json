@@ -46,19 +46,31 @@
       "Nico Hulkenberg"
     ],
     "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "16"
+    "colapinto": "16 "
   },
-  "Japan": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
+  "Miami": {
+    "resultado_carrera": [
+      "Kimi Antonelli",
+      "Lando Norris",
+      "Oscar Piastri",
+      "George Russell",
+      "Max Verstappen",
+      "Charles Leclerc",
+      "Lewis Hamilton",
+      "Franco Colapinto",
+      "Carlos Sainz",
+      "Alex Albon",
+      "Ollie Bearman"
+    ],
+    "vuelta_rapida": "Lando Norris",
+    "colapinto": "8"
   },
   "": {
     "resultado_carrera": [],
     "vuelta_rapida": "",
     "colapinto": 0
   },
-  "Miami": {
+  "_": {
     "resultado_carrera": [],
     "vuelta_rapida": "",
     "colapinto": 0
