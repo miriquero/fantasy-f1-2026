@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import json
 from typing import Dict, List, Tuple
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
@@ -11,13 +13,9 @@ import numpy as np
 # =========================
 # CONFIGURACIÓN GENERAL
 # =========================
-# Carpeta donde se guardan los CSV de respuestas (uno por carrera)
-CARPETA_RESPUESTAS = "respuestas"  # Crea esta carpeta y agrega los CSV allí
-
-# Archivo JSON con resultados reales por carrera (crea este archivo manualmente)
+CARPETA_RESPUESTAS = "respuestas"
 ARCHIVO_RESULTADOS = "resultados.json"
 
-# Lista oficial de pilotos (agrega si faltan)
 PILOTOS = [
     "Max Verstappen", "Arvid Lindblad", "Charles Leclerc", "Lewis Hamilton",
     "Oscar Piastri", "Lando Norris", "George Russell", "Kimi Antonelli",
@@ -27,14 +25,12 @@ PILOTOS = [
     "Valtteri Bottas", "Sergio Perez", "Yuki Tsunoda"
 ]
 
-# Nombres de columnas de puestos
 COL_PUESTOS = [
     "Primer puesto", "Segundo puesto", "Tercer puesto", "Cuarto puesto",
     "Quinto puesto", "Sexto puesto", "Séptimo puesto", "Octavo puesto",
     "Noveno puesto", "Décimo puesto"
 ]
 
-# Calendario de carreras 2026 (basado en la imagen proporcionada)
 CALENDARIO = [
     {"Jornada": "R01", "Carrera": "AUSTRALIA", "Fecha": "8 MAR", "Hora Local": "15:00", "Hora Argentina": "01:00"},
     {"Jornada": "R02", "Carrera": "CHINA", "Fecha": "15 MAR", "Hora Local": "15:00", "Hora Argentina": "04:00"},
@@ -62,7 +58,6 @@ CALENDARIO = [
     {"Jornada": "R24", "Carrera": "ABU DHABI", "Fecha": "06 DIC", "Hora Local": "17:00", "Hora Argentina": "10:00"}
 ]
 
-
 # =========================
 # FUNCIÓN PUNTOS POR POSICIÓN
 # =========================
@@ -80,7 +75,7 @@ def puntos_posicion(predicha: int, real: int) -> int:
 def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int], vuelta_rapida_real: str, colapinto_real: int) -> Tuple[int, str]:
     puntos = 0
     detalles = []
-    
+
     for i, col in enumerate(COL_PUESTOS):
         piloto = str(row.get(col, "")).strip()
         if not piloto:
@@ -96,12 +91,12 @@ def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int]
                 detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
             elif pts == 1:
                 detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
-    
+
     vr = str(row.get("Vuelta Rápida", "")).strip()
     if vr == vuelta_rapida_real:
         puntos += 10
         detalles.append(f"Vuelta rápida: {vr} (+10)")
-    
+
     try:
         pred_colapinto_str = str(row.get("Franco Colapinto", "")).strip()
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
@@ -113,7 +108,7 @@ def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int]
             detalles.append(f"Colapinto: diferencia de 1 (+5 puntos)")
     except (ValueError, TypeError):
         pass
-    
+
     detalle_str = "<br>".join(detalles) if detalles else "Sin puntos detallados"
     return puntos, detalle_str
 
@@ -137,28 +132,28 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
 # =========================
 # PROCESAR UNA CARRERA
 # =========================
-def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) -> pd.DataFrame:
+def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
     df = pd.read_csv(archivo_csv)
     df.columns = df.columns.str.strip().str.replace(r'\s+', ' ', regex=True)
-    
+
     resultado_carrera = resultados.get("resultado_carrera", [])
     vuelta_rapida_real = resultados.get("vuelta_rapida", "")
     colapinto_real = resultados.get("colapinto", 0)
-    
+
     if isinstance(colapinto_real, str):
         try:
             colapinto_real = convertir_posicion_a_numero(colapinto_real)
         except:
             colapinto_real = 0
-    
+
     posiciones_reales = {piloto: i+1 for i, piloto in enumerate(resultado_carrera)}
-    
+
     df[["Puntos", "Detalles"]] = df.apply(
         lambda row: pd.Series(calcular_puntos_y_detalles(row, posiciones_reales, vuelta_rapida_real, colapinto_real)),
         axis=1
     )
     df["Carrera"] = nombre_carrera
-    
+
     ranking = df.groupby("Dirección de correo electrónico", as_index=False).agg({
         "Puntos": "sum",
         "Detalles": lambda x: "<br><br>".join(x)
@@ -166,7 +161,7 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     ranking["Posición"] = ranking.index + 1
     ranking = ranking[["Posición", "Dirección de correo electrónico", "Puntos", "Detalles"]]
     ranking["Carrera"] = nombre_carrera
-    
+
     return ranking, df
 
 # =========================
@@ -176,10 +171,10 @@ def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: p
     if len(all_rankings['Carrera'].unique()) < 2:
         ranking_acumulado['Cambio'] = '-'
         return ranking_acumulado
-    
+
     carreras = sorted(all_rankings['Carrera'].unique())
     acum_actual = all_rankings[all_rankings['Carrera'] == carreras[-1]].set_index('Dirección de correo electrónico')['Posición']
-    
+
     prev_rankings = all_rankings[all_rankings['Carrera'] != carreras[-1]]
     if prev_rankings.empty:
         acum_prev = pd.Series()
@@ -187,76 +182,108 @@ def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: p
         acum_prev = prev_rankings.groupby("Dirección de correo electrónico")["Puntos"].sum().sort_values(ascending=False).reset_index()
         acum_prev["Posición"] = acum_prev.index + 1
         acum_prev = acum_prev.set_index('Dirección de correo electrónico')['Posición']
-    
+
     cambios = {}
     for email in ranking_acumulado['Dirección de correo electrónico']:
         pos_actual = ranking_acumulado[ranking_acumulado['Dirección de correo electrónico'] == email]['Posición'].values[0]
         pos_prev = acum_prev.get(email, float('inf'))
         diff = pos_prev - pos_actual
         if diff > 0:
-            cambios[email] = f'<span style="color:#22c55e">↑{diff}</span>'
+            cambios[email] = f'<span class="trend-up">▲{diff}</span>'
         elif diff < 0:
-            cambios[email] = f'<span style="color:#ef4444">↓{-diff}</span>'
+            cambios[email] = f'<span class="trend-down">▼{-diff}</span>'
         else:
-            cambios[email] = '—'
-    
+            cambios[email] = '<span class="trend-neutral">—</span>'
+
     ranking_acumulado['Cambio'] = ranking_acumulado['Dirección de correo electrónico'].map(cambios)
     return ranking_acumulado
 
 # =========================
-# GENERAR GRÁFICOS (MEJORADOS VISUALMENTE)
+# GENERAR GRÁFICOS
 # =========================
 def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     if ranking_acumulado.empty:
         return ""
+
+    plt.rcParams['font.family'] = 'DejaVu Sans'
+    fig, ax = plt.subplots(figsize=(10, max(4, len(ranking_acumulado) * 0.45 + 1)))
     
-    fig, ax = plt.subplots(figsize=(10, len(ranking_acumulado) * 0.35 + 1))
-    ax.barh(ranking_acumulado["Dirección de correo electrónico"], ranking_acumulado["Puntos"], color='#E10600')
-    ax.set_title('Puntos Acumulados', color='#FFFFFF', fontsize=14, pad=15)
-    ax.set_xlabel('Puntos', color='#FFFFFF')
+    colors = ['#E10600' if i == 0 else '#2A2A2A' for i in range(len(ranking_acumulado))]
+    bars = ax.barh(
+        ranking_acumulado["Dirección de correo electrónico"],
+        ranking_acumulado["Puntos"],
+        color=colors, height=0.65, edgecolor='none'
+    )
+    
+    for bar, pts in zip(bars, ranking_acumulado["Puntos"]):
+        ax.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2,
+                f'{pts}', va='center', ha='left', color='#FFFFFF', fontsize=9, fontweight='bold')
+    
+    ax.set_title('Puntos acumulados', color='#FFFFFF', fontsize=13, pad=15, loc='left', fontweight='bold')
+    ax.set_xlabel('')
     ax.invert_yaxis()
-    ax.tick_params(colors='#FFFFFF')
-    ax.set_facecolor('#111111')
-    fig.patch.set_facecolor('#111111')
+    ax.tick_params(colors='#AAAAAA', labelsize=9)
+    ax.set_facecolor('#0D0D0D')
+    fig.patch.set_facecolor('#0D0D0D')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['bottom'].set_color('#333333')
+    ax.spines['left'].set_visible(False)
+    ax.xaxis.set_tick_params(color='#333333')
+    ax.set_axisbelow(True)
+    ax.xaxis.grid(True, color='#1E1E1E', linewidth=0.8)
+    
+    plt.tight_layout(pad=1.5)
     buf = BytesIO()
-    fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
+    fig.savefig(buf, format="png", bbox_inches='tight', transparent=False, dpi=130)
     buf.seek(0)
+    plt.close(fig)
     return base64.b64encode(buf.read()).decode('utf-8')
 
 def generar_grafico_evolucion(all_rankings: pd.DataFrame, top_n=5) -> str:
     if all_rankings.empty:
         return ""
-    
+
     pivot = all_rankings.pivot_table(index="Dirección de correo electrónico", columns="Carrera", values="Puntos", fill_value=0).cumsum(axis=1)
     top_emails = pivot.iloc[:, -1].nlargest(top_n).index
     carreras_ordenadas = sorted(pivot.columns)
     pivot = pivot[carreras_ordenadas]
-    
+
     fig, ax = plt.subplots(figsize=(12, 6))
-    colors = ['#E10600', '#00D4FF', '#FFD700', '#FF00FF', '#00FF9F']
+    colors = ['#E10600', '#00C8FF', '#FFD700', '#C77DFF', '#39FF14']
+    
     for i, email in enumerate(top_emails):
-        ax.plot(pivot.columns, pivot.loc[email], marker='o', linewidth=2.5, markersize=6, label=email.split('@')[0], color=colors[i % len(colors)])
-    ax.set_title('Evolución de Puntos - Top 5', color='#FFFFFF', fontsize=14)
-    ax.set_xlabel('Carreras', color='#FFFFFF')
-    ax.set_ylabel('Puntos Acumulados', color='#FFFFFF')
-    ax.legend(loc='upper left', labelcolor='#FFFFFF', frameon=False)
-    ax.grid(True, color='#333333', linestyle='--')
-    ax.tick_params(colors='#FFFFFF')
-    ax.set_facecolor('#111111')
-    fig.patch.set_facecolor('#111111')
+        label = email.split('@')[0]
+        line_color = colors[i % len(colors)]
+        ax.plot(pivot.columns, pivot.loc[email], marker='o', linewidth=2.5,
+                markersize=7, label=label, color=line_color,
+                markerfacecolor='#0D0D0D', markeredgecolor=line_color, markeredgewidth=2)
+    
+    ax.set_title('Evolución de puntos · Top 5', color='#FFFFFF', fontsize=13, pad=15, loc='left', fontweight='bold')
+    ax.set_xlabel('')
+    ax.set_ylabel('Puntos acumulados', color='#888888', fontsize=9)
+    legend = ax.legend(loc='upper left', frameon=False, labelcolor='#DDDDDD', fontsize=9)
+    ax.grid(True, color='#1E1E1E', linestyle='-', linewidth=0.8)
+    ax.tick_params(colors='#888888', labelsize=8)
+    ax.set_facecolor('#0D0D0D')
+    fig.patch.set_facecolor('#0D0D0D')
+    for spine in ax.spines.values():
+        spine.set_color('#333333')
+    
+    plt.tight_layout(pad=1.5)
     buf = BytesIO()
-    fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
+    fig.savefig(buf, format="png", bbox_inches='tight', transparent=False, dpi=130)
     buf.seek(0)
+    plt.close(fig)
     return base64.b64encode(buf.read()).decode('utf-8')
 
 def generar_radar_por_carrera(all_dfs: List[pd.DataFrame], top_n=5) -> List[Tuple[str, str]]:
     if not all_dfs:
         return []
-    
+
     df_all = pd.concat(all_dfs)
-    categorias = ['Exactos', 'Cercanos', 'Top10', 'VueltaRapida', 'Colapinto']
-    
-    # Función auxiliar para calcular breakdown por fila
+    categorias = ['Exactos', 'Cercanos', 'Top10', 'V.Rápida', 'Colapinto']
+
     def breakdown_puntos(row):
         exactos = sum(1 for d in row['Detalles'].split('<br>') if 'Exacto' in d) * 10
         cercanos = sum(1 for d in row['Detalles'].split('<br>') if 'Diff 1' in d) * 5
@@ -267,19 +294,11 @@ def generar_radar_por_carrera(all_dfs: List[pd.DataFrame], top_n=5) -> List[Tupl
             col = 10
         elif 'Colapinto: diferencia de 1' in row['Detalles']:
             col = 5
-        return pd.Series({
-            'Exactos': exactos,
-            'Cercanos': cercanos,
-            'Top10': top10,
-            'VueltaRapida': vr,
-            'Colapinto': col
-        })
-    
-    # Aplicar breakdown
+        return pd.Series({'Exactos': exactos, 'Cercanos': cercanos, 'Top10': top10, 'VueltaRapida': vr, 'Colapinto': col})
+
     breakdowns = df_all.apply(breakdown_puntos, axis=1)
     df_with_break = pd.concat([df_all[['Carrera', 'Dirección de correo electrónico', 'Puntos']], breakdowns], axis=1)
-    
-    # Por carrera: top N
+
     radars = []
     for carrera, group in df_with_break.groupby('Carrera'):
         if group.empty:
@@ -287,49 +306,51 @@ def generar_radar_por_carrera(all_dfs: List[pd.DataFrame], top_n=5) -> List[Tupl
         top_group = group.nlargest(top_n, 'Puntos')
         if top_group.empty:
             continue
-        
-        # Normalizar a % (máximo posible por categoría en teoría)
+
         max_por_cat = {'Exactos': 100, 'Cercanos': 50, 'Top10': 10, 'VueltaRapida': 10, 'Colapinto': 10}
-        for cat in categorias:
+        for cat in ['Exactos', 'Cercanos', 'Top10', 'VueltaRapida', 'Colapinto']:
+            top_group = top_group.copy()
             top_group[cat] = top_group[cat] / max_por_cat[cat] * 100
-        
-        # Preparar radar
+
         fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True))
         angles = np.linspace(0, 2*np.pi, len(categorias), endpoint=False).tolist()
-        angles += angles[:1]  # cerrar polígono
-        
+        angles += angles[:1]
+
         ax.set_theta_offset(np.pi / 2)
         ax.set_theta_direction(-1)
-        
-        # Colores para top 5
-        colors = ['#E10600', '#00D4FF', '#FFD700', '#FF00FF', '#00FF9F']
-        
+
+        colors = ['#E10600', '#00C8FF', '#FFD700', '#C77DFF', '#39FF14']
+
         for i, (_, row) in enumerate(top_group.iterrows()):
-            values = row[categorias].tolist()
-            values += values[:1]  # cerrar
-            ax.plot(angles, values, linewidth=2, linestyle='solid', label=f"{row['Dirección de correo electrónico'].split('@')[0]} ({int(row['Puntos'])} pts)", color=colors[i % len(colors)])
-            ax.fill(angles, values, color=colors[i % len(colors)], alpha=0.15)
-        
+            values = row[['Exactos', 'Cercanos', 'Top10', 'VueltaRapida', 'Colapinto']].tolist()
+            values += values[:1]
+            ax.plot(angles, values, linewidth=2, linestyle='solid',
+                    label=f"{row['Dirección de correo electrónico'].split('@')[0]} ({int(row['Puntos'])} pts)",
+                    color=colors[i % len(colors)])
+            ax.fill(angles, values, color=colors[i % len(colors)], alpha=0.12)
+
         ax.set_xticks(angles[:-1])
-        ax.set_xticklabels(categorias, fontsize=10, color='#FFFFFF')
+        ax.set_xticklabels(categorias, fontsize=10, color='#CCCCCC')
         ax.set_ylim(0, 100)
-        ax.set_yticklabels([])  # quitar números para limpiar
-        ax.tick_params(colors='#FFFFFF')
-        ax.grid(color='#333333')
-        ax.set_facecolor('#111111')
-        fig.patch.set_facecolor('#111111')
-        
-        ax.set_title(f'Perfil de Aciertos - {carrera}\n(Top {min(top_n, len(top_group))})', color='#FFFFFF', fontsize=13, pad=20)
-        ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), labelcolor='#FFFFFF', frameon=False)
-        
+        ax.set_yticklabels([])
+        ax.tick_params(colors='#555555')
+        ax.grid(color='#222222', linewidth=0.8)
+        ax.set_facecolor('#0D0D0D')
+        fig.patch.set_facecolor('#0D0D0D')
+        ax.spines['polar'].set_color('#333333')
+
+        ax.set_title(f'Perfil de aciertos · {carrera}\nTop {min(top_n, len(top_group))}',
+                     color='#FFFFFF', fontsize=12, pad=25, fontweight='bold')
+        ax.legend(loc='upper right', bbox_to_anchor=(1.35, 1.12), labelcolor='#CCCCCC',
+                  frameon=False, fontsize=8)
+
         buf = BytesIO()
-        fig.savefig(buf, format="png", bbox_inches='tight', transparent=True)
+        fig.savefig(buf, format="png", bbox_inches='tight', transparent=False, dpi=130)
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close(fig)
-        
         radars.append((carrera, img_base64))
-    
+
     return radars
 
 # =========================
@@ -337,478 +358,862 @@ def generar_radar_por_carrera(all_dfs: List[pd.DataFrame], top_n=5) -> List[Tupl
 # =========================
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame], ranking_acumulado: pd.DataFrame) -> str:
     if not all_dfs:
-        return "<p>No hay datos disponibles.</p>"
-    
+        return '<p class="empty-msg">No hay datos disponibles.</p>'
+
     df_all = pd.concat(all_dfs)
     total_participantes = df_all['Dirección de correo electrónico'].nunique()
     total_predicciones = len(df_all)
     puntos_totales = df_all['Puntos'].sum()
     promedio_puntos = puntos_totales / total_predicciones if total_predicciones > 0 else 0
     lider = ranking_acumulado.iloc[0]['Dirección de correo electrónico'] if not ranking_acumulado.empty else "N/A"
-    
+
     maximos_por_carrera = df_all.groupby('Carrera')['Puntos'].max()
-    maximos_html = "".join([f"<li>{carrera}: {puntos} puntos</li>" for carrera, puntos in maximos_por_carrera.items()])
-    
+    maximos_rows = "".join([
+        f'<tr><td class="stat-label">{carrera}</td><td class="stat-value">{puntos} <span class="pts-tag">pts</span></td></tr>'
+        for carrera, puntos in maximos_por_carrera.items()
+    ])
+
     return f"""
-    <div class="stats-container">
-        <h3>Estadísticas Generales</h3>
-        <ul>
-            <li>Participantes únicos: {total_participantes}</li>
-            <li>Predicciones totales: {total_predicciones}</li>
-            <li>Puntos totales distribuidos: {puntos_totales}</li>
-            <li>Promedio por predicción: {promedio_puntos:.2f}</li>
-            <li>Líder actual: {lider}</li>
-        </ul>
-        <h4>Máximos por Carrera</h4>
-        <ul>{maximos_html}</ul>
+    <div class="stats-grid">
+        <div class="stat-card accent">
+            <div class="stat-num">{total_participantes}</div>
+            <div class="stat-desc">Participantes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{total_predicciones}</div>
+            <div class="stat-desc">Predicciones totales</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{puntos_totales}</div>
+            <div class="stat-desc">Puntos distribuidos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{promedio_puntos:.1f}</div>
+            <div class="stat-desc">Promedio por predicción</div>
+        </div>
+    </div>
+    <div class="leader-banner">
+        <span class="leader-label">LÍDER ACTUAL</span>
+        <span class="leader-name">{lider.split('@')[0]}</span>
+        <span class="leader-email">{lider}</span>
+    </div>
+    <div class="section-label">MÁXIMOS POR CARRERA</div>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead><tr><th>Carrera</th><th>Mejor puntaje</th></tr></thead>
+            <tbody>{maximos_rows}</tbody>
+        </table>
     </div>
     """
 
 # =========================
-# GENERAR HTML PROFESIONAL (VERSIÓN MEJORADA PARA MÓVIL)
+# GENERAR HTML — DISEÑO 2026
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame], ranking_acumulado: pd.DataFrame,
                  grafico_barras: str, grafico_evolucion: str, radars_data: List[Tuple[str, str]],
                  stats_adicionales: str) -> str:
+
     calendario_df = pd.DataFrame(CALENDARIO)
-    
-    # HTML base (con CSS ultra-optimizado para móviles)
-    html = """
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ranking F1 Predicciones - Temporada 2026</title>
-        <!-- FAVICON OFICIAL F1 -->
-        <link rel="icon" href="https://www.formula1.com/etc/designs/f1/img/favicon.ico" type="image/x-icon">
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-            
-            :root {{
-                --primary-red: #E10600;
-                --dark-bg: #0F0F0F;
-                --card-bg: #1A1A1A;
-                --text: #FFFFFF;
-            }}
-            
-            body {{
-                font-family: 'Inter', system-ui, sans-serif;
-                background-color: var(--dark-bg);
-                color: var(--text);
-                margin: 0;
-                padding: 0;
-                line-height: 1.6;
-            }}
-            
-            header {{
-                background: linear-gradient(90deg, #111111, #1F1F1F);
-                padding: 20px 0;
-                text-align: center;
-                position: relative;
-                border-bottom: 4px solid var(--primary-red);
-            }}
-            
-            header h1 {{
-                margin: 0;
-                font-size: 2rem;
-                font-weight: 700;
-                letter-spacing: -0.5px;
-            }}
-            
-            nav {{
-                background-color: #111111;
-                padding: 12px 0;
-                border-bottom: 1px solid #333;
-            }}
-            
-            nav ul {{
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                justify-content: center;
-                gap: 20px;
-                flex-wrap: wrap;
-            }}
-            
-            nav a {{
-                color: #CCCCCC;
-                text-decoration: none;
-                font-weight: 500;
-                transition: color 0.2s;
-            }}
-            
-            nav a:hover {{
-                color: var(--primary-red);
-            }}
-            
-            .tab-container {{
-                max-width: 1280px;
-                margin: 30px auto;
-                padding: 0 15px;
-            }}
-            
-            .tab-buttons {{
-                display: flex;
-                background: #111111;
-                border-radius: 12px;
-                padding: 6px;
-                margin-bottom: 25px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            }}
-            
-            .tab-button {{
-                flex: 1;
-                background: transparent;
-                border: none;
-                color: #AAAAAA;
-                padding: 14px 20px;
-                font-size: 1rem;
-                font-weight: 600;
-                border-radius: 10px;
-                transition: all 0.3s;
-            }}
-            
-            .tab-button.active {{
-                background: var(--primary-red);
-                color: white;
-                box-shadow: 0 4px 10px rgba(225,6,0,0.3);
-            }}
-            
-            .tab-content {{
-                display: none;
-                background: var(--card-bg);
-                border-radius: 16px;
-                padding: 25px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            }}
-            
-            .tab-content.active {{
-                display: block;
-            }}
-            
-            table {{
-                width: 100%;
-                border-collapse: collapse;
-                background: #111111;
-                border-radius: 12px;
-                overflow: hidden;
-            }}
-            
-            th {{
-                background: var(--primary-red);
-                color: white;
-                padding: 16px 12px;
-                font-weight: 600;
-                text-transform: uppercase;
-                font-size: 0.85rem;
-                letter-spacing: 0.5px;
-            }}
-            
-            td {{
-                padding: 16px 12px;
-                border-bottom: 1px solid #222;
-            }}
-            
-            tr:last-child td {{
-                border-bottom: none;
-            }}
-            
-            tr:hover {{
-                background: #1F1F1F;
-            }}
-            
-            .table-wrapper {{
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin: 20px 0;
-                border-radius: 12px;
-                background: #111111;
-            }}
-            
-            .table-wrapper table {{
-                min-width: 700px;
-                width: 100%;
-            }}
-            
-            .chart-container {{
-                text-align: center;
-                margin: 25px 0;
-                background: #111111;
-                padding: 20px;
-                border-radius: 16px;
-            }}
-            
-            .chart-container img {{
-                max-width: 100%;
-                height: auto;
-                border-radius: 8px;
-            }}
-            
-            .stats-container {{
-                background: #111111;
-                padding: 25px;
-                border-radius: 16px;
-            }}
-            
-            .accordion {{
-                margin-bottom: 12px;
-                border-radius: 10px;
-                overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            }}
-            
-            .accordion-button {{
-                background: #1F1F1F;
-                color: white;
-                padding: 16px 20px;
-                width: 100%;
-                text-align: left;
-                border: none;
-                font-weight: 500;
-                transition: background 0.2s;
-            }}
-            
-            .accordion-button:hover {{
-                background: #2A2A2A;
-            }}
-            
-            .accordion-content {{
-                background: #111111;
-                padding: 20px;
-                display: none;
-            }}
-            
-            footer {{
-                text-align: center;
-                padding: 20px;
-                background: #0A0A0A;
-                color: #666;
-                font-size: 0.9rem;
-            }}
-            
-            /* ==================== RESPONSIVE MÓVIL ==================== */
-            @media (max-width: 768px) {{
-                header h1 {{
-                    font-size: 1.65rem;
-                }}
-                
-                nav ul {{
-                    gap: 12px;
-                    justify-content: center;
-                }}
-                
-                nav a {{
-                    font-size: 0.9rem;
-                }}
-                
-                .tab-buttons {{
-                    flex-direction: column;
-                }}
-                
-                .tab-button {{
-                    padding: 14px 16px;
-                    font-size: 0.95rem;
-                }}
-                
-                .tab-content {{
-                    padding: 18px 12px;
-                }}
-                
-                .stats-container {{
-                    padding: 18px;
-                }}
-                
-                th, td {{
-                    padding: 12px 8px;
-                    font-size: 0.82rem;
-                }}
-                
-                .table-wrapper {{
-                    margin: 15px 0;
-                }}
-                
-                .chart-container {{
-                    padding: 12px;
-                }}
-                
-                .accordion-button {{
-                    padding: 14px 16px;
-                    font-size: 0.95rem;
-                }}
-                
-                .accordion-content {{
-                    padding: 15px;
-                }}
-            }}
-            
-            .calendar-table th {{
-                background: #1F1F1F;
-            }}
-        </style>
-        <script>
-            function openTab(evt, tabName) {{
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-                document.getElementById(tabName).classList.add('active');
-                evt.currentTarget.classList.add('active');
-            }}
-            
-            function toggleAccordion(id) {{
-                const content = document.getElementById(id);
-                content.style.display = content.style.display === 'block' ? 'none' : 'block';
-            }}
-        </script>
-    </head>
-    <body>
-        <header>
-            <h1>🏁 Ranking de Predicciones F1 - Temporada 2026</h1>
-        </header>
-        
-        <nav>
-            <ul>
-                <li><a href="#acumulado" onclick="document.querySelector('.tab-button[onclick*=\\'acumulado\\']').click();">Acumulado</a></li>
-                <li><a href="#por-carrera" onclick="document.querySelector('.tab-button[onclick*=\\'por-carrera\\']').click();">Por Carrera</a></li>
-                <li><a href="#graficos" onclick="document.querySelector('.tab-button[onclick*=\\'graficos\\']').click();">Gráficos</a></li>
-                <li><a href="#estadisticas" onclick="document.querySelector('.tab-button[onclick*=\\'estadisticas\\']').click();">Estadísticas</a></li>
-                <li><a href="#calendario" onclick="document.querySelector('.tab-button[onclick*=\\'calendario\\']').click();">Calendario</a></li>
-            </ul>
-        </nav>
-        
-        <div class="tab-container">
-            <div class="tab-buttons">
-                <button class="tab-button active" onclick="openTab(event, 'acumulado')">Ranking Acumulado</button>
-                <button class="tab-button" onclick="openTab(event, 'por-carrera')">Rankings por Carrera</button>
-                <button class="tab-button" onclick="openTab(event, 'graficos')">Gráficos</button>
-                <button class="tab-button" onclick="openTab(event, 'estadisticas')">Estadísticas</button>
-                <button class="tab-button" onclick="openTab(event, 'calendario')">Calendario</button>
-            </div>
-            
-            <div id="acumulado" class="tab-content active">
-                <h2>Ranking Acumulado General</h2>
-                {ranking_acumulado_html}
-                <div class="chart-container">
-                    <h3>Gráfico de Puntos Acumulados</h3>
-                    <img src="data:image/png;base64,{grafico_barras}" alt="Gráfico Acumulado">
-                </div>
-            </div>
-            
-            <div id="por-carrera" class="tab-content">
-                <h2>Rankings por Carrera</h2>
-                {rankings_por_carrera_html}
-            </div>
-            
-            <div id="graficos" class="tab-content">
-            <h2>Gráficos y Visualizaciones</h2>
-            <div class="chart-container">
-                <h3>Evolución de Puntos (Top 5)</h3>
-                <img src="data:image/png;base64,{grafico_evolucion}" alt="Evolución">
-                </div>
-                <div class="chart-container" style="padding: 10px 5px;">
-                    <h3>Perfil de Aciertos por Carrera (Radar – Top 8)</h3>
-                    {radars_html}
-                </div>
-            </div>
-            
-            <div id="estadisticas" class="tab-content">
-                <h2>Estadísticas Adicionales</h2>
-                {stats_adicionales}
-            </div>
-            
-            <div id="calendario" class="tab-content">
-                <h2>Calendario Oficial F1 2026</h2>
-                <p style="color:#AAAAAA; margin-bottom:20px;">Horarios completos con hora local y ajustada a Argentina (GMT-3)</p>
-                {calendario_html}
-            </div>
-        </div>
-        
-        <footer>
-            <p>Generado automáticamente — {fecha_actual}</p>
-        </footer>
-    </body>
-    </html>
-    """
-    
-    # ==================== INSERCIÓN DE CONTENIDO (CON WRAPPERS PARA MÓVIL) ====================
+
+    # ---- Ranking acumulado ----
     if not ranking_acumulado.empty:
-        ranking_acumulado_html = f'<div class="table-wrapper">{ranking_acumulado.to_html(index=False, classes="ranking-table", escape=False)}</div>'
+        rows_html = ""
+        for _, row in ranking_acumulado.iterrows():
+            pos = row['Posición']
+            email = row['Dirección de correo electrónico']
+            nombre = email.split('@')[0]
+            pts = row['Puntos']
+            cambio = row.get('Cambio', '—')
+            medal = ""
+            row_class = ""
+            if pos == 1:
+                medal = '<span class="medal gold">1</span>'
+                row_class = "row-first"
+            elif pos == 2:
+                medal = '<span class="medal silver">2</span>'
+            elif pos == 3:
+                medal = '<span class="medal bronze">3</span>'
+            else:
+                medal = f'<span class="medal plain">{pos}</span>'
+            rows_html += f"""
+            <tr class="{row_class}">
+                <td>{medal}</td>
+                <td><span class="driver-name">{nombre}</span><span class="driver-email">{email}</span></td>
+                <td><span class="pts-big">{pts}</span></td>
+                <td>{cambio}</td>
+            </tr>"""
+        ranking_acumulado_html = f"""
+        <div class="table-wrapper">
+        <table class="data-table leaderboard">
+            <thead><tr><th>#</th><th>Participante</th><th>Puntos</th><th>Cambio</th></tr></thead>
+            <tbody>{rows_html}</tbody>
+        </table>
+        </div>"""
     else:
-        ranking_acumulado_html = "<p>No hay datos disponibles.</p>"
-    
+        ranking_acumulado_html = '<p class="empty-msg">No hay datos disponibles.</p>'
+
+    # ---- Rankings por carrera ----
     rankings_por_carrera_html = ""
     for i, ranking in enumerate(rankings_por_carrera):
         carrera = ranking["Carrera"].iloc[0]
-        ranking_table = f'<div class="table-wrapper">{ranking.drop(columns=["Carrera", "Detalles"]).to_html(index=False, classes="ranking-table")}</div>'
-        
+        table_rows = ""
+        for j, row in ranking.iterrows():
+            pos = row['Posición']
+            email = row['Dirección de correo electrónico']
+            pts = row['Puntos']
+            table_rows += f"<tr><td>{pos}</td><td>{email.split('@')[0]}<span class='driver-email'>{email}</span></td><td><span class='pts-chip'>{pts}</span></td></tr>"
+
         detalles_html = ""
         for j, row in ranking.iterrows():
             email = row["Dirección de correo electrónico"]
             detalles = row["Detalles"]
             detalles_html += f"""
-            <div class="accordion">
-                <button class="accordion-button" onclick="toggleAccordion('det-{i}-{j}')">Detalles para {email}</button>
-                <div id="det-{i}-{j}" class="accordion-content">
-                    <p>{detalles}</p>
+            <div class="detail-row">
+                <button class="detail-toggle" onclick="toggleDetail('det-{i}-{j}')">
+                    <span>{email.split('@')[0]}</span>
+                    <span class="toggle-icon" id="icon-det-{i}-{j}">＋</span>
+                </button>
+                <div id="det-{i}-{j}" class="detail-body">
+                    <p class="detail-text">{detalles}</p>
                 </div>
-            </div>
-            """
-        
+            </div>"""
+
         rankings_por_carrera_html += f"""
-        <div class="accordion">
-            <button class="accordion-button" onclick="toggleAccordion('acc-{i}')">{carrera}</button>
-            <div id="acc-{i}" class="accordion-content">
-                {ranking_table}
-                <h3>Detalles por Participante</h3>
+        <div class="race-block">
+            <button class="race-header" onclick="toggleDetail('race-{i}')">
+                <div class="race-title-wrap">
+                    <span class="race-badge">R{i+1:02d}</span>
+                    <span class="race-title">{carrera}</span>
+                </div>
+                <span class="toggle-icon" id="icon-race-{i}">＋</span>
+            </button>
+            <div id="race-{i}" class="race-body">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
+                        <tbody>{table_rows}</tbody>
+                    </table>
+                </div>
+                <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
                 {detalles_html}
             </div>
-        </div>
-        """
-    
-    calendario_html = f'<div class="table-wrapper">{calendario_df.to_html(index=False, classes="calendar-table", escape=False)}</div>'
-    fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
-        # GENERAR HTML DINÁMICO PARA LOS RADARES (esto faltaba)
-    
-    
+        </div>"""
+
+    # ---- Calendario ----
+    cal_rows = ""
+    for _, row in calendario_df.iterrows():
+        jornada = row['Jornada']
+        carrera = row['Carrera']
+        fecha = row['Fecha']
+        hora_l = row['Hora Local']
+        hora_a = row['Hora Argentina']
+        tachado = '<s>' in str(jornada)
+        row_class = "cal-cancelled" if tachado else ""
+        cal_rows += f"<tr class='{row_class}'><td class='cal-jornada'>{jornada}</td><td class='cal-carrera'>{carrera}</td><td>{fecha}</td><td>{hora_l}</td><td>{hora_a}</td></tr>"
+
+    calendario_html = f"""
+    <div class="table-wrapper">
+    <table class="data-table cal-table">
+        <thead><tr><th>Jornada</th><th>Gran Premio</th><th>Fecha</th><th>Hora Local</th><th>ARG (GMT-3)</th></tr></thead>
+        <tbody>{cal_rows}</tbody>
+    </table>
+    </div>"""
+
+    # ---- Radares ----
     radars_html = ""
     if radars_data:
-        for carrera, base64_img in radars_data:
+        for carrera, b64 in radars_data:
             radars_html += f"""
-            <div style="margin: 35px 0; text-align: center; background: #0F0F0F; padding: 15px; border-radius: 12px;">
-                <h4 style="color: #E10600; margin: 0 0 15px 0; font-size: 1.3rem;">{carrera}</h4>
-                <img src="data:image/png;base64,{base64_img}" alt="Radar {carrera}" 
-                     style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 6px 20px rgba(225,6,0,0.25);">
-            </div>
-            """
+            <div class="radar-block">
+                <div class="radar-label">{carrera}</div>
+                <img src="data:image/png;base64,{b64}" alt="Radar {carrera}" class="chart-img">
+            </div>"""
     else:
-        radars_html = '<p style="text-align:center; color:#888; font-style:italic;">No hay suficientes datos para mostrar perfiles de aciertos.</p>'
-    
-    return html.format(
-        ranking_acumulado_html=ranking_acumulado_html,
-        rankings_por_carrera_html=rankings_por_carrera_html,
-        grafico_barras=grafico_barras,
-        grafico_evolucion=grafico_evolucion,
-        radars_html=radars_html,
-        stats_adicionales=stats_adicionales,
-        calendario_html=calendario_html,
-        fecha_actual=fecha_actual
-    )
+        radars_html = '<p class="empty-msg">No hay suficientes datos para mostrar perfiles de aciertos.</p>'
+
+    fecha_actual = datetime.now().strftime("%d/%m/%Y · %H:%M")
+    carreras_procesadas = len(rankings_por_carrera)
+
+    # ---- Imagen de barra si existe ----
+    grafico_barras_html = f'<img src="data:image/png;base64,{grafico_barras}" alt="Puntos acumulados" class="chart-img">' if grafico_barras else '<p class="empty-msg">Sin datos.</p>'
+    grafico_evolucion_html = f'<img src="data:image/png;base64,{grafico_evolucion}" alt="Evolución" class="chart-img">' if grafico_evolucion else '<p class="empty-msg">Sin datos.</p>'
+
+    return f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>F1 Predictions · 2026</title>
+<link rel="icon" href="https://www.formula1.com/etc/designs/f1/img/favicon.ico" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+
+:root {{
+    --red: #E10600;
+    --red-dim: #8a0300;
+    --bg: #080808;
+    --bg-2: #111111;
+    --bg-3: #181818;
+    --bg-4: #1F1F1F;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.13);
+    --text: #F0F0F0;
+    --muted: #888888;
+    --muted-2: #555555;
+    --gold: #FFD700;
+    --silver: #C0C0C0;
+    --bronze: #CD7F32;
+    --green: #22c55e;
+    --danger: #ef4444;
+    --font-display: 'Barlow Condensed', sans-serif;
+    --font-body: 'Barlow', sans-serif;
+}}
+
+html {{ scroll-behavior: smooth; }}
+
+body {{
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}}
+
+/* ===== HEADER ===== */
+.site-header {{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,8,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}}
+
+.header-inner {{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 16px;
+}}
+
+.header-brand {{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}}
+
+.brand-stripe {{
+    width: 4px;
+    height: 32px;
+    background: var(--red);
+    border-radius: 2px;
+}}
+
+.brand-text {{
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    text-transform: uppercase;
+}}
+
+.brand-sub {{
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 1px;
+}}
+
+.header-meta {{
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.4;
+}}
+
+.header-meta strong {{
+    color: var(--red);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: block;
+}}
+
+/* ===== NAV TABS ===== */
+.tab-nav {{
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+}}
+.tab-nav::-webkit-scrollbar {{ display: none; }}
+
+.tab-nav-inner {{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+}}
+
+.tab-btn {{
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 14px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+}}
+
+.tab-btn:hover {{ color: var(--text); }}
+.tab-btn.active {{ color: var(--text); border-bottom-color: var(--red); }}
+
+/* ===== MAIN LAYOUT ===== */
+.main {{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+}}
+
+.tab-panel {{ display: none; }}
+.tab-panel.active {{ display: block; animation: fadeIn 0.25s ease; }}
+
+@keyframes fadeIn {{ from {{ opacity: 0; transform: translateY(6px); }} to {{ opacity: 1; transform: translateY(0); }} }}
+
+/* ===== SECTION HEADING ===== */
+.section-heading {{
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    line-height: 1;
+}}
+
+.section-heading span {{ color: var(--red); }}
+
+.section-label {{
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    margin-top: 4px;
+}}
+
+/* ===== TABLE ===== */
+.table-wrapper {{
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    -webkit-overflow-scrolling: touch;
+}}
+
+.data-table {{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 480px;
+}}
+
+.data-table th {{
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    background: var(--bg-3);
+    white-space: nowrap;
+}}
+
+.data-table td {{
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}}
+
+.data-table tr:last-child td {{ border-bottom: none; }}
+.data-table tr:hover td {{ background: rgba(255,255,255,0.025); }}
+.data-table .row-first td {{ background: rgba(225,6,0,0.05); }}
+
+/* ===== LEADERBOARD ESPECÍFICO ===== */
+.leaderboard {{ min-width: 520px; }}
+
+.medal {{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.85rem;
+}}
+.medal.gold {{ background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }}
+.medal.silver {{ background: rgba(192,192,192,0.12); color: var(--silver); border: 1px solid rgba(192,192,192,0.25); }}
+.medal.bronze {{ background: rgba(205,127,50,0.12); color: var(--bronze); border: 1px solid rgba(205,127,50,0.25); }}
+.medal.plain {{ background: var(--bg-4); color: var(--muted); border: 1px solid var(--border); }}
+
+.driver-name {{
+    display: block;
+    font-weight: 600;
+    font-size: 0.92rem;
+}}
+.driver-email {{
+    display: block;
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-top: 1px;
+}}
+
+.pts-big {{
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text);
+}}
+
+.pts-chip {{
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    background: var(--bg-4);
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}}
+
+.pts-tag {{
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 400;
+}}
+
+.trend-up {{ color: var(--green); font-weight: 700; font-size: 0.85rem; }}
+.trend-down {{ color: var(--danger); font-weight: 700; font-size: 0.85rem; }}
+.trend-neutral {{ color: var(--muted-2); font-weight: 700; }}
+
+/* ===== DIVIDER ===== */
+.divider {{
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+}}
+
+/* ===== CHART ===== */
+.chart-block {{
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}}
+
+.chart-title {{
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+}}
+
+.chart-img {{
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}}
+
+/* ===== RACE ACCORDION ===== */
+.race-block {{
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: var(--bg-2);
+}}
+
+.race-header {{
+    width: 100%;
+    background: var(--bg-3);
+    border: none;
+    color: var(--text);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 12px;
+}}
+
+.race-header:hover {{ background: var(--bg-4); }}
+
+.race-title-wrap {{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}}
+
+.race-badge {{
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    background: var(--red);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    flex-shrink: 0;
+}}
+
+.race-title {{
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}}
+
+.toggle-icon {{
+    font-size: 1.3rem;
+    color: var(--muted);
+    font-style: normal;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+}}
+
+.race-body {{
+    display: none;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+}}
+
+/* ===== DETAIL ACCORDION ===== */
+.detail-row {{
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}}
+
+.detail-toggle {{
+    width: 100%;
+    background: var(--bg-4);
+    border: none;
+    color: var(--text);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: background 0.15s;
+    gap: 8px;
+}}
+
+.detail-toggle:hover {{ background: #262626; }}
+
+.detail-body {{
+    display: none;
+    padding: 14px 16px;
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+}}
+
+.detail-text {{
+    font-size: 0.85rem;
+    color: #CCCCCC;
+    line-height: 1.7;
+}}
+
+/* ===== STATS ===== */
+.stats-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}}
+
+.stat-card {{
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+}}
+
+.stat-card.accent {{
+    border-color: var(--red);
+    background: rgba(225,6,0,0.06);
+}}
+
+.stat-num {{
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 6px;
+}}
+
+.stat-desc {{
+    font-size: 0.76rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: var(--font-display);
+}}
+
+.leader-banner {{
+    background: linear-gradient(135deg, rgba(225,6,0,0.12), rgba(225,6,0,0.04));
+    border: 1px solid rgba(225,6,0,0.25);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}}
+
+.leader-label {{
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    font-weight: 800;
+    color: var(--red);
+    text-transform: uppercase;
+    flex-shrink: 0;
+}}
+
+.leader-name {{
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}}
+
+.leader-email {{
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-left: auto;
+}}
+
+/* ===== CALENDARIO ===== */
+.cal-table {{ min-width: 560px; }}
+.cal-jornada {{ font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--red); }}
+.cal-carrera {{ font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; }}
+.cal-cancelled td {{ opacity: 0.35; }}
+
+/* ===== RADAR ===== */
+.radar-block {{
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    text-align: center;
+}}
+
+.radar-label {{
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+}}
+
+/* ===== EMPTY ===== */
+.empty-msg {{
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-style: italic;
+    padding: 24px 0;
+}}
+
+/* ===== FOOTER ===== */
+.site-footer {{
+    border-top: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted-2);
+}}
+
+.footer-stripe {{
+    width: 32px;
+    height: 3px;
+    background: var(--red);
+    border-radius: 2px;
+    margin: 0 auto 12px;
+}}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {{
+    .header-inner {{ height: 56px; padding: 0 14px; }}
+    .brand-text {{ font-size: 1rem; }}
+    .main {{ padding: 20px 14px 60px; }}
+    .section-heading {{ font-size: 1.5rem; }}
+    .tab-btn {{ padding: 12px 12px; font-size: 0.78rem; letter-spacing: 1px; }}
+    .stats-grid {{ grid-template-columns: 1fr 1fr; }}
+    .leader-banner {{ gap: 10px; }}
+    .leader-email {{ display: none; }}
+    .race-header {{ padding: 14px 14px; }}
+    .race-body {{ padding: 14px; }}
+    .data-table th, .data-table td {{ padding: 11px 12px; }}
+    .stat-num {{ font-size: 2rem; }}
+}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <div class="header-brand">
+            <div class="brand-stripe"></div>
+            <div>
+                <div class="brand-text">F1 Predictions</div>
+                <div class="brand-sub">Torneo Familiar · 2026</div>
+            </div>
+        </div>
+        <div class="header-meta">
+            <strong>{carreras_procesadas}</strong>
+            carrera{'s' if carreras_procesadas != 1 else ''} procesada{'s' if carreras_procesadas != 1 else ''}
+        </div>
+    </div>
+</header>
+
+<nav class="tab-nav">
+    <div class="tab-nav-inner">
+        <button class="tab-btn active" onclick="openTab(event,'panel-acumulado')">Acumulado</button>
+        <button class="tab-btn" onclick="openTab(event,'panel-carreras')">Por Carrera</button>
+        <button class="tab-btn" onclick="openTab(event,'panel-graficos')">Gráficos</button>
+        <button class="tab-btn" onclick="openTab(event,'panel-stats')">Estadísticas</button>
+        <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
+    </div>
+</nav>
+
+<main class="main">
+
+    <div id="panel-acumulado" class="tab-panel active">
+        <h2 class="section-heading">Ranking <span>General</span></h2>
+        <p class="section-label" style="margin-bottom:20px;">Puntos acumulados · Todas las carreras</p>
+        {ranking_acumulado_html}
+        <div class="divider"></div>
+        <div class="chart-block">
+            <div class="chart-title">Distribución de puntos</div>
+            {grafico_barras_html}
+        </div>
+    </div>
+
+    <div id="panel-carreras" class="tab-panel">
+        <h2 class="section-heading">Rankings <span>por Carrera</span></h2>
+        <p class="section-label" style="margin-bottom:20px;">Seleccioná una carrera para ver el detalle</p>
+        {rankings_por_carrera_html}
+    </div>
+
+    <div id="panel-graficos" class="tab-panel">
+        <h2 class="section-heading">Gráficos <span>&amp; Datos</span></h2>
+        <p class="section-label" style="margin-bottom:20px;">Visualizaciones de la temporada</p>
+        <div class="chart-block">
+            <div class="chart-title">Evolución de puntos · Top 5</div>
+            {grafico_evolucion_html}
+        </div>
+        <div class="section-label" style="margin-top:32px;">Perfil de aciertos por carrera · Radar Top 8</div>
+        {radars_html}
+    </div>
+
+    <div id="panel-stats" class="tab-panel">
+        <h2 class="section-heading">Esta<span>dísticas</span></h2>
+        <p class="section-label" style="margin-bottom:20px;">Resumen general de la temporada</p>
+        {stats_adicionales}
+    </div>
+
+    <div id="panel-calendario" class="tab-panel">
+        <h2 class="section-heading">Calen<span>dario</span></h2>
+        <p class="section-label" style="margin-bottom:20px;">F1 World Championship 2026 · Horarios ARG (GMT−3)</p>
+        {calendario_html}
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-stripe"></div>
+    Generado automáticamente · {fecha_actual}
+</footer>
+
+<script>
+function openTab(evt, panelId) {{
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(panelId).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}}
+
+function toggleDetail(id) {{
+    const el = document.getElementById(id);
+    const iconId = 'icon-' + id;
+    const icon = document.getElementById(iconId);
+    const isOpen = el.style.display === 'block';
+    el.style.display = isOpen ? 'none' : 'block';
+    if (icon) icon.textContent = isOpen ? '＋' : '－';
+}}
+</script>
+</body>
+</html>"""
 
 # =========================
-# MAIN: PROCESAR TODO
+# MAIN
 # =========================
 def main():
     if not os.path.exists(CARPETA_RESPUESTAS):
-        print(f"Carpeta '{CARPETA_RESPUESTAS}' no existe. Créala y agrega los CSV.")
+        print(f"Carpeta '{CARPETA_RESPUESTAS}' no existe. Créala y agregá los CSV.")
         return
-    
+
     with open(ARCHIVO_RESULTADOS, 'r') as f:
         resultados_por_carrera = json.load(f)
-    
+
     rankings_por_carrera = []
     all_rankings = pd.DataFrame()
     all_dfs = []
-    
+
     archivos = sorted(os.listdir(CARPETA_RESPUESTAS))
     for archivo in archivos:
         if archivo.endswith(".csv"):
@@ -821,8 +1226,7 @@ def main():
                 all_dfs.append(df)
             else:
                 print(f"Advertencia: No hay resultados reales completos para {nombre_carrera}")
-    
-    # Calcular acumulado
+
     if not all_rankings.empty:
         ranking_acumulado = (
             all_rankings.groupby("Dirección de correo electrónico", as_index=False)["Puntos"]
@@ -835,24 +1239,23 @@ def main():
         ranking_acumulado = calcular_cambios_posiciones(all_rankings, ranking_acumulado)
     else:
         ranking_acumulado = pd.DataFrame(columns=["Posición", "Dirección de correo electrónico", "Puntos", "Cambio"])
-    
-    # Generar gráficos
+
     grafico_barras = generar_grafico_barras_acumulado(ranking_acumulado)
     grafico_evolucion = generar_grafico_evolucion(all_rankings)
     radars_data = generar_radar_por_carrera(all_dfs, top_n=8)
-    
-    # Estadísticas
     stats_adicionales = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
-    
-    # Generar HTML (versión móvil optimizada)
-    html_content = generar_html(rankings_por_carrera, ranking_acumulado, 
-                                grafico_barras, grafico_evolucion, radars_data, 
-                                stats_adicionales)
+
+    html_content = generar_html(
+        rankings_por_carrera, ranking_acumulado,
+        grafico_barras, grafico_evolucion, radars_data,
+        stats_adicionales
+    )
+
     with open("ranking_f1.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    
+
     print("🏁 HTML generado: ranking_f1.html")
-    print("Ábrelo en un navegador (o móvil) para ver el ranking PROFESIONAL y 100% responsive.")
+    print("   Abrilo en cualquier navegador o celular.")
 
 if __name__ == "__main__":
     main()
