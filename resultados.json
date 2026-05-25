@@ -65,104 +65,22 @@
     "vuelta_rapida": "Lando Norris",
     "colapinto": "7"
   },
-  "": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "_": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Imola": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Monaco": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
   "Canada": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Spain": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Austria": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "GreatBritain": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Hungary": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Belgium": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Netherlands": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Italy": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Azerbaijan": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Singapore": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "UnitedStates": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Mexico": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Brazil": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "LasVegas": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "Qatar": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
-  },
-  "AbuDhabi": {
-    "resultado_carrera": [],
-    "vuelta_rapida": "",
-    "colapinto": 0
+    "resultado_carrera": [
+      "Kimi Antonelli",
+      "Lewis Hamilton",
+      "Max Verstappen",
+      "Charles Leclerc",
+      "Isack Hadjar",
+      "Franco Colapinto",
+      "Liam Lawson",
+      "Pierre Gasly",
+      "Carlos Sainz",
+      "Ollie Bearman",
+      "Oscar Piastri"
+    ],
+    "vuelta_rapida": "Kimi Antonelli",
+    "colapinto": "6"
   }
+  
 }
