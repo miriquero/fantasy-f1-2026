@@ -373,78 +373,7 @@ def generar_bump_chart(all_rankings: pd.DataFrame) -> str:
     plt.close(fig)
     return base64.b64encode(buf.read()).decode('utf-8')
 
-# =========================
-# RADAR POR CARRERA
-# =========================
-def generar_radar_por_carrera(all_dfs: List[pd.DataFrame], top_n=5) -> List[Tuple[str, str]]:
-    if not all_dfs:
-        return []
 
-    df_all = pd.concat(all_dfs)
-    categorias = ['Exactos', 'Cercanos', 'Top10', 'V.Rápida', 'Colapinto']
-
-    def breakdown_puntos(row):
-        exactos  = sum(1 for d in row['Detalles'].split('<br>') if 'Exacto' in d) * 10
-        cercanos = sum(1 for d in row['Detalles'].split('<br>') if 'Diff 1' in d) * 5
-        top10    = sum(1 for d in row['Detalles'].split('<br>') if 'En top 10' in d) * 1
-        vr  = 10 if 'Vuelta rápida' in row['Detalles'] else 0
-        col = 10 if 'Colapinto: EXACTO' in row['Detalles'] else (
-              5  if 'Colapinto: diferencia de 1' in row['Detalles'] else 0)
-        return pd.Series({'Exactos': exactos, 'Cercanos': cercanos,
-                          'Top10': top10, 'VueltaRapida': vr, 'Colapinto': col})
-
-    breakdowns = df_all.apply(breakdown_puntos, axis=1)
-    df_with_break = pd.concat(
-        [df_all[['Carrera', 'Dirección de correo electrónico', 'Puntos']], breakdowns], axis=1)
-
-    radars = []
-    for carrera, group in df_with_break.groupby('Carrera'):
-        if group.empty:
-            continue
-        top_group = group.nlargest(top_n, 'Puntos').copy()
-        if top_group.empty:
-            continue
-
-        max_por_cat = {'Exactos': 100, 'Cercanos': 50, 'Top10': 10, 'VueltaRapida': 10, 'Colapinto': 10}
-        for cat in ['Exactos', 'Cercanos', 'Top10', 'VueltaRapida', 'Colapinto']:
-            top_group[cat] = top_group[cat] / max_por_cat[cat] * 100
-
-        fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True))
-        angles = np.linspace(0, 2*np.pi, len(categorias), endpoint=False).tolist()
-        angles += angles[:1]
-        ax.set_theta_offset(np.pi / 2)
-        ax.set_theta_direction(-1)
-
-        for i, (_, row) in enumerate(top_group.iterrows()):
-            c = COLORES_PARTICIPANTES[i % len(COLORES_PARTICIPANTES)]
-            values = row[['Exactos', 'Cercanos', 'Top10', 'VueltaRapida', 'Colapinto']].tolist()
-            values += values[:1]
-            ax.plot(angles, values, linewidth=2, linestyle='solid',
-                    label=f"{row['Dirección de correo electrónico'].split('@')[0]} ({int(row['Puntos'])} pts)",
-                    color=c)
-            ax.fill(angles, values, color=c, alpha=0.12)
-
-        ax.set_xticks(angles[:-1])
-        ax.set_xticklabels(categorias, fontsize=10, color='#CCCCCC')
-        ax.set_ylim(0, 100)
-        ax.set_yticklabels([])
-        ax.grid(color='#222222', linewidth=0.8)
-        ax.set_facecolor('#0D0D0D')
-        fig.patch.set_facecolor('#0D0D0D')
-        ax.spines['polar'].set_color('#333333')
-        ax.set_title(f'Perfil de aciertos · {carrera}\nTop {min(top_n, len(top_group))}',
-                     color='#FFFFFF', fontsize=12, pad=25, fontweight='bold')
-        ax.legend(loc='upper right', bbox_to_anchor=(1.35, 1.12),
-                  labelcolor='#CCCCCC', frameon=False, fontsize=8)
-
-        buf = BytesIO()
-        fig.savefig(buf, format="png", bbox_inches='tight', transparent=False, dpi=130)
-        buf.seek(0)
-        img_b64 = base64.b64encode(buf.read()).decode('utf-8')
-        plt.close(fig)
-        radars.append((carrera, img_b64))
-
-    return radars
 
 # =========================
 # GRÁFICO MINI PARA PERFIL (sparkline de puntos por carrera)
@@ -488,7 +417,8 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
 
     historial_pos = calcular_historial_posiciones(all_rankings)
     df_all = pd.concat(all_dfs) if all_dfs else pd.DataFrame()
-    carreras_lista = sorted(all_rankings['Carrera'].unique())
+    # Mantener orden cronológico de aparición
+    carreras_lista = pd.Series(all_rankings['Carrera'].unique()).unique().tolist()
     total_carreras = len(carreras_lista)
 
     perfiles_html = ""
@@ -633,11 +563,17 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
     lider = ranking_acumulado.iloc[0]['Dirección de correo electrónico'] \
             if not ranking_acumulado.empty else "N/A"
 
-    maximos_por_carrera = df_all.groupby('Carrera')['Puntos'].max()
+    # Orden según el orden de procesamiento (el mismo que usa el main)
+    orden_carreras = df_all['Carrera'].unique()  # mantiene orden de aparición
+    maximos_por_carrera = df_all.groupby('Carrera', sort=False)['Puntos'].max()
+    
+    # Reordenar según aparición real
+    maximos_por_carrera = maximos_por_carrera.reindex(orden_carreras)
+    
     maximos_rows = "".join([
         f'<tr><td class="stat-label">{c}</td>'
         f'<td class="stat-value">{p} <span class="pts-tag">pts</span></td></tr>'
-        for c, p in maximos_por_carrera.items()
+        for c, p in maximos_por_carrera.items() if pd.notna(p)
     ])
 
     return f"""
@@ -697,7 +633,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  ranking_acumulado: pd.DataFrame,
                  grafico_barras: str, grafico_evolucion: str,
                  bump_chart: str,
-                 radars_data: List[Tuple[str, str]],
                  stats_adicionales: str,
                  perfiles_html: str) -> str:
 
@@ -798,18 +733,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         <thead><tr><th>Jornada</th><th>Gran Premio</th><th>Fecha</th><th>Hora Local</th><th>ARG (GMT-3)</th></tr></thead>
         <tbody>{cal_rows}</tbody>
     </table></div>"""
-
-    # ---- Radares ----
-    radars_html = ""
-    if radars_data:
-        for c, b64 in radars_data:
-            radars_html += f"""
-            <div class="radar-block">
-                <div class="radar-label">{c}</div>
-                <img src="data:image/png;base64,{b64}" alt="Radar {c}" class="chart-img">
-            </div>"""
-    else:
-        radars_html = '<p class="empty-msg">No hay suficientes datos.</p>'
 
     # ---- Bump chart ----
     bump_html = (f'<img src="data:image/png;base64,{bump_chart}" '
@@ -1013,12 +936,6 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 .cal-carrera {{ font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; }}
 .cal-cancelled td {{ opacity: 0.35; }}
 
-/* RADAR */
-.radar-block {{ background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: center; }}
-.radar-label {{ font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 2.5px; text-transform: uppercase; color: var(--red); margin-bottom: 16px; }}
-
 /* PERFILES */
 .perfiles-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
     gap: 16px; }}
@@ -1177,8 +1094,6 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
         <div class="chart-title">Historial de posiciones carrera a carrera (bump chart)</div>
         {bump_html}
     </div>
-    <div class="section-label" style="margin-top:32px;">Perfil de aciertos por carrera · Radar Top 8</div>
-    {radars_html}
 </div>
 
 <div id="panel-perfiles" class="tab-panel">
@@ -1369,14 +1284,13 @@ def main():
     grafico_barras = generar_grafico_barras_acumulado(ranking_acumulado)
     grafico_evolucion = generar_grafico_evolucion(all_rankings)
     bump_chart = generar_bump_chart(all_rankings)
-    radars_data = generar_radar_por_carrera(all_dfs, top_n=8)
     stats_adicionales = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
     perfiles_html = generar_perfiles_html(all_rankings, all_dfs, ranking_acumulado)
 
     html_content = generar_html(
         rankings_por_carrera, ranking_acumulado,
         grafico_barras, grafico_evolucion, bump_chart,
-        radars_data, stats_adicionales, perfiles_html
+        stats_adicionales, perfiles_html
     )
 
     with open("ranking_f1.html", "w", encoding="utf-8") as f:
