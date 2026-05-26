@@ -64,6 +64,43 @@ CALENDARIO = [
 COLORES_PARTICIPANTES = ['#E10600','#00C8FF','#FFD700','#C77DFF','#39FF14','#FF6B35','#00E5CC','#FF69B4']
 
 # =========================
+# HELPER: ORDEN DE CARRERAS SEGÚN CALENDARIO
+# =========================
+def get_orden_carreras() -> List[str]:
+    """
+    Devuelve la lista de nombres de carrera en orden cronológico,
+    tal como aparecen en el CALENDARIO (excluyendo las canceladas/tachadas).
+    El nombre se normaliza igual que en el main: strip de tags HTML + capitalize.
+    """
+    orden = []
+    for entry in CALENDARIO:
+        nombre_raw = entry["Carrera"]
+        # Saltar canceladas (las que tienen tags <s>)
+        if "<s>" in nombre_raw:
+            continue
+        nombre = re.sub(r'<[^>]+>', '', nombre_raw).strip().capitalize()
+        if nombre not in orden:
+            orden.append(nombre)
+    return orden
+
+
+def carreras_en_orden(available: List[str]) -> List[str]:
+    """
+    Dado un conjunto de nombres de carrera disponibles,
+    devuelve solo las que existen, en orden de calendario.
+    Las que no están en el calendario se agregan al final.
+    """
+    orden_cal = get_orden_carreras()
+    available_set = set(available)
+    ordenadas = [c for c in orden_cal if c in available_set]
+    # Agregar al final cualquiera que no esté en el calendario (por si acaso)
+    for c in available:
+        if c not in ordenadas:
+            ordenadas.append(c)
+    return ordenadas
+
+
+# =========================
 # FUNCIÓN PUNTOS POR POSICIÓN
 # =========================
 def puntos_posicion(predicha: int, real: int) -> int:
@@ -180,7 +217,8 @@ def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: p
         ranking_acumulado['Cambio'] = '-'
         return ranking_acumulado
 
-    carreras = sorted(all_rankings['Carrera'].unique())
+    # Usar orden de calendario en lugar de sorted()
+    carreras = carreras_en_orden(all_rankings['Carrera'].unique().tolist())
     prev_rankings = all_rankings[all_rankings['Carrera'] != carreras[-1]]
     if prev_rankings.empty:
         acum_prev = pd.Series()
@@ -194,7 +232,11 @@ def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: p
     for email in ranking_acumulado['Dirección de correo electrónico']:
         pos_actual = ranking_acumulado[
             ranking_acumulado['Dirección de correo electrónico'] == email]['Posición'].values[0]
-        pos_prev = acum_prev.get(email, float('inf'))
+        pos_prev = acum_prev.get(email, None)
+        # Participante nuevo (no estaba en carreras anteriores): mostrar neutro
+        if pos_prev is None or not np.isfinite(pos_prev):
+            cambios[email] = '<span class="trend-neutral">—</span>'
+            continue
         diff = pos_prev - pos_actual
         if diff > 0:
             cambios[email] = f'<span class="trend-up">▲{int(diff)}</span>'
@@ -213,7 +255,8 @@ def calcular_historial_posiciones(all_rankings: pd.DataFrame) -> pd.DataFrame:
     """Devuelve DataFrame con posición acumulada de cada participante después de cada carrera."""
     if all_rankings.empty:
         return pd.DataFrame()
-    carreras = sorted(all_rankings['Carrera'].unique())
+    # ✅ FIX: orden de calendario en lugar de sorted()
+    carreras = carreras_en_orden(all_rankings['Carrera'].unique().tolist())
     rows = []
     for i, carrera in enumerate(carreras):
         subset = all_rankings[all_rankings['Carrera'].isin(carreras[:i+1])]
@@ -272,7 +315,9 @@ def generar_grafico_evolucion(all_rankings: pd.DataFrame, top_n=5) -> str:
         index="Dirección de correo electrónico", columns="Carrera",
         values="Puntos", fill_value=0).cumsum(axis=1)
     top_emails = pivot.iloc[:, -1].nlargest(top_n).index
-    carreras_ordenadas = sorted(pivot.columns)
+
+    # ✅ FIX: ordenar columnas según el calendario, no alfabéticamente
+    carreras_ordenadas = carreras_en_orden(pivot.columns.tolist())
     pivot = pivot[carreras_ordenadas]
 
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -312,7 +357,8 @@ def generar_bump_chart(all_rankings: pd.DataFrame) -> str:
     if historial.empty:
         return ""
 
-    carreras = sorted(historial['Carrera'].unique())
+    # ✅ FIX: orden de calendario en lugar de sorted()
+    carreras = carreras_en_orden(historial['Carrera'].unique().tolist())
     participantes = historial.groupby("Dirección de correo electrónico")["Puntos"]\
         .sum().sort_values(ascending=False).index.tolist()
 
@@ -330,18 +376,15 @@ def generar_bump_chart(all_rankings: pd.DataFrame) -> str:
         data = data.set_index("Carrera").reindex(carreras)
         ys = data["Posición"].tolist()
 
-        # línea suavizada con segmentos
         ax.plot(x_pos, ys, color=color, linewidth=2.5, zorder=2,
                 solid_capstyle='round', solid_joinstyle='round')
 
-        # puntos en cada carrera
         for xi, yi in enumerate(ys):
             if pd.isna(yi):
                 continue
             ax.scatter(xi, yi, s=70, color=color, zorder=3,
                        edgecolors='#0D0D0D', linewidths=1.5)
 
-        # etiqueta al inicio y al final
         if not pd.isna(ys[0]):
             ax.text(-0.15, ys[0], nombre, ha='right', va='center',
                     color=color, fontsize=8, fontweight='bold')
@@ -374,7 +417,6 @@ def generar_bump_chart(all_rankings: pd.DataFrame) -> str:
     return base64.b64encode(buf.read()).decode('utf-8')
 
 
-
 # =========================
 # GRÁFICO MINI PARA PERFIL (sparkline de puntos por carrera)
 # =========================
@@ -382,7 +424,8 @@ def generar_sparkline_perfil(email: str, all_rankings: pd.DataFrame) -> str:
     data = all_rankings[all_rankings["Dirección de correo electrónico"] == email]
     if data.empty:
         return ""
-    carreras = sorted(data['Carrera'].unique())
+    # ✅ FIX: orden de calendario en lugar de sorted()
+    carreras = carreras_en_orden(data['Carrera'].unique().tolist())
     pts = [data[data['Carrera'] == c]['Puntos'].values[0] for c in carreras]
 
     fig, ax = plt.subplots(figsize=(5, 1.8))
@@ -417,8 +460,9 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
 
     historial_pos = calcular_historial_posiciones(all_rankings)
     df_all = pd.concat(all_dfs) if all_dfs else pd.DataFrame()
-    # Mantener orden cronológico de aparición
-    carreras_lista = pd.Series(all_rankings['Carrera'].unique()).unique().tolist()
+
+    # ✅ FIX: orden de calendario en lugar de unique() sin orden garantizado
+    carreras_lista = carreras_en_orden(all_rankings['Carrera'].unique().tolist())
     total_carreras = len(carreras_lista)
 
     perfiles_html = ""
@@ -469,7 +513,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
         spark_html = (f'<img src="data:image/png;base64,{spark_b64}" '
                       f'alt="Puntos por carrera" class="spark-img">') if spark_b64 else ""
 
-        # Historial de posición por carrera (mini tabla)
+        # Historial de posición por carrera (mini tabla) — ya usa carreras_lista en orden
         hist_rows = ""
         for c in carreras_lista:
             row_h = historial_pos[(historial_pos["Dirección de correo electrónico"] == email) &
@@ -563,13 +607,11 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
     lider = ranking_acumulado.iloc[0]['Dirección de correo electrónico'] \
             if not ranking_acumulado.empty else "N/A"
 
-    # Orden según el orden de procesamiento (el mismo que usa el main)
-    orden_carreras = df_all['Carrera'].unique()  # mantiene orden de aparición
-    maximos_por_carrera = df_all.groupby('Carrera', sort=False)['Puntos'].max()
-    
-    # Reordenar según aparición real
+    # ✅ FIX: orden de calendario para máximos por carrera
+    orden_carreras = carreras_en_orden(df_all['Carrera'].unique().tolist())
+    maximos_por_carrera = df_all.groupby('Carrera')['Puntos'].max()
     maximos_por_carrera = maximos_por_carrera.reindex(orden_carreras)
-    
+
     maximos_rows = "".join([
         f'<tr><td class="stat-label">{c}</td>'
         f'<td class="stat-value">{p} <span class="pts-tag">pts</span></td></tr>'
@@ -1220,9 +1262,6 @@ function exportarCSV() {{
 # =========================
 # MAIN
 # =========================
-# =========================
-# MAIN
-# =========================
 def main():
     if not os.path.exists(CARPETA_RESPUESTAS):
         print(f"Carpeta '{CARPETA_RESPUESTAS}' no existe. Créala y agregá los CSV.")
@@ -1239,6 +1278,7 @@ def main():
     orden_calendario = [
         re.sub(r'<[^>]+>', '', entry["Carrera"]).strip().capitalize()
         for entry in CALENDARIO
+        if "<s>" not in entry["Carrera"]
     ]
 
     # Mapear nombre de carrera → nombre de archivo
