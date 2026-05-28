@@ -11,35 +11,32 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-    --red: #E10600; --red-dim: #8a0300;
-    --bg: #080808; --bg-2: #111111; --bg-3: #181818; --bg-4: #1F1F1F;
+    --red: #E10600; --bg: #080808; --bg-2: #111111; --bg-3: #181818; --bg-4: #1F1F1F;
     --border: rgba(255,255,255,0.07); --border-bright: rgba(255,255,255,0.13);
     --text: #F0F0F0; --muted: #888888; --muted-2: #555555;
     --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
     --green: #22c55e; --danger: #ef4444;
+    --champion: #FFD700;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-body: 'Barlow', sans-serif;
 }
 html { scroll-behavior: smooth; }
 body { font-family: var(--font-body); background: var(--bg); color: var(--text);
-        min-height: 100vh; font-size: 15px; line-height: 1.55;
-        -webkit-font-smoothing: antialiased; }
+        min-height: 100vh; font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 
 /* HEADER */
 .site-header { position: sticky; top: 0; z-index: 100;
-    background: rgba(8,8,8,0.95); backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px;
+    background: rgba(8,8,8,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 6px 20px;
     display: flex; align-items: center; justify-content: space-between;
-    min-height: 64px; gap: 16px; flex-wrap: wrap; padding-top: 6px; padding-bottom: 6px; }
+    min-height: 64px; gap: 16px; flex-wrap: wrap; }
 .header-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .brand-stripe { width: 4px; height: 32px; background: var(--red); border-radius: 2px; }
 .brand-text { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
                letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.1; }
 .brand-sub { font-size: 0.7rem; color: var(--muted); font-weight: 400;
               letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; }
-
-/* COUNTDOWN */
 .countdown-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .countdown-label { font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
     letter-spacing: 2px; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
@@ -72,7 +69,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .tab-panel { display: none; }
 .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
-
 .section-heading { font-family: var(--font-display); font-size: 2rem; font-weight: 800;
     letter-spacing: -0.5px; text-transform: uppercase; margin-bottom: 8px; line-height: 1; }
 .section-heading span { color: var(--red); }
@@ -93,7 +89,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .data-table tr:hover td { background: rgba(255,255,255,0.025); }
 .data-table .row-first td { background: rgba(225,6,0,0.05); }
 .leaderboard { min-width: 520px; }
-
 .medal { display: inline-flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 50%;
     font-family: var(--font-display); font-weight: 800; font-size: 0.85rem; }
@@ -101,7 +96,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .medal.silver { background: rgba(192,192,192,0.12); color: var(--silver); border: 1px solid rgba(192,192,192,0.25); }
 .medal.bronze { background: rgba(205,127,50,0.12);  color: var(--bronze); border: 1px solid rgba(205,127,50,0.25); }
 .medal.plain  { background: var(--bg-4); color: var(--muted); border: 1px solid var(--border); }
-
 .driver-name  { display: block; font-weight: 600; font-size: 0.92rem; }
 .driver-email { display: block; font-size: 0.76rem; color: var(--muted); margin-top: 1px; }
 .pts-big  { font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; }
@@ -111,7 +105,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .trend-up      { color: var(--green);   font-weight: 700; font-size: 0.85rem; }
 .trend-down    { color: var(--danger);  font-weight: 700; font-size: 0.85rem; }
 .trend-neutral { color: var(--muted-2); font-weight: 700; }
-
 .divider { height: 1px; background: var(--border); margin: 28px 0; }
 
 /* CHARTS */
@@ -121,7 +114,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
 .chart-img { width: 100%; height: auto; display: block; border-radius: 8px; }
 
-/* EXPORTAR */
+/* EXPORT */
 .export-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
 .export-btn { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700;
     letter-spacing: 1.5px; text-transform: uppercase; background: var(--bg-3);
@@ -131,6 +124,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .export-btn:hover { background: var(--bg-4); border-color: var(--red); color: var(--red); }
 .export-btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
 .export-btn.primary:hover { background: #c50500; }
+.export-btn-sm { font-size: 0.72rem; padding: 7px 14px; letter-spacing: 1px; }
+.export-btn:disabled { opacity: 0.6; cursor: wait; }
 
 /* RACE ACCORDION */
 .race-block { border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
@@ -148,8 +143,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .toggle-icon { font-size: 1.3rem; color: var(--muted); font-style: normal;
     transition: transform 0.2s; flex-shrink: 0; line-height: 1; }
 .race-body { display: none; padding: 20px; border-top: 1px solid var(--border); }
-
-/* DETAIL ACCORDION */
 .detail-row { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
 .detail-toggle { width: 100%; background: var(--bg-4); border: none; color: var(--text);
     padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
@@ -185,10 +178,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .cal-cancelled td { opacity: 0.35; }
 
 /* PERFILES */
-.perfiles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 16px; }
-.perfil-card { background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden; }
+.perfiles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+.perfil-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
 .perfil-header { display: flex; align-items: center; gap: 14px; padding: 18px 20px;
     background: var(--bg-3); border-bottom: 1px solid var(--border); }
 .perfil-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex;
@@ -200,21 +191,95 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     overflow: hidden; text-overflow: ellipsis; }
 .perfil-email { font-size: 0.75rem; color: var(--muted); white-space: nowrap;
     overflow: hidden; text-overflow: ellipsis; }
-.perfil-pos-wrap { display: flex; flex-direction: column; align-items: center;
-    gap: 4px; flex-shrink: 0; }
+.perfil-pos-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
 .perfil-pts { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; line-height: 1; }
-.perfil-stats-mini { display: grid; grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid var(--border); }
-.perfil-stat { padding: 14px 10px; text-align: center;
-    border-right: 1px solid var(--border); }
+.perfil-stats-mini { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }
+.perfil-stat { padding: 14px 10px; text-align: center; border-right: 1px solid var(--border); }
 .perfil-stat:last-child { border-right: none; }
-.perfil-stat-num   { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
-    color: var(--text); line-height: 1; }
+.perfil-stat-num   { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; }
 .perfil-stat-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase;
     letter-spacing: 0.8px; margin-top: 3px; line-height: 1.3; }
 .perfil-spark-wrap { padding: 16px 16px 8px; border-bottom: 1px solid var(--border); }
 .spark-img { width: 100%; height: auto; display: block; border-radius: 6px; }
 .perfil-hist-toggle { padding: 4px 0; }
+.perfil-export-bar { padding: 10px 16px 14px; display: flex; justify-content: flex-end; }
+
+/* ===== BADGES ===== */
+.perfil-badges-wrap { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.badges-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+.badge-chip {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 13px; border-radius: 20px;
+    font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
+    cursor: pointer; border: none;
+    transition: opacity 0.15s, transform 0.1s;
+    user-select: none; -webkit-user-select: none;
+}
+.badge-chip:hover { opacity: 0.88; transform: translateY(-1px); }
+.badge-chip:active { transform: translateY(0); }
+.badge-emoji { font-size: 1rem; line-height: 1; }
+.badge-nombre { white-space: nowrap; }
+.badge-nivel-tag { font-size: 0.75rem; line-height: 1; margin-left: 1px; opacity: 0.85; }
+.badge-counter {
+    display: inline-flex; align-items: center;
+    background: rgba(255,255,255,0.08); color: var(--muted);
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+}
+
+/* Badge Campeón — efecto especial */
+.badge-chip[data-nivel="Rey de la Temporada"] {
+    animation: champion-glow 2.5s ease-in-out infinite;
+}
+@keyframes champion-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
+    50%       { box-shadow: 0 0 18px rgba(255,215,0,0.6); }
+}
+
+/* TOOLTIP del badge */
+.badge-tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    width: 230px;
+    background: #1C1C1C;
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #E8E8E8;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.5;
+    padding: 10px 13px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s, transform 0.18s;
+    z-index: 200;
+    text-align: left;
+    white-space: normal;
+}
+.badge-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1C1C1C;
+}
+.badge-chip:hover .badge-tooltip,
+.badge-chip.open .badge-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.badge-chip:first-child .badge-tooltip { left: 0; transform: translateX(0) translateY(4px); }
+.badge-chip:first-child .badge-tooltip::after { left: 20px; }
+.badge-chip:first-child:hover .badge-tooltip,
+.badge-chip:first-child.open .badge-tooltip { transform: translateX(0) translateY(0); }
 
 /* EMPTY */
 .empty-msg { color: var(--muted); font-size: 0.9rem; font-style: italic; padding: 24px 0; }
@@ -222,8 +287,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 /* FOOTER */
 .site-footer { border-top: 1px solid var(--border); padding: 20px;
     text-align: center; font-size: 0.78rem; color: var(--muted-2); }
-.footer-stripe { width: 32px; height: 3px; background: var(--red);
-    border-radius: 2px; margin: 0 auto 12px; }
+.footer-stripe { width: 32px; height: 3px; background: var(--red); border-radius: 2px; margin: 0 auto 12px; }
 
 /* PRINT */
 @media print {
@@ -250,6 +314,14 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     .perfil-stat:nth-child(2) { border-right: none; }
     .perfil-stat:nth-child(3) { border-top: 1px solid var(--border); }
     .countdown-wrap { gap: 6px; }
+    .badge-tooltip {
+        position: fixed;
+        bottom: auto; top: 50%; left: 50%;
+        transform: translate(-50%, -50%) !important;
+        width: 260px;
+        z-index: 1000;
+    }
+    .badge-tooltip::after { display: none; }
 }
 </style>
 </head>
@@ -270,25 +342,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             <div class="countdown-race" id="cd-race">MÓNACO</div>
         </div>
         <div class="countdown-timer" id="cd-timer">
-            <div class="countdown-unit">
-                <span class="countdown-num" id="cd-d">--</span>
-                <span class="countdown-unit-label">días</span>
-            </div>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-d">--</span><span class="countdown-unit-label">días</span></div>
             <span class="countdown-sep">:</span>
-            <div class="countdown-unit">
-                <span class="countdown-num" id="cd-h">--</span>
-                <span class="countdown-unit-label">horas</span>
-            </div>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-h">--</span><span class="countdown-unit-label">horas</span></div>
             <span class="countdown-sep">:</span>
-            <div class="countdown-unit">
-                <span class="countdown-num" id="cd-m">--</span>
-                <span class="countdown-unit-label">min</span>
-            </div>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-m">--</span><span class="countdown-unit-label">min</span></div>
             <span class="countdown-sep">:</span>
-            <div class="countdown-unit">
-                <span class="countdown-num" id="cd-s">--</span>
-                <span class="countdown-unit-label">seg</span>
-            </div>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-s">--</span><span class="countdown-unit-label">seg</span></div>
         </div>
     </div>
 </div>
@@ -316,9 +376,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
         <button class="export-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
     </div>
     <div id="ranking-export-target">
-        
-        <p class="section-label" style="margin-bottom:8px; color:var(--muted);">
-            Hacé click en cualquier fila para ver el perfil del participante</p>
+        <p class="section-label" style="margin-bottom:8px;color:var(--muted);">Hacé click en cualquier fila para ver el perfil del participante</p>
         <div class="table-wrapper">
         <table class="data-table leaderboard">
             <thead><tr><th>#</th><th>Participante</th><th>Puntos</th><th>Cambio</th></tr></thead>
@@ -383,8 +441,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <td><span class="pts-big">25</span></td>
                 <td><span class="trend-neutral">—</span></td>
             </tr></tbody>
-        </table></div>
-    </div>
+        </table></div></div>
     <div class="divider"></div>
     <div class="chart-block">
         <div class="chart-title">Distribución de puntos</div>
@@ -859,14 +916,11 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 
 <div id="panel-perfiles" class="tab-panel">
     <h2 class="section-heading">Per<span>files</span></h2>
-    <p class="section-label" style="margin-bottom:20px;">Estadísticas individuales de cada participante</p>
+    <p class="section-label" style="margin-bottom:20px;">Estadísticas individuales · Tocá 📸 para compartir tu tarjeta</p>
     <div class="perfiles-grid">
-        
         <div class="perfil-card" id="perfil-0">
-            <div class="perfil-header" style="border-left: 4px solid #E10600;">
-                <div class="perfil-avatar" style="background: #E1060022; color: #E10600; border: 1px solid #E1060044;">
-                    MI
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #E10600;">
+                <div class="perfil-avatar" style="background:rgba(225,6,0,0.13);color:#E10600;border:1px solid rgba(225,6,0,0.27);">MI</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">miriquero</div>
                     <div class="perfil-email">miriquero@gmail.com</div>
@@ -878,23 +932,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">45.0</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">72</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">11</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">0</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">45.0</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">72</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">11</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">3/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(255,215,0,0.18);border:1px solid rgba(255,215,0,0.4);color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,0.35);font-size:0.88rem;" data-desc="🏆 CAMPEÓN · Líder del ranking general acumulado. El logro más grande del torneo. Solo uno puede tenerlo." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">👑</span><span class="badge-nombre">Rey de la Temporada</span><span class="badge-nivel-tag">🏆</span></button><button class="badge-chip" style="background:rgba(211,84,0,0.18);border:1px solid rgba(211,84,0,0.4);color:#D35400;" data-desc="🥇 ORO · Mayor puntaje del grupo en predicciones de P6 a P10: 73 pts." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🏗️</span><span class="badge-nombre">Arquitecto</span><span class="badge-nivel-tag">🥇</span></button><button class="badge-chip" style="background:rgba(155,89,182,0.18);border:1px solid rgba(155,89,182,0.4);color:#9B59B6;" data-desc="🥉 BRONCE · Lograste 6 predicciones exactas en Australia. Criterio: 5+ aciertos exactos en una carrera (sobre 10)." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔮</span><span class="badge-nombre">Adivino</span><span class="badge-nivel-tag">🥉</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -915,13 +959,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 0, 'miriquero')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-1">
-            <div class="perfil-header" style="border-left: 4px solid #00C8FF;">
-                <div class="perfil-avatar" style="background: #00C8FF22; color: #00C8FF; border: 1px solid #00C8FF44;">
-                    RI
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #00C8FF;">
+                <div class="perfil-avatar" style="background:rgba(0,200,255,0.13);color:#00C8FF;border:1px solid rgba(0,200,255,0.27);">RI</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">riquerorori1993</div>
                     <div class="perfil-email">riquerorori1993@gmail.com</div>
@@ -933,23 +981,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">41.8</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">66</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">10</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">0</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">41.8</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">66</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">10</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">0/15</span></div><p class="empty-msg" style="padding:8px 0;font-size:0.8rem;">Seguí participando para desbloquear logros 🏁</p></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -970,13 +1008,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 1, 'riquerorori1993')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-2">
-            <div class="perfil-header" style="border-left: 4px solid #FFD700;">
-                <div class="perfil-avatar" style="background: #FFD70022; color: #FFD700; border: 1px solid #FFD70044;">
-                    AL
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #FFD700;">
+                <div class="perfil-avatar" style="background:rgba(255,215,0,0.13);color:#FFD700;border:1px solid rgba(255,215,0,0.27);">AL</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">alinaiaraceleste</div>
                     <div class="perfil-email">alinaiaraceleste@gmail.com</div>
@@ -988,23 +1030,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">41.0</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">52</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">8</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">1</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">41.0</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">52</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">8</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">2/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button><button class="badge-chip" style="background:rgba(230,126,34,0.18);border:1px solid rgba(230,126,34,0.4);color:#E67E22;" data-desc="🥉 BRONCE · Quedaste en el top-3 del grupo 3 carreras seguidas. Criterio: 3+ fechas consecutivas en el podio grupal." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔥</span><span class="badge-nombre">Racha Caliente</span><span class="badge-nivel-tag">🥉</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1025,13 +1057,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 2, 'alinaiaraceleste')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-3">
-            <div class="perfil-header" style="border-left: 4px solid #C77DFF;">
-                <div class="perfil-avatar" style="background: #C77DFF22; color: #C77DFF; border: 1px solid #C77DFF44;">
-                    RI
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #C77DFF;">
+                <div class="perfil-avatar" style="background:rgba(199,125,255,0.13);color:#C77DFF;border:1px solid rgba(199,125,255,0.27);">RI</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">riqueropetiniha</div>
                     <div class="perfil-email">riqueropetiniha@gmail.com</div>
@@ -1043,23 +1079,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">39.6</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">52</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">8</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">1</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">39.6</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">52</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">8</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1080,13 +1106,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 3, 'riqueropetiniha')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-4">
-            <div class="perfil-header" style="border-left: 4px solid #39FF14;">
-                <div class="perfil-avatar" style="background: #39FF1422; color: #39FF14; border: 1px solid #39FF1444;">
-                    RI
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #39FF14;">
+                <div class="perfil-avatar" style="background:rgba(57,255,20,0.13);color:#39FF14;border:1px solid rgba(57,255,20,0.27);">RI</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">riquerole</div>
                     <div class="perfil-email">riquerole@gmail.com</div>
@@ -1098,23 +1128,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">38.8</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">50</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">10</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">1</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">38.8</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">50</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">10</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1135,13 +1155,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 4, 'riquerole')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-5">
-            <div class="perfil-header" style="border-left: 4px solid #FF6B35;">
-                <div class="perfil-avatar" style="background: #FF6B3522; color: #FF6B35; border: 1px solid #FF6B3544;">
-                    EU
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #FF6B35;">
+                <div class="perfil-avatar" style="background:rgba(255,107,53,0.13);color:#FF6B35;border:1px solid rgba(255,107,53,0.27);">EU</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">eugeniabanini</div>
                     <div class="perfil-email">eugeniabanini@yahoo.com.ar</div>
@@ -1153,23 +1177,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">34.0</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">53</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">4</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">1</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">34.0</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">53</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">4</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">0/15</span></div><p class="empty-msg" style="padding:8px 0;font-size:0.8rem;">Seguí participando para desbloquear logros 🏁</p></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1190,13 +1204,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 5, 'eugeniabanini')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-6">
-            <div class="perfil-header" style="border-left: 4px solid #00E5CC;">
-                <div class="perfil-avatar" style="background: #00E5CC22; color: #00E5CC; border: 1px solid #00E5CC44;">
-                    FR
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #00E5CC;">
+                <div class="perfil-avatar" style="background:rgba(0,229,204,0.13);color:#00E5CC;border:1px solid rgba(0,229,204,0.27);">FR</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">friquero</div>
                     <div class="perfil-email">friquero@gmail.com</div>
@@ -1208,23 +1226,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">31.4</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">66</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">9</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">1</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">31.4</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">66</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">9</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">2/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button><button class="badge-chip" style="background:rgba(155,89,182,0.18);border:1px solid rgba(155,89,182,0.4);color:#9B59B6;" data-desc="🥉 BRONCE · Lograste 5 predicciones exactas en Australia. Criterio: 5+ aciertos exactos en una carrera (sobre 10)." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔮</span><span class="badge-nombre">Adivino</span><span class="badge-nivel-tag">🥉</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1245,13 +1253,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 6, 'friquero')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-7">
-            <div class="perfil-header" style="border-left: 4px solid #FF69B4;">
-                <div class="perfil-avatar" style="background: #FF69B422; color: #FF69B4; border: 1px solid #FF69B444;">
-                    SE
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #FF69B4;">
+                <div class="perfil-avatar" style="background:rgba(255,105,180,0.13);color:#FF69B4;border:1px solid rgba(255,105,180,0.27);">SE</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">sergiopede92</div>
                     <div class="perfil-email">sergiopede92@gmail.com</div>
@@ -1263,23 +1275,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">27.6</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">53</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">6</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">1</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">27.6</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">53</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">6</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1300,13 +1302,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 7, 'sergiopede92')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-8">
-            <div class="perfil-header" style="border-left: 4px solid #E10600;">
-                <div class="perfil-avatar" style="background: #E1060022; color: #E10600; border: 1px solid #E1060044;">
-                    DA
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #E10600;">
+                <div class="perfil-avatar" style="background:rgba(225,6,0,0.13);color:#E10600;border:1px solid rgba(225,6,0,0.27);">DA</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">damiantourres</div>
                     <div class="perfil-email">damiantourres@gmail.com</div>
@@ -1318,23 +1324,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">6.8</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">34</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">2</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">0</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">6.8</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">34</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">2</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1355,13 +1351,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 8, 'damiantourres')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
         
         <div class="perfil-card" id="perfil-9">
-            <div class="perfil-header" style="border-left: 4px solid #00C8FF;">
-                <div class="perfil-avatar" style="background: #00C8FF22; color: #00C8FF; border: 1px solid #00C8FF44;">
-                    LA
-                </div>
+            <div class="perfil-header" style="border-left:4px solid #00C8FF;">
+                <div class="perfil-avatar" style="background:rgba(0,200,255,0.13);color:#00C8FF;border:1px solid rgba(0,200,255,0.27);">LA</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">lautarotourres</div>
                     <div class="perfil-email">lautarotourres@gmail.com</div>
@@ -1373,23 +1373,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">5.0</div>
-                    <div class="perfil-stat-label">Prom. por carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">25</div>
-                    <div class="perfil-stat-label">Mejor carrera</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">0</div>
-                    <div class="perfil-stat-label">Predicciones exactas</div>
-                </div>
-                <div class="perfil-stat">
-                    <div class="perfil-stat-num">0</div>
-                    <div class="perfil-stat-label">Racha mejorando</div>
-                </div>
+                <div class="perfil-stat"><div class="perfil-stat-num">5.0</div><div class="perfil-stat-label">Prom. carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">25</div><div class="perfil-stat-label">Mejor carrera</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Exactos totales</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
+
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1410,9 +1400,14 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                     </div>
                 </div>
             </div>
+
+            <div class="perfil-export-bar">
+                <button class="export-btn export-btn-sm" onclick="exportarPerfil(this, 9, 'lautarotourres')">
+                    📸 Exportar tarjeta
+                </button>
+            </div>
         </div>
-        
-    </div>
+        </div>
 </div>
 
 <div id="panel-stats" class="tab-panel">
@@ -1420,22 +1415,10 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     <p class="section-label" style="margin-bottom:20px;">Resumen general de la temporada</p>
     
     <div class="stats-grid">
-        <div class="stat-card accent">
-            <div class="stat-num">10</div>
-            <div class="stat-desc">Participantes</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-num">39</div>
-            <div class="stat-desc">Predicciones totales</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-num">1555</div>
-            <div class="stat-desc">Puntos distribuidos</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-num">39.9</div>
-            <div class="stat-desc">Promedio por predicción</div>
-        </div>
+        <div class="stat-card accent"><div class="stat-num">10</div><div class="stat-desc">Participantes</div></div>
+        <div class="stat-card"><div class="stat-num">39</div><div class="stat-desc">Predicciones totales</div></div>
+        <div class="stat-card"><div class="stat-num">1555</div><div class="stat-desc">Puntos distribuidos</div></div>
+        <div class="stat-card"><div class="stat-num">39.9</div><div class="stat-desc">Promedio por predicción</div></div>
     </div>
     <div class="leader-banner">
         <span class="leader-label">LÍDER ACTUAL</span>
@@ -1467,7 +1450,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    Generado automáticamente · 26/05/2026 · 19:59
+    Generado automáticamente · 28/05/2026 · 09:53
 </footer>
 
 <script>
@@ -1481,10 +1464,10 @@ function openTab(evt, panelId) {
 
 // ===== ACCORDION =====
 function toggleDetail(id) {
-    const el   = document.getElementById(id);
+    const el = document.getElementById(id);
     const icon = document.getElementById('icon-' + id);
     const open = el.style.display === 'block';
-    el.style.display  = open ? 'none' : 'block';
+    el.style.display = open ? 'none' : 'block';
     if (icon) icon.textContent = open ? '＋' : '－';
 }
 
@@ -1511,52 +1494,116 @@ function irPerfil(idx) {
         }
         const d = Math.floor(diff / 86400000);
         const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000)  / 60000);
-        const s = Math.floor((diff % 60000)    / 1000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
         document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
         document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
         document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
         document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
     }
-    tick();
-    setInterval(tick, 1000);
+    tick(); setInterval(tick, 1000);
 })();
 
-// ===== EXPORTAR IMAGEN (html2canvas via CDN) =====
-function exportarImagen() {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    script.onload = function() {
-        const target = document.getElementById('ranking-export-target');
-        html2canvas(target, {
+// ===== BADGES: tooltip hover (desktop) + toggle click (mobile) =====
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.badge-chip').forEach(function(chip) {
+        var desc = chip.getAttribute('data-desc');
+        if (!desc) return;
+        var tip = document.createElement('span');
+        tip.className = 'badge-tooltip';
+        tip.textContent = desc;
+        chip.appendChild(tip);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.badge-chip')) {
+            document.querySelectorAll('.badge-chip.open').forEach(function(c) {
+                c.classList.remove('open');
+            });
+        }
+    });
+});
+
+function toggleBadge(chip) {
+    var wasOpen = chip.classList.contains('open');
+    document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
+    if (!wasOpen) chip.classList.add('open');
+}
+
+// ===== CARGAR html2canvas =====
+function cargarHtml2Canvas(cb) {
+    if (window.html2canvas) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = cb;
+    s.onerror = function() { alert('No se pudo cargar html2canvas. Verificá tu conexión a internet.'); };
+    document.head.appendChild(s);
+}
+
+// ===== EXPORTAR TARJETA DE PERFIL =====
+function exportarPerfil(btnEl, idx, nombre) {
+    var originalText = btnEl.textContent;
+    btnEl.textContent = '⏳ Generando...';
+    btnEl.disabled = true;
+
+    cargarHtml2Canvas(function() {
+        var card = document.getElementById('perfil-' + idx);
+        card.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
+
+        html2canvas(card, {
             backgroundColor: '#111111',
             scale: 2,
             useCORS: true,
-            logging: false
-        }).then(canvas => {
-            const link = document.createElement('a');
+            allowTaint: true,
+            logging: false,
+            ignoreElements: function(el) {
+                return el.classList.contains('perfil-export-bar') ||
+                       el.classList.contains('perfil-hist-toggle');
+            }
+        }).then(function(canvas) {
+            var link = document.createElement('a');
+            link.download = 'f1_perfil_' + nombre + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            btnEl.textContent = originalText;
+            btnEl.disabled = false;
+        }).catch(function(err) {
+            console.error('Error al exportar:', err);
+            alert('Error al generar la imagen. Intentá de nuevo.');
+            btnEl.textContent = originalText;
+            btnEl.disabled = false;
+        });
+    });
+}
+
+// ===== EXPORTAR RANKING IMAGEN =====
+function exportarImagen() {
+    cargarHtml2Canvas(function() {
+        html2canvas(document.getElementById('ranking-export-target'), {
+            backgroundColor: '#111111', scale: 2, useCORS: true, allowTaint: true, logging: false
+        }).then(function(canvas) {
+            var link = document.createElement('a');
             link.download = 'ranking_f1_2026.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
-    };
-    document.head.appendChild(script);
+    });
 }
 
 // ===== EXPORTAR CSV =====
 function exportarCSV() {
-    const rows = document.querySelectorAll('#ranking-export-target table tr');
+    var rows = document.querySelectorAll('#ranking-export-target table tr');
     if (!rows.length) return;
-    let csv = '';
-    rows.forEach(tr => {
-        const cols = Array.from(tr.querySelectorAll('th, td')).map(td => {
+    var csv = '';
+    rows.forEach(function(tr) {
+        var cols = Array.from(tr.querySelectorAll('th, td')).map(function(td) {
             return '"' + (td.innerText || td.textContent).replace(/"/g, '""').trim() + '"';
         });
         csv += cols.join(',') + '\n';
     });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
     link.href = url; link.download = 'ranking_f1_2026.csv'; link.click();
     URL.revokeObjectURL(url);
 }
