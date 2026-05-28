@@ -16,7 +16,6 @@
     --text: #F0F0F0; --muted: #888888; --muted-2: #555555;
     --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
     --green: #22c55e; --danger: #ef4444;
-    --champion: #FFD700;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-body: 'Barlow', sans-serif;
 }
@@ -208,12 +207,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .perfil-badges-wrap { padding: 14px 16px; border-bottom: 1px solid var(--border); }
 .badges-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
+/* El chip es un <button> para accesibilidad y eventos touch */
 .badge-chip {
     position: relative;
     display: inline-flex; align-items: center; gap: 6px;
     padding: 6px 13px; border-radius: 20px;
     font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
-    cursor: pointer; border: none;
+    cursor: pointer; border: none; /* border viene del style inline */
     transition: opacity 0.15s, transform 0.1s;
     user-select: none; -webkit-user-select: none;
 }
@@ -229,57 +229,46 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
 }
 
-/* Badge Campeón — efecto especial */
-.badge-chip[data-nivel="Rey de la Temporada"] {
-    animation: champion-glow 2.5s ease-in-out infinite;
-}
-@keyframes champion-glow {
-    0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
-    50%       { box-shadow: 0 0 18px rgba(255,215,0,0.6); }
-}
-
 /* TOOLTIP del badge */
-.badge-tooltip {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    width: 230px;
+/* ===== TOOLTIP GLOBAL (portal) =====
+   Un único elemento en <body> posicionado con JS.
+   Evita cualquier overflow sin importar dónde esté el badge. */
+#global-badge-tip {
+    position: fixed;
+    width: 248px;
     background: #1C1C1C;
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.16);
     color: #E8E8E8;
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.5;
-    padding: 10px 13px;
+    line-height: 1.55;
+    padding: 10px 14px;
     border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.65);
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.18s, transform 0.18s;
-    z-index: 200;
-    text-align: left;
+    z-index: 9999;
     white-space: normal;
+    opacity: 0;
+    transition: opacity 0.16s;
 }
-.badge-tooltip::after {
+#global-badge-tip.tip-show { opacity: 1; }
+/* Flecha — su posición horizontal se ajusta via --al */
+#global-badge-tip::after {
     content: '';
     position: absolute;
-    top: 100%; left: 50%;
+    left: var(--al, 50%);
     transform: translateX(-50%);
-    border: 6px solid transparent;
+    border: 7px solid transparent;
+}
+#global-badge-tip[data-pos="above"]::after {
+    top: 100%;
     border-top-color: #1C1C1C;
 }
-.badge-chip:hover .badge-tooltip,
-.badge-chip.open .badge-tooltip {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+#global-badge-tip[data-pos="below"]::after {
+    bottom: 100%;
+    border-bottom-color: #1C1C1C;
 }
-.badge-chip:first-child .badge-tooltip { left: 0; transform: translateX(0) translateY(4px); }
-.badge-chip:first-child .badge-tooltip::after { left: 20px; }
-.badge-chip:first-child:hover .badge-tooltip,
-.badge-chip:first-child.open .badge-tooltip { transform: translateX(0) translateY(0); }
 
 /* EMPTY */
 .empty-msg { color: var(--muted); font-size: 0.9rem; font-style: italic; padding: 24px 0; }
@@ -314,14 +303,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     .perfil-stat:nth-child(2) { border-right: none; }
     .perfil-stat:nth-child(3) { border-top: 1px solid var(--border); }
     .countdown-wrap { gap: 6px; }
-    .badge-tooltip {
-        position: fixed;
-        bottom: auto; top: 50%; left: 50%;
-        transform: translate(-50%, -50%) !important;
-        width: 260px;
-        z-index: 1000;
-    }
-    .badge-tooltip::after { display: none; }
 }
 </style>
 </head>
@@ -938,7 +919,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">3/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(255,215,0,0.18);border:1px solid rgba(255,215,0,0.4);color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,0.35);font-size:0.88rem;" data-desc="🏆 CAMPEÓN · Líder del ranking general acumulado. El logro más grande del torneo. Solo uno puede tenerlo." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">👑</span><span class="badge-nombre">Rey de la Temporada</span><span class="badge-nivel-tag">🏆</span></button><button class="badge-chip" style="background:rgba(211,84,0,0.18);border:1px solid rgba(211,84,0,0.4);color:#D35400;" data-desc="🥇 ORO · Mayor puntaje del grupo en predicciones de P6 a P10: 73 pts." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🏗️</span><span class="badge-nombre">Arquitecto</span><span class="badge-nivel-tag">🥇</span></button><button class="badge-chip" style="background:rgba(155,89,182,0.18);border:1px solid rgba(155,89,182,0.4);color:#9B59B6;" data-desc="🥉 BRONCE · Lograste 6 predicciones exactas en Australia. Criterio: 5+ aciertos exactos en una carrera (sobre 10)." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔮</span><span class="badge-nombre">Adivino</span><span class="badge-nivel-tag">🥉</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">3/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(155,89,182,0.18);border:1px solid rgba(155,89,182,0.4);color:#9B59B6;" data-desc="🥉 BRONCE · Lograste 6 predicciones exactas en Australia. Criterio: 6+ aciertos exactos en una carrera (sobre 10)." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔮</span><span class="badge-nombre">Adivino</span><span class="badge-nivel-tag">🥉</span></button><button class="badge-chip" style="background:rgba(243,156,18,0.18);border:1px solid rgba(243,156,18,0.4);color:#F39C12;" data-desc="🥇 ORO · Líder del ranking general acumulado. Solo uno puede tenerlo. El más codiciado del torneo." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">👑</span><span class="badge-nombre">Rey de la Temporada</span><span class="badge-nivel-tag">🥇</span></button><button class="badge-chip" style="background:rgba(211,84,0,0.18);border:1px solid rgba(211,84,0,0.4);color:#D35400;" data-desc="🥇 ORO · Mayor puntaje del grupo en predicciones de P6 a P10: 73 pts. Conoce el pelotón del fondo como nadie." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🏗️</span><span class="badge-nombre">Arquitecto</span><span class="badge-nivel-tag">🥇</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1036,7 +1017,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">2/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button><button class="badge-chip" style="background:rgba(230,126,34,0.18);border:1px solid rgba(230,126,34,0.4);color:#E67E22;" data-desc="🥉 BRONCE · Quedaste en el top-3 del grupo 3 carreras seguidas. Criterio: 3+ fechas consecutivas en el podio grupal." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔥</span><span class="badge-nombre">Racha Caliente</span><span class="badge-nivel-tag">🥉</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en los últimos 2 del ranking en ninguna de las 5 carreras disputadas. Se verifica carrera a carrera, de la R01 a la R05." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1085,7 +1066,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en los últimos 2 del ranking en ninguna de las 5 carreras disputadas. Se verifica carrera a carrera, de la R01 a la R05." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1134,7 +1115,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">0/15</span></div><p class="empty-msg" style="padding:8px 0;font-size:0.8rem;">Seguí participando para desbloquear logros 🏁</p></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1232,7 +1213,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">2/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button><button class="badge-chip" style="background:rgba(155,89,182,0.18);border:1px solid rgba(155,89,182,0.4);color:#9B59B6;" data-desc="🥉 BRONCE · Lograste 5 predicciones exactas en Australia. Criterio: 5+ aciertos exactos en una carrera (sobre 10)." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🔮</span><span class="badge-nombre">Adivino</span><span class="badge-nivel-tag">🥉</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en los últimos 2 del ranking en ninguna de las 5 carreras disputadas. Se verifica carrera a carrera, de la R01 a la R05." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1281,7 +1262,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">1</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">0/15</span></div><p class="empty-msg" style="padding:8px 0;font-size:0.8rem;">Seguí participando para desbloquear logros 🏁</p></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1330,7 +1311,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en los últimos 2 del ranking en ninguna de las 5 carreras disputadas. Se verifica carrera a carrera, de la R01 a la R05." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1379,7 +1360,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
                 <div class="perfil-stat"><div class="perfil-stat-num">0</div><div class="perfil-stat-label">Racha mejorando</div></div>
             </div>
 
-            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en el último lugar del ranking en ninguna de las 5 carreras disputadas." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
+            <div class="perfil-badges-wrap"><div class="section-label" style="display:flex;align-items:center;gap:8px;">LOGROS <span class="badge-counter">1/15</span><span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">· Pasá el mouse o tocá para ver qué significa</span></div><div class="badges-row"><button class="badge-chip" style="background:rgba(149,165,166,0.18);border:1px solid rgba(149,165,166,0.4);color:#95A5A6;" data-desc="🥈 PLATA · Nunca terminaste en los últimos 2 del ranking en ninguna de las 5 carreras disputadas. Se verifica carrera a carrera, de la R01 a la R05." onclick="toggleBadge(this)" onmouseenter="showBadge(this)" onmouseleave="hideBadge(this)"><span class="badge-emoji">🛡️</span><span class="badge-nombre">Muralla</span><span class="badge-nivel-tag">🥈</span></button></div></div>
 
             <div class="perfil-spark-wrap">
                 <div class="section-label">PUNTOS POR CARRERA</div>
@@ -1450,7 +1431,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    Generado automáticamente · 28/05/2026 · 09:53
+    Generado automáticamente · 28/05/2026 · 15:13
 </footer>
 
 <script>
@@ -1504,33 +1485,112 @@ function irPerfil(idx) {
     tick(); setInterval(tick, 1000);
 })();
 
-// ===== BADGES: tooltip hover (desktop) + toggle click (mobile) =====
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.badge-chip').forEach(function(chip) {
-        var desc = chip.getAttribute('data-desc');
-        if (!desc) return;
-        var tip = document.createElement('span');
-        tip.className = 'badge-tooltip';
-        tip.textContent = desc;
-        chip.appendChild(tip);
-    });
-
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.badge-chip')) {
-            document.querySelectorAll('.badge-chip.open').forEach(function(c) {
-                c.classList.remove('open');
-            });
-        }
-    });
-});
-
-function toggleBadge(chip) {
-    var wasOpen = chip.classList.contains('open');
-    document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
-    if (!wasOpen) chip.classList.add('open');
+// ===== BADGE TOOLTIP — PORTAL GLOBAL =====
+// Un único div #global-badge-tip vive en <body>.
+// showBadge() lo posiciona con JS justo antes de mostrarlo,
+// calculando si cabe arriba o abajo y ajustando para no salirse del viewport.
+var _gTip = null;
+function _getTip() {
+    if (_gTip) return _gTip;
+    _gTip = document.createElement('div');
+    _gTip.id = 'global-badge-tip';
+    document.body.appendChild(_gTip);
+    return _gTip;
 }
 
-// ===== CARGAR html2canvas =====
+function showBadge(chip) {
+    var desc = chip.getAttribute('data-desc');
+    if (!desc) return;
+
+    var tip = _getTip();
+    tip.textContent = desc;
+    tip.className = '';           // quitar tip-show para medir sin transición
+
+    var W = 248, GAP = 10, MARGIN = 12;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var r = chip.getBoundingClientRect();
+
+    // ── Mobile: centrar en pantalla ──────────────────────────────────────────
+    if (vw <= 640) {
+        tip.style.width  = Math.min(W, vw - MARGIN * 2) + 'px';
+        tip.style.left   = '50%';
+        tip.style.top    = '50%';
+        tip.style.transform = 'translate(-50%, -50%)';
+        tip.removeAttribute('data-pos');
+        tip.style.removeProperty('--al');
+        tip.className = 'tip-show';
+        return;
+    }
+
+    // ── Desktop: posición relativa al chip ───────────────────────────────────
+    tip.style.transform = '';
+    tip.style.width = W + 'px';
+    // Colocar temporalmente fuera de pantalla para medir la altura real
+    tip.style.left = '-9999px';
+    tip.style.top  = '-9999px';
+    tip.style.display = 'block';           // asegurar que sea medible
+    var tipH = tip.offsetHeight;
+
+    // Calcular left: centrado sobre el chip, clampeado al viewport
+    var idealLeft = r.left + r.width / 2 - W / 2;
+    var clampedLeft = Math.max(MARGIN, Math.min(idealLeft, vw - W - MARGIN));
+
+    // Decidir si va arriba o abajo
+    var spaceAbove = r.top;
+    var spaceBelow = vh - r.bottom;
+    var pos, top;
+    if (spaceAbove >= tipH + GAP || spaceAbove >= spaceBelow) {
+        pos = 'above';
+        top = r.top - tipH - GAP;
+    } else {
+        pos = 'below';
+        top = r.bottom + GAP;
+    }
+
+    // Posición horizontal de la flecha: apunta al centro del chip
+    var arrowLeft = (r.left + r.width / 2) - clampedLeft;
+    arrowLeft = Math.max(14, Math.min(arrowLeft, W - 14));
+
+    tip.setAttribute('data-pos', pos);
+    tip.style.setProperty('--al', arrowLeft + 'px');
+    tip.style.left = clampedLeft + 'px';
+    tip.style.top  = top + 'px';
+    tip.className  = 'tip-show';
+}
+
+function hideBadge(chip) {
+    var tip = document.getElementById('global-badge-tip');
+    if (tip) tip.className = '';
+}
+
+function toggleBadge(chip) {
+    // En mobile (sin hover) alterna el tooltip con tap
+    var wasOpen = chip.classList.contains('open');
+    document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
+    if (wasOpen) {
+        hideBadge(chip);
+    } else {
+        chip.classList.add('open');
+        showBadge(chip);
+    }
+}
+
+// Cerrar al tocar fuera de cualquier chip
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.badge-chip')) {
+            document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
+            hideBadge(null);
+        }
+    });
+    // Ocultar también si se hace scroll (evita que quede flotando)
+    window.addEventListener('scroll', function() {
+        hideBadge(null);
+        document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
+    }, { passive: true });
+});
+
+// ===== CARGAR html2canvas (una sola vez, on demand) =====
 function cargarHtml2Canvas(cb) {
     if (window.html2canvas) { cb(); return; }
     var s = document.createElement('script');
@@ -1541,6 +1601,7 @@ function cargarHtml2Canvas(cb) {
 }
 
 // ===== EXPORTAR TARJETA DE PERFIL =====
+// Recibe el botón directamente (this) para evitar problemas con el objeto event.
 function exportarPerfil(btnEl, idx, nombre) {
     var originalText = btnEl.textContent;
     btnEl.textContent = '⏳ Generando...';
@@ -1548,6 +1609,8 @@ function exportarPerfil(btnEl, idx, nombre) {
 
     cargarHtml2Canvas(function() {
         var card = document.getElementById('perfil-' + idx);
+
+        // Cerrar tooltips y acordeones antes de capturar
         card.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
 
         html2canvas(card, {
@@ -1557,6 +1620,7 @@ function exportarPerfil(btnEl, idx, nombre) {
             allowTaint: true,
             logging: false,
             ignoreElements: function(el) {
+                // Ignorar el botón de exportar y los acordeones de historial
                 return el.classList.contains('perfil-export-bar') ||
                        el.classList.contains('perfil-hist-toggle');
             }

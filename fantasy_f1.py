@@ -35,8 +35,7 @@ COL_PUESTOS = [
 # =========================
 # DEFINICIÓN DE BADGES
 # =========================
-# 16 badges · 5 niveles
-# Niveles: BRONCE · PLATA · ORO · LEGENDARIO · CAMPEÓN
+# 15 badges · 4 niveles · según documento Logros_Fantasy_F1.docx
 BADGES_DEF = {
     # ─── 🥉 BRONCE ───────────────────────────────────────────────────────────
     "francotirador":  {
@@ -47,7 +46,7 @@ BADGES_DEF = {
     "racha_caliente": {
         "emoji": "🔥", "nombre": "Racha Caliente",   "hex": "#E67E22",
         "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Terminar en el top-3 del ranking grupal en 3 carreras consecutivas."
+        "criterio": "Terminar en el top-3 del ranking grupal en 4 carreras consecutivas."
     },
     "hincha_franco":  {
         "emoji": "🇦🇷", "nombre": "Hincha de Franco", "hex": "#3498DB",
@@ -57,23 +56,23 @@ BADGES_DEF = {
     "bomba_puntos":   {
         "emoji": "💣", "nombre": "Bomba de Puntos",  "hex": "#C0392B",
         "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Ser el máximo anotador individual del grupo en 4 o más carreras distintas."
+        "criterio": "Ser el máximo anotador individual del grupo en 3 o más carreras distintas."
     },
     "adivino":        {
         "emoji": "🔮", "nombre": "Adivino",          "hex": "#9B59B6",
         "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Lograr 5 o más predicciones de posición exacta en una misma carrera."
+        "criterio": "Lograr 6 o más predicciones de posición exacta en una misma carrera."
     },
     # ─── 🥈 PLATA ────────────────────────────────────────────────────────────
     "muralla":        {
         "emoji": "🛡️", "nombre": "Muralla",          "hex": "#95A5A6",
         "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "No terminar nunca en último lugar del ranking individual en ninguna carrera de la temporada."
+        "criterio": "No terminar nunca último en el ranking individual de ninguna carrera disputada."
     },
     "remontada_epica":{
         "emoji": "📈", "nombre": "Remontada Épica",  "hex": "#27AE60",
         "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "Pasar de los últimos 3 del ranking general a top-3 y sostenerlo 4 fechas seguidas."
+        "criterio": "Pasar de los últimos 3 del ranking general a top-2 y sostenerlo 4 fechas seguidas."
     },
     "estratega":      {
         "emoji": "🧠", "nombre": "Estratega",        "hex": "#16A085",
@@ -91,6 +90,11 @@ BADGES_DEF = {
         "criterio": "Acertar una posición exacta entre P7 y P10 en 6 o más carreras distintas."
     },
     # ─── 🥇 ORO ──────────────────────────────────────────────────────────────
+    "rey_temporada":  {
+        "emoji": "👑", "nombre": "Rey de la Temporada","hex": "#F39C12",
+        "nivel": "ORO",       "nivel_emoji": "🥇",
+        "criterio": "Liderar el ranking general acumulado al cierre de la temporada."
+    },
     "marea_alta":     {
         "emoji": "🌊", "nombre": "Marea Alta",       "hex": "#2471A3",
         "nivel": "ORO",       "nivel_emoji": "🥇",
@@ -105,18 +109,12 @@ BADGES_DEF = {
     "oraculo":        {
         "emoji": "🌌", "nombre": "Oráculo",          "hex": "#4A90E2",
         "nivel": "LEGENDARIO","nivel_emoji": "💎",
-        "criterio": "Acertar el podio completo (P1, P2 y P3 en orden exacto) en 5 o más carreras."
+        "criterio": "Acertar el podio completo (P1, P2 y P3 en orden exacto) en 4 o más carreras."
     },
     "perfeccionista": {
         "emoji": "💎", "nombre": "Perfeccionista",   "hex": "#00BCD4",
         "nivel": "LEGENDARIO","nivel_emoji": "💎",
         "criterio": "Lograr 7 o más predicciones de posición exacta en una misma carrera."
-    },
-    # ─── 🏆 CAMPEÓN ──────────────────────────────────────────────────────────
-    "rey_temporada":  {
-        "emoji": "👑", "nombre": "Rey de la Temporada", "hex": "#FFD700",
-        "nivel": "CAMPEÓN",   "nivel_emoji": "🏆",
-        "criterio": "Liderar el ranking general acumulado al cierre de la temporada. El logro más grande del torneo. Solo uno puede tenerlo."
     },
 }
 
@@ -364,16 +362,13 @@ def calcular_pts_p6_p10(detalles_str: str) -> int:
 def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                     ranking_acumulado: pd.DataFrame) -> Dict[str, List[Dict]]:
     """
-    Calcula los 15 logros del sistema de badges (+ 1 nivel Campeón = 16 total).
-
-    Niveles:
-      🥉 BRONCE     (5): Francotirador, Racha Caliente, Hincha de Franco,
-                          Bomba de Puntos, Adivino
-      🥈 PLATA      (5): Muralla, Remontada Épica, Estratega,
-                          Consistente, Apostador Nato
-      🥇 ORO        (2): Marea Alta, Arquitecto
-      💎 LEGENDARIO (2): Oráculo, Perfeccionista
-      🏆 CAMPEÓN    (1): Rey de la Temporada  ← nivel exclusivo, solo uno por temporada
+    Calcula los 15 logros del sistema de badges.
+    🥉 BRONCE  (5): Francotirador, Racha Caliente, Hincha de Franco,
+                     Bomba de Puntos, Adivino
+    🥈 PLATA   (5): Muralla, Remontada Épica, Estratega,
+                     Consistente, Apostador Nato
+    🥇 ORO     (3): Rey de la Temporada, Marea Alta, Arquitecto
+    💎 LEGENDARIO (2): Oráculo, Perfeccionista
     """
     if all_rankings.empty or ranking_acumulado.empty:
         return {}
@@ -382,25 +377,29 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
     historial  = calcular_historial_posiciones(all_rankings)
     carreras   = carreras_en_orden(all_rankings['Carrera'].unique().tolist())
     n_part     = ranking_acumulado.shape[0]
-    n_disp     = len(carreras)
+    n_disp     = len(carreras)   # carreras disputadas hasta ahora
 
     # ── Lookups rápidos ───────────────────────────────────────────────────────
+    # Posición POR CARRERA (ranking individual de cada fecha)
     per_race_pos: Dict[str, Dict[str, int]] = {}
     for _, row in all_rankings.iterrows():
         em = row['Dirección de correo electrónico']
         per_race_pos.setdefault(em, {})[row['Carrera']] = int(row['Posición'])
 
+    # Cantidad de participantes POR CARRERA (puede variar entre fechas)
     n_part_per_race: Dict[str, int] = {
         c: int(all_rankings[all_rankings['Carrera'] == c]['Dirección de correo electrónico'].nunique())
         for c in carreras
     }
 
+    # Posición ACUMULADA (ranking general después de cada carrera)
     cumul_pos: Dict[str, Dict[str, int]] = {}
     if not historial.empty:
         for _, row in historial.iterrows():
             em = row['Dirección de correo electrónico']
             cumul_pos.setdefault(em, {})[row['Carrera']] = int(row['Posición'])
 
+    # Quién fue top-1 de cada carrera (puede haber empate)
     top1_per_race: Dict[str, List[str]] = {}
     for c in carreras:
         sub = all_rankings[all_rankings['Carrera'] == c]
@@ -408,6 +407,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             mx = sub['Puntos'].max()
             top1_per_race[c] = sub[sub['Puntos'] == mx]['Dirección de correo electrónico'].tolist()
 
+    # Puntos P6-P10 por participante (para Arquitecto)
     arch_pts: Dict[str, int] = {
         em: sum(
             calcular_pts_p6_p10(str(r['Detalles']))
@@ -427,9 +427,10 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
 
         part_df = df_all[df_all['Dirección de correo electrónico'] == email] \
                   if not df_all.empty else pd.DataFrame()
-        my_rp   = per_race_pos.get(email, {})
-        my_cp   = cumul_pos.get(email, {})
+        my_rp   = per_race_pos.get(email, {})   # pos por carrera individual
+        my_cp   = cumul_pos.get(email, {})       # pos acumulada
 
+        # ── Helper: contar exactos en una fila de detalles ────────────────────
         def exactos_en_fila(det: str) -> int:
             return sum(1 for d in str(det).split('<br>') if 'Exacto en P' in d)
 
@@ -443,7 +444,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Acertaste el ganador exacto en {p1_ok} carreras. "
                          f"Criterio: 5+ aciertos de P1 en la temporada.")})
 
-        # 🔥 RACHA CALIENTE – Top-3 del grupo en 3 carreras consecutivas
+        # 🔥 RACHA CALIENTE – Top-3 del grupo en 4 carreras consecutivas
         consec = max_consec = 0
         for c in carreras:
             p = my_rp.get(c)
@@ -451,11 +452,11 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                 consec += 1; max_consec = max(max_consec, consec)
             else:
                 consec = 0
-        if max_consec >= 3:
+        if max_consec >= 4:
             badges.append({**BADGES_DEF["racha_caliente"],
                 "desc": (f"{BADGES_DEF['racha_caliente']['nivel_emoji']} BRONCE · "
                          f"Quedaste en el top-3 del grupo {max_consec} carreras seguidas. "
-                         f"Criterio: 3+ fechas consecutivas en el podio grupal.")})
+                         f"Criterio: 4+ fechas consecutivas en el podio grupal.")})
 
         # 🇦🇷 HINCHA DE FRANCO – Posición exacta de Colapinto en 4+ carreras
         cola_ok = sum(1 for _, r in part_df.iterrows() if 'Colapinto: EXACTO' in str(r['Detalles']))
@@ -465,55 +466,59 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Acertaste la posición exacta de Franco Colapinto en {cola_ok} carreras. "
                          f"Criterio: 4+ aciertos exactos.")})
 
-        # 💣 BOMBA DE PUNTOS – Top-1 en puntaje individual en 4+ carreras
+        # 💣 BOMBA DE PUNTOS – Top-1 en puntaje individual en 3+ carreras
         bomba_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
-        if bomba_n >= 4:
+        if bomba_n >= 3:
             badges.append({**BADGES_DEF["bomba_puntos"],
                 "desc": (f"{BADGES_DEF['bomba_puntos']['nivel_emoji']} BRONCE · "
                          f"Fuiste el máximo anotador del grupo en {bomba_n} carreras distintas. "
-                         f"Criterio: 4+ victorias de fecha.")})
+                         f"Criterio: 3+ victorias de fecha.")})
 
-        # 🔮 ADIVINO – 5+ aciertos exactos de posición en una misma carrera
+        # 🔮 ADIVINO – 6+ aciertos exactos de posición en una misma carrera
         adivino_max = adivino_carrera = 0
         for _, r in part_df.iterrows():
             ex = exactos_en_fila(r['Detalles'])
             if ex > adivino_max:
                 adivino_max = ex; adivino_carrera = r['Carrera']
-        if adivino_max >= 5:
+        if adivino_max >= 6:
             badges.append({**BADGES_DEF["adivino"],
                 "desc": (f"{BADGES_DEF['adivino']['nivel_emoji']} BRONCE · "
                          f"Lograste {adivino_max} predicciones exactas en {adivino_carrera}. "
-                         f"Criterio: 5+ aciertos exactos en una carrera (sobre 10).")})
+                         f"Criterio: 6+ aciertos exactos en una carrera (sobre 10).")})
 
         # ════════════════════════ 🥈 PLATA ════════════════════════════════════
 
-        # 🛡️ MURALLA – Nunca terminar en el ÚLTIMO puesto del ranking por carrera
+        # 🛡️ MURALLA – Nunca terminar en los últimos 2 puestos del ranking
+        # individual de CADA carrera disputada (se evalúa carrera a carrera,
+        # no el ranking acumulado). "Últimos 2" se calcula sobre los
+        # participantes reales de ESA carrera, no un total global fijo.
         muralla = all(
-            my_rp.get(c, 1) < n_part_per_race.get(c, n_part)
-            for c in carreras
+            my_rp.get(c, 1) < n_part_per_race.get(c, n_part) - 1
+            for c in carreras   # evalúa TODAS las carreras disputadas, R01→Rn
         ) and n_disp > 0
         if muralla:
             badges.append({**BADGES_DEF["muralla"],
                 "desc": (f"{BADGES_DEF['muralla']['nivel_emoji']} PLATA · "
-                         f"Nunca terminaste en el último lugar del ranking en ninguna "
-                         f"de las {n_disp} carreras disputadas.")})
+                         f"Nunca terminaste en los últimos 2 del ranking en ninguna "
+                         f"de las {n_disp} carreras disputadas. "
+                         f"Se verifica carrera a carrera, de la R01 a la R{n_disp:02d}.")})
 
-        # 📈 REMONTADA ÉPICA – De últimos 3 del ranking general a top-3
+        # 📈 REMONTADA ÉPICA – De últimos 3 del ranking general a top-2
         #    sostenido en 4 carreras consecutivas
         remontada_epica = False
         if len(carreras) >= 5:
             for i in range(len(carreras) - 4):
                 pos_t = my_cp.get(carreras[i])
                 if pos_t is None or pos_t < (n_part - 2):
-                    continue
+                    continue  # no estaba en el fondo
                 siguientes = [my_cp.get(carreras[i + j + 1]) for j in range(4)]
-                if all(p is not None and p <= 3 for p in siguientes):
+                if all(p is not None and p <= 2 for p in siguientes):
                     remontada_epica = True; break
         if remontada_epica:
             badges.append({**BADGES_DEF["remontada_epica"],
                 "desc": (f"{BADGES_DEF['remontada_epica']['nivel_emoji']} PLATA · "
-                         f"Pasaste de estar en los últimos 3 del ranking general a top-3 y "
-                         f"lo sostuviste 4 carreras seguidas.")})
+                         f"Pasaste de estar en los últimos 3 del ranking general a top-2 y "
+                         f"lo sostuviste 4 carreras seguidas. La remontada más épica del torneo.")})
 
         # 🧠 ESTRATEGA – Top-5 exacto completo (P1-P5 en orden) en una carrera
         estratega_carrera = None
@@ -523,7 +528,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         if estratega_carrera:
             badges.append({**BADGES_DEF["estratega"],
                 "desc": (f"{BADGES_DEF['estratega']['nivel_emoji']} PLATA · "
-                         f"Acertaste P1, P2, P3, P4 y P5 exactos en orden en {estratega_carrera}.")})
+                         f"Acertaste P1, P2, P3, P4 y P5 exactos en orden en {estratega_carrera}. "
+                         f"Cinco posiciones exactas de una. Brutal.")})
 
         # ⚙️ CONSISTENTE – Top-50% en al menos 17 de las 22 carreras
         umbral_50 = n_part / 2
@@ -545,9 +551,16 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                 "desc": (f"{BADGES_DEF['apostador_nato']['nivel_emoji']} PLATA · "
                          f"Acertaste una posición exacta entre P7 y P10 en "
                          f"{len(apuesta_carreras)} carreras distintas. "
-                         f"Criterio: 6+ carreras.")})
+                         f"Criterio: 6+ carreras. La zona del caos total.")})
 
         # ════════════════════════ 🥇 ORO ══════════════════════════════════════
+
+        # 👑 REY DE LA TEMPORADA – #1 en el ranking general acumulado
+        if pos_gral == 1:
+            badges.append({**BADGES_DEF["rey_temporada"],
+                "desc": (f"{BADGES_DEF['rey_temporada']['nivel_emoji']} ORO · "
+                         f"Líder del ranking general acumulado. "
+                         f"Solo uno puede tenerlo. El más codiciado del torneo.")})
 
         # 🌊 MAREA ALTA – Top-1 en 7+ carreras individuales
         marea_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
@@ -555,27 +568,28 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             badges.append({**BADGES_DEF["marea_alta"],
                 "desc": (f"{BADGES_DEF['marea_alta']['nivel_emoji']} ORO · "
                          f"Fuiste el top-1 del grupo en {marea_n} carreras individuales. "
-                         f"Criterio: 7+ victorias de fecha.")})
+                         f"Criterio: 7+ victorias de fecha. Una de cada tres tiene que ser tuya.")})
 
         # 🏗️ ARQUITECTO – Mayor puntaje acumulado en predicciones P6-P10
         if arch_pts.get(email, 0) >= max_arch > 0:
             badges.append({**BADGES_DEF["arquitecto"],
                 "desc": (f"{BADGES_DEF['arquitecto']['nivel_emoji']} ORO · "
                          f"Mayor puntaje del grupo en predicciones de P6 a P10: "
-                         f"{arch_pts.get(email,0)} pts.")})
+                         f"{arch_pts.get(email,0)} pts. Conoce el pelotón del fondo como nadie.")})
 
         # ════════════════════════ 💎 LEGENDARIO ═══════════════════════════════
 
-        # 🌌 ORÁCULO – Podio exacto (P1, P2, P3 en orden) en 5+ carreras
+        # 🌌 ORÁCULO – Podio exacto (P1, P2, P3 en orden) en 4+ carreras
         oraculo_n = sum(
             1 for _, r in part_df.iterrows()
             if all(f'Exacto en P{p}' in str(r['Detalles']) for p in range(1, 4))
         )
-        if oraculo_n >= 5:
+        if oraculo_n >= 4:
             badges.append({**BADGES_DEF["oraculo"],
                 "desc": (f"{BADGES_DEF['oraculo']['nivel_emoji']} LEGENDARIO · "
                          f"Acertaste el podio completo (P1, P2 y P3 exactos en orden) en "
-                         f"{oraculo_n} carreras. Criterio: 5+ carreras.")})
+                         f"{oraculo_n} carreras. Criterio: 4+ carreras. "
+                         f"Estadísticamente casi imposible.")})
 
         # 💎 PERFECCIONISTA – 7+ aciertos exactos en una misma carrera
         perf_max = perf_carrera = 0
@@ -587,17 +601,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             badges.append({**BADGES_DEF["perfeccionista"],
                 "desc": (f"{BADGES_DEF['perfeccionista']['nivel_emoji']} LEGENDARIO · "
                          f"Lograste {perf_max} predicciones exactas en {perf_carrera}. "
-                         f"Criterio: 7+ aciertos exactos en una carrera.")})
-
-        # ════════════════════════ 🏆 CAMPEÓN ══════════════════════════════════
-
-        # 👑 REY DE LA TEMPORADA – #1 en el ranking general acumulado
-        # Nivel exclusivo CAMPEÓN: solo uno puede tenerlo, es el logro más grande del torneo.
-        if pos_gral == 1:
-            badges.append({**BADGES_DEF["rey_temporada"],
-                "desc": (f"{BADGES_DEF['rey_temporada']['nivel_emoji']} CAMPEÓN · "
-                         f"Líder del ranking general acumulado. "
-                         f"El logro más grande del torneo. Solo uno puede tenerlo.")})
+                         f"Criterio: 7+ aciertos exactos en una carrera. "
+                         f"Si alguien lo logra, es el momento de la temporada.")})
 
         badges_resultado[email] = badges
 
@@ -781,9 +786,11 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
             for _, r in part_df.iterrows():
                 exactos_total += sum(1 for d in str(r['Detalles']).split('<br>') if 'Exacto en P' in d)
 
+        # Sparkline
         spark_b64  = generar_sparkline_perfil(email, all_rankings)
         spark_html = (f'<img src="data:image/png;base64,{spark_b64}" alt="Puntos por carrera" class="spark-img">') if spark_b64 else ""
 
+        # Historial tabla
         hist_rows = ""
         for c in carreras_lista:
             row_h = historial_pos[(historial_pos["Dirección de correo electrónico"] == email) &
@@ -797,27 +804,22 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
                           f"<td><span class='pts-chip'>{pts_c}</span></td></tr>")
 
         # ---- BADGES HTML ----
+        # Colores en rgba explícito para compatibilidad con html2canvas
         badges = badges_por_participante.get(email, [])
         n_badges = len(badges)
-
-        # Orden de niveles de mayor a menor (Campeón primero para destacarlo)
-        nivel_order = ["CAMPEÓN", "LEGENDARIO", "ORO", "PLATA", "BRONCE"]
-
         if badges:
+            # Agrupar por nivel para mostrarlos ordenados
+            nivel_order = ["BRONCE", "PLATA", "ORO", "LEGENDARIO"]
             chips = ""
             for nivel in nivel_order:
                 grupo = [b for b in badges if b.get("nivel") == nivel]
                 for b in grupo:
                     bg       = hex_to_rgba(b["hex"], 0.18)
                     border   = hex_to_rgba(b["hex"], 0.40)
-                    # El badge Campeón tiene estilos especiales
-                    extra_style = ""
-                    if b.get("nivel") == "CAMPEÓN":
-                        extra_style = "box-shadow:0 0 12px rgba(255,215,0,0.35);font-size:0.88rem;"
                     desc_safe = b["desc"].replace('"', '&quot;')
                     chips += (
                         f'<button class="badge-chip" '
-                        f'style="background:{bg};border:1px solid {border};color:{b["hex"]};{extra_style}" '
+                        f'style="background:{bg};border:1px solid {border};color:{b["hex"]};" '
                         f'data-desc="{desc_safe}" '
                         f'onclick="toggleBadge(this)" '
                         f'onmouseenter="showBadge(this)" '
@@ -849,11 +851,13 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
                 '</div>'
             )
 
+        # Medal
         if pos_gral == 1:   medal_str = '<span class="medal gold">1</span>'
         elif pos_gral == 2: medal_str = '<span class="medal silver">2</span>'
         elif pos_gral == 3: medal_str = '<span class="medal bronze">3</span>'
         else:               medal_str = f'<span class="medal plain">{pos_gral}</span>'
 
+        # Botón export: pasa `this` para evitar problemas con el objeto event
         perfiles_html += f"""
         <div class="perfil-card" id="perfil-{idx}">
             <div class="perfil-header" style="border-left:4px solid {color};">
@@ -1094,7 +1098,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
     --text: #F0F0F0; --muted: #888888; --muted-2: #555555;
     --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
     --green: #22c55e; --danger: #ef4444;
-    --champion: #FFD700;
     --font-display: 'Barlow Condensed', sans-serif;
     --font-body: 'Barlow', sans-serif;
 }}
@@ -1286,12 +1289,13 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 .perfil-badges-wrap {{ padding: 14px 16px; border-bottom: 1px solid var(--border); }}
 .badges-row {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
 
+/* El chip es un <button> para accesibilidad y eventos touch */
 .badge-chip {{
     position: relative;
     display: inline-flex; align-items: center; gap: 6px;
     padding: 6px 13px; border-radius: 20px;
     font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
-    cursor: pointer; border: none;
+    cursor: pointer; border: none; /* border viene del style inline */
     transition: opacity 0.15s, transform 0.1s;
     user-select: none; -webkit-user-select: none;
 }}
@@ -1307,57 +1311,46 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
 }}
 
-/* Badge Campeón — efecto especial */
-.badge-chip[data-nivel="Rey de la Temporada"] {{
-    animation: champion-glow 2.5s ease-in-out infinite;
-}}
-@keyframes champion-glow {{
-    0%, 100% {{ box-shadow: 0 0 8px rgba(255,215,0,0.3); }}
-    50%       {{ box-shadow: 0 0 18px rgba(255,215,0,0.6); }}
-}}
-
 /* TOOLTIP del badge */
-.badge-tooltip {{
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    width: 230px;
+/* ===== TOOLTIP GLOBAL (portal) =====
+   Un único elemento en <body> posicionado con JS.
+   Evita cualquier overflow sin importar dónde esté el badge. */
+#global-badge-tip {{
+    position: fixed;
+    width: 248px;
     background: #1C1C1C;
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.16);
     color: #E8E8E8;
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.5;
-    padding: 10px 13px;
+    line-height: 1.55;
+    padding: 10px 14px;
     border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.65);
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.18s, transform 0.18s;
-    z-index: 200;
-    text-align: left;
+    z-index: 9999;
     white-space: normal;
+    opacity: 0;
+    transition: opacity 0.16s;
 }}
-.badge-tooltip::after {{
+#global-badge-tip.tip-show {{ opacity: 1; }}
+/* Flecha — su posición horizontal se ajusta via --al */
+#global-badge-tip::after {{
     content: '';
     position: absolute;
-    top: 100%; left: 50%;
+    left: var(--al, 50%);
     transform: translateX(-50%);
-    border: 6px solid transparent;
+    border: 7px solid transparent;
+}}
+#global-badge-tip[data-pos="above"]::after {{
+    top: 100%;
     border-top-color: #1C1C1C;
 }}
-.badge-chip:hover .badge-tooltip,
-.badge-chip.open .badge-tooltip {{
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+#global-badge-tip[data-pos="below"]::after {{
+    bottom: 100%;
+    border-bottom-color: #1C1C1C;
 }}
-.badge-chip:first-child .badge-tooltip {{ left: 0; transform: translateX(0) translateY(4px); }}
-.badge-chip:first-child .badge-tooltip::after {{ left: 20px; }}
-.badge-chip:first-child:hover .badge-tooltip,
-.badge-chip:first-child.open .badge-tooltip {{ transform: translateX(0) translateY(0); }}
 
 /* EMPTY */
 .empty-msg {{ color: var(--muted); font-size: 0.9rem; font-style: italic; padding: 24px 0; }}
@@ -1392,14 +1385,6 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     .perfil-stat:nth-child(2) {{ border-right: none; }}
     .perfil-stat:nth-child(3) {{ border-top: 1px solid var(--border); }}
     .countdown-wrap {{ gap: 6px; }}
-    .badge-tooltip {{
-        position: fixed;
-        bottom: auto; top: 50%; left: 50%;
-        transform: translate(-50%, -50%) !important;
-        width: 260px;
-        z-index: 1000;
-    }}
-    .badge-tooltip::after {{ display: none; }}
 }}
 </style>
 </head>
@@ -1556,33 +1541,112 @@ function irPerfil(idx) {{
     tick(); setInterval(tick, 1000);
 }})();
 
-// ===== BADGES: tooltip hover (desktop) + toggle click (mobile) =====
-document.addEventListener('DOMContentLoaded', function() {{
-    document.querySelectorAll('.badge-chip').forEach(function(chip) {{
-        var desc = chip.getAttribute('data-desc');
-        if (!desc) return;
-        var tip = document.createElement('span');
-        tip.className = 'badge-tooltip';
-        tip.textContent = desc;
-        chip.appendChild(tip);
-    }});
-
-    document.addEventListener('click', function(e) {{
-        if (!e.target.closest('.badge-chip')) {{
-            document.querySelectorAll('.badge-chip.open').forEach(function(c) {{
-                c.classList.remove('open');
-            }});
-        }}
-    }});
-}});
-
-function toggleBadge(chip) {{
-    var wasOpen = chip.classList.contains('open');
-    document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
-    if (!wasOpen) chip.classList.add('open');
+// ===== BADGE TOOLTIP — PORTAL GLOBAL =====
+// Un único div #global-badge-tip vive en <body>.
+// showBadge() lo posiciona con JS justo antes de mostrarlo,
+// calculando si cabe arriba o abajo y ajustando para no salirse del viewport.
+var _gTip = null;
+function _getTip() {{
+    if (_gTip) return _gTip;
+    _gTip = document.createElement('div');
+    _gTip.id = 'global-badge-tip';
+    document.body.appendChild(_gTip);
+    return _gTip;
 }}
 
-// ===== CARGAR html2canvas =====
+function showBadge(chip) {{
+    var desc = chip.getAttribute('data-desc');
+    if (!desc) return;
+
+    var tip = _getTip();
+    tip.textContent = desc;
+    tip.className = '';           // quitar tip-show para medir sin transición
+
+    var W = 248, GAP = 10, MARGIN = 12;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var r = chip.getBoundingClientRect();
+
+    // ── Mobile: centrar en pantalla ──────────────────────────────────────────
+    if (vw <= 640) {{
+        tip.style.width  = Math.min(W, vw - MARGIN * 2) + 'px';
+        tip.style.left   = '50%';
+        tip.style.top    = '50%';
+        tip.style.transform = 'translate(-50%, -50%)';
+        tip.removeAttribute('data-pos');
+        tip.style.removeProperty('--al');
+        tip.className = 'tip-show';
+        return;
+    }}
+
+    // ── Desktop: posición relativa al chip ───────────────────────────────────
+    tip.style.transform = '';
+    tip.style.width = W + 'px';
+    // Colocar temporalmente fuera de pantalla para medir la altura real
+    tip.style.left = '-9999px';
+    tip.style.top  = '-9999px';
+    tip.style.display = 'block';           // asegurar que sea medible
+    var tipH = tip.offsetHeight;
+
+    // Calcular left: centrado sobre el chip, clampeado al viewport
+    var idealLeft = r.left + r.width / 2 - W / 2;
+    var clampedLeft = Math.max(MARGIN, Math.min(idealLeft, vw - W - MARGIN));
+
+    // Decidir si va arriba o abajo
+    var spaceAbove = r.top;
+    var spaceBelow = vh - r.bottom;
+    var pos, top;
+    if (spaceAbove >= tipH + GAP || spaceAbove >= spaceBelow) {{
+        pos = 'above';
+        top = r.top - tipH - GAP;
+    }} else {{
+        pos = 'below';
+        top = r.bottom + GAP;
+    }}
+
+    // Posición horizontal de la flecha: apunta al centro del chip
+    var arrowLeft = (r.left + r.width / 2) - clampedLeft;
+    arrowLeft = Math.max(14, Math.min(arrowLeft, W - 14));
+
+    tip.setAttribute('data-pos', pos);
+    tip.style.setProperty('--al', arrowLeft + 'px');
+    tip.style.left = clampedLeft + 'px';
+    tip.style.top  = top + 'px';
+    tip.className  = 'tip-show';
+}}
+
+function hideBadge(chip) {{
+    var tip = document.getElementById('global-badge-tip');
+    if (tip) tip.className = '';
+}}
+
+function toggleBadge(chip) {{
+    // En mobile (sin hover) alterna el tooltip con tap
+    var wasOpen = chip.classList.contains('open');
+    document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
+    if (wasOpen) {{
+        hideBadge(chip);
+    }} else {{
+        chip.classList.add('open');
+        showBadge(chip);
+    }}
+}}
+
+// Cerrar al tocar fuera de cualquier chip
+document.addEventListener('DOMContentLoaded', function() {{
+    document.addEventListener('click', function(e) {{
+        if (!e.target.closest('.badge-chip')) {{
+            document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
+            hideBadge(null);
+        }}
+    }});
+    // Ocultar también si se hace scroll (evita que quede flotando)
+    window.addEventListener('scroll', function() {{
+        hideBadge(null);
+        document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
+    }}, {{ passive: true }});
+}});
+
+// ===== CARGAR html2canvas (una sola vez, on demand) =====
 function cargarHtml2Canvas(cb) {{
     if (window.html2canvas) {{ cb(); return; }}
     var s = document.createElement('script');
@@ -1593,6 +1657,7 @@ function cargarHtml2Canvas(cb) {{
 }}
 
 // ===== EXPORTAR TARJETA DE PERFIL =====
+// Recibe el botón directamente (this) para evitar problemas con el objeto event.
 function exportarPerfil(btnEl, idx, nombre) {{
     var originalText = btnEl.textContent;
     btnEl.textContent = '⏳ Generando...';
@@ -1600,6 +1665,8 @@ function exportarPerfil(btnEl, idx, nombre) {{
 
     cargarHtml2Canvas(function() {{
         var card = document.getElementById('perfil-' + idx);
+
+        // Cerrar tooltips y acordeones antes de capturar
         card.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
 
         html2canvas(card, {{
@@ -1609,6 +1676,7 @@ function exportarPerfil(btnEl, idx, nombre) {{
             allowTaint: true,
             logging: false,
             ignoreElements: function(el) {{
+                // Ignorar el botón de exportar y los acordeones de historial
                 return el.classList.contains('perfil-export-bar') ||
                        el.classList.contains('perfil-hist-toggle');
             }}
