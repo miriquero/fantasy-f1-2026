@@ -203,17 +203,15 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .perfil-hist-toggle { padding: 4px 0; }
 .perfil-export-bar { padding: 10px 16px 14px; display: flex; justify-content: flex-end; }
 
-/* ===== BADGES ===== */
+/* BADGES */
 .perfil-badges-wrap { padding: 14px 16px; border-bottom: 1px solid var(--border); }
 .badges-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-
-/* El chip es un <button> para accesibilidad y eventos touch */
 .badge-chip {
     position: relative;
     display: inline-flex; align-items: center; gap: 6px;
     padding: 6px 13px; border-radius: 20px;
     font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
-    cursor: pointer; border: none; /* border viene del style inline */
+    cursor: pointer; border: none;
     transition: opacity 0.15s, transform 0.1s;
     user-select: none; -webkit-user-select: none;
 }
@@ -228,11 +226,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     padding: 2px 8px; border-radius: 10px;
     font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
 }
-
-/* TOOLTIP del badge */
-/* ===== TOOLTIP GLOBAL (portal) =====
-   Un único elemento en <body> posicionado con JS.
-   Evita cualquier overflow sin importar dónde esté el badge. */
 #global-badge-tip {
     position: fixed;
     width: 248px;
@@ -253,7 +246,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     transition: opacity 0.16s;
 }
 #global-badge-tip.tip-show { opacity: 1; }
-/* Flecha — su posición horizontal se ajusta via --al */
 #global-badge-tip::after {
     content: '';
     position: absolute;
@@ -304,6 +296,200 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     .perfil-stat:nth-child(3) { border-top: 1px solid var(--border); }
     .countdown-wrap { gap: 6px; }
 }
+
+
+/* ═══════════════════ LOGROS TAB ═══════════════════ */
+.logros-hero {
+    position: relative; overflow: hidden;
+    border-radius: 16px; margin-bottom: 32px;
+    min-height: 220px;
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: flex-end;
+}
+.logros-hero-bg {
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse 80% 80% at 110% 50%, rgba(225,6,0,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at -10% 100%, rgba(255,215,0,0.08) 0%, transparent 55%),
+        linear-gradient(135deg, #0D0D0D 0%, #111111 100%);
+    z-index: 0;
+}
+.logros-hero-bg::after {
+    content: '🏆';
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    font-size: clamp(80px, 14vw, 160px);
+    opacity: 0.06; filter: blur(1px);
+    pointer-events: none; user-select: none;
+}
+.logros-hero-content {
+    position: relative; z-index: 1;
+    padding: 32px 36px; width: 100%;
+}
+.logros-eyebrow {
+    font-family: var(--font-display); font-size: 0.68rem; font-weight: 800;
+    letter-spacing: 4px; text-transform: uppercase; color: var(--red);
+    margin-bottom: 10px;
+}
+.logros-title {
+    font-family: var(--font-display); font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 800; letter-spacing: -1px; text-transform: uppercase;
+    line-height: 0.9; color: #FFFFFF; margin-bottom: 16px;
+}
+.logros-title span { color: var(--red); }
+.logros-subtitle {
+    font-size: 0.85rem; color: #888888; margin-bottom: 24px; max-width: 500px;
+    letter-spacing: 0.3px;
+}
+.logros-hero-stats {
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.logros-hero-stat { text-align: left; }
+.logros-hero-num {
+    font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+    color: #FFFFFF; line-height: 1; display: block;
+}
+.logros-hero-desc {
+    font-size: 0.7rem; color: #666666; text-transform: uppercase;
+    letter-spacing: 1.5px; display: block; margin-top: 3px;
+    font-family: var(--font-display);
+}
+.logros-hero-divider {
+    width: 1px; height: 40px;
+    background: rgba(255,255,255,0.1);
+}
+.logros-main-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+@media (max-width: 860px) {
+    .logros-main-grid { grid-template-columns: 1fr; }
+}
+.logros-sidebar-inner {
+    background: #111111; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 20px; position: sticky; top: 80px;
+}
+.logros-sidebar-title {
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 800;
+    letter-spacing: 2.5px; text-transform: uppercase; color: #888888;
+    margin-bottom: 6px; margin-top: 20px;
+}
+.logros-sidebar-title:first-child { margin-top: 0; }
+.logros-sidebar-sub {
+    font-size: 0.72rem; color: #444444; margin-bottom: 16px;
+}
+.logros-lideres-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.logros-lider-row {
+    display: flex; align-items: center; gap: 8px;
+}
+.logros-lider-left {
+    display: flex; align-items: center; gap: 6px; min-width: 90px;
+}
+.logros-lider-pos {
+    font-family: var(--font-display); font-size: 0.75rem; font-weight: 800;
+    width: 22px; flex-shrink: 0;
+}
+.logros-lider-nombre {
+    font-family: var(--font-display); font-size: 0.82rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.logros-lider-bar-wrap {
+    flex: 1; height: 5px; background: rgba(255,255,255,0.06);
+    border-radius: 3px; overflow: hidden;
+}
+.logros-lider-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+.logros-lider-right { display: flex; align-items: baseline; gap: 1px; }
+.logros-lider-count {
+    font-family: var(--font-display); font-size: 0.95rem; font-weight: 800; color: #FFFFFF;
+}
+.logros-lider-total { font-size: 0.65rem; color: #444444; }
+.logros-leyenda { margin-top: 4px; display: flex; flex-direction: column; gap: 8px; }
+.logros-leyenda-row { display: flex; align-items: center; gap: 10px; }
+.logros-leyenda-dot {
+    width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+}
+.logros-leyenda-label {
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.logros-catalogo { display: flex; flex-direction: column; gap: 28px; }
+.logros-nivel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.03); border-radius: 8px;
+}
+.logros-nivel-label {
+    font-family: var(--font-display); font-size: 0.9rem; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+}
+.logros-nivel-sub {
+    font-size: 0.72rem; color: #555555; font-family: var(--font-display);
+    font-weight: 600; letter-spacing: 1px;
+}
+.logros-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+.logro-card {
+    position: relative; border-radius: 12px;
+    padding: 18px 18px 16px; display: flex; align-items: flex-start; gap: 14px;
+    transition: transform 0.18s, box-shadow 0.18s;
+    overflow: hidden;
+}
+.logro-card::before {
+    content: ''; position: absolute; inset: 0; opacity: 0;
+    background: radial-gradient(ellipse at 0% 50%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    transition: opacity 0.2s;
+}
+.logro-desbloqueado:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+.logro-desbloqueado:hover::before { opacity: 1; }
+.logro-bloqueado { filter: saturate(0.1); }
+.badge-lock {
+    position: absolute; top: 10px; right: 12px;
+    font-size: 0.8rem; opacity: 0.35;
+}
+.logro-emoji-wrap {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.logro-emoji { font-size: 1.6rem; line-height: 1; }
+.logro-content { flex: 1; min-width: 0; }
+.logro-nombre {
+    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+    letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 4px;
+    line-height: 1.1;
+}
+.logro-desc-corta {
+    font-family: var(--font-display); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.2px; margin-bottom: 6px; line-height: 1.4;
+}
+.logro-desc-larga {
+    font-size: 0.73rem; line-height: 1.55; margin-bottom: 10px;
+}
+.badge-ganadores { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.badge-ganador-chip {
+    font-family: var(--font-display); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    background: rgba(255,255,255,0.08); color: #CCCCCC;
+    padding: 3px 9px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.badge-nadie {
+    font-size: 0.68rem; color: #333333; font-style: italic;
+    font-family: var(--font-display);
+}
+/* ═══════════════════════════════════════════════════════ */
+
 </style>
 </head>
 <body>
@@ -343,6 +529,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
     <button class="tab-btn" onclick="openTab(event,'panel-stats')">Estadísticas</button>
     <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
 </div>
 </nav>
 
@@ -1427,11 +1614,453 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     </table></div>
 </div>
 
+
+<div id="panel-logros" class="tab-panel">
+    <div class="logros-hero">
+        <div class="logros-hero-bg"></div>
+        <div class="logros-hero-content">
+            <div class="logros-eyebrow">Sistema de Logros</div>
+            <h2 class="logros-title">HAL<span>L OF</span><br>FAME</h2>
+            <p class="logros-subtitle">15 badges · 5 niveles · 22 carreras · Solo los mejores los desbloquean</p>
+            <div class="logros-hero-stats">
+                <div class="logros-hero-stat">
+                    <span class="logros-hero-num">8</span>
+                    <span class="logros-hero-desc">Badges otorgados</span>
+                </div>
+                <div class="logros-hero-divider"></div>
+                <div class="logros-hero-stat">
+                    <span class="logros-hero-num">4</span>
+                    <span class="logros-hero-desc">Badges desbloqueados</span>
+                </div>
+                <div class="logros-hero-divider"></div>
+                <div class="logros-hero-stat">
+                    <span class="logros-hero-num">15</span>
+                    <span class="logros-hero-desc">Total disponibles</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="logros-main-grid">
+        <div class="logros-sidebar">
+            <div class="logros-sidebar-inner">
+                <div class="logros-sidebar-title">🏆 Ranking de Logros</div>
+                <div class="logros-sidebar-sub">Quién tiene más badges desbloqueados</div>
+                <div class="logros-lideres-list">
+                    
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#E10600;">#1</span>
+                <span class="logros-lider-nombre" style="color:#E10600;">miriquero</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:20%;background:#E10600;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">3</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#00C8FF;">#2</span>
+                <span class="logros-lider-nombre" style="color:#00C8FF;">alinaiaraceleste</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:7%;background:#00C8FF;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">1</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#FFD700;">#3</span>
+                <span class="logros-lider-nombre" style="color:#FFD700;">riqueropetiniha</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:7%;background:#FFD700;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">1</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#C77DFF;">#4</span>
+                <span class="logros-lider-nombre" style="color:#C77DFF;">friquero</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:7%;background:#C77DFF;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">1</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#39FF14;">#5</span>
+                <span class="logros-lider-nombre" style="color:#39FF14;">damiantourres</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:7%;background:#39FF14;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">1</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#FF6B35;">#6</span>
+                <span class="logros-lider-nombre" style="color:#FF6B35;">lautarotourres</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:7%;background:#FF6B35;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">1</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#00E5CC;">#7</span>
+                <span class="logros-lider-nombre" style="color:#00E5CC;">riquerorori1993</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:4%;background:#00E5CC;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">0</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#FF69B4;">#8</span>
+                <span class="logros-lider-nombre" style="color:#FF69B4;">riquerole</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:4%;background:#FF69B4;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">0</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#E10600;">#9</span>
+                <span class="logros-lider-nombre" style="color:#E10600;">eugeniabanini</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:4%;background:#E10600;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">0</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+        <div class="logros-lider-row">
+            <div class="logros-lider-left">
+                <span class="logros-lider-pos" style="color:#00C8FF;">#10</span>
+                <span class="logros-lider-nombre" style="color:#00C8FF;">sergiopede92</span>
+            </div>
+            <div class="logros-lider-bar-wrap">
+                <div class="logros-lider-bar-fill" style="width:4%;background:#00C8FF;"></div>
+            </div>
+            <div class="logros-lider-right">
+                <span class="logros-lider-count">0</span>
+                <span class="logros-lider-total">/15</span>
+            </div>
+        </div>
+                </div>
+                <div class="logros-leyenda">
+                    <div class="logros-sidebar-title" style="margin-top:0;">Niveles de dificultad</div>
+                    <div class="logros-leyenda-row">
+        <span class="logros-leyenda-dot" style="background:#CD7F32;box-shadow:0 0 8px #CD7F3244;"></span>
+        <span class="logros-leyenda-label" style="color:#CD7F32;">🥉 BRONCE</span>
+    </div><div class="logros-leyenda-row">
+        <span class="logros-leyenda-dot" style="background:#C0C0C0;box-shadow:0 0 8px #C0C0C044;"></span>
+        <span class="logros-leyenda-label" style="color:#C0C0C0;">🥈 PLATA</span>
+    </div><div class="logros-leyenda-row">
+        <span class="logros-leyenda-dot" style="background:#FFD700;box-shadow:0 0 8px #FFD70044;"></span>
+        <span class="logros-leyenda-label" style="color:#FFD700;">🥇 ORO</span>
+    </div><div class="logros-leyenda-row">
+        <span class="logros-leyenda-dot" style="background:#4A90E2;box-shadow:0 0 8px #4A90E244;"></span>
+        <span class="logros-leyenda-label" style="color:#4A90E2;">💎 LEGENDARIO</span>
+    </div><div class="logros-leyenda-row">
+        <span class="logros-leyenda-dot" style="background:#F39C12;box-shadow:0 0 8px #F39C1244;"></span>
+        <span class="logros-leyenda-label" style="color:#F39C12;">🏆 CAMPEÓN</span>
+    </div>
+                </div>
+            </div>
+        </div>
+        <div class="logros-catalogo">
+            
+        <div class="logros-nivel-block">
+            <div class="logros-nivel-header" style="border-left:3px solid #CD7F32;">
+                <span class="logros-nivel-label" style="color:#CD7F32;">🥉 BRONCE</span>
+                <span class="logros-nivel-sub">
+                    1 / 5 desbloqueados
+                </span>
+            </div>
+            <div class="logros-cards-grid">
+                
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(231,76,60,0.03);border:1px solid rgba(231,76,60,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(231,76,60,0.06);border:1px solid rgba(231,76,60,0.12);">
+                    <span class="logro-emoji">🎯</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Francotirador</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Acertar P1 exacto en 5 carreras distintas</div>
+                    <div class="logro-desc-larga" style="color:#333333;">No tienen que ser seguidas. Pero acertar 5 ganadores en 22 carreras requiere leer bien hasta las fechas más impredecibles.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(230,126,34,0.03);border:1px solid rgba(230,126,34,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(230,126,34,0.06);border:1px solid rgba(230,126,34,0.12);">
+                    <span class="logro-emoji">🔥</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Racha Caliente</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Top-3 del grupo en 3 carreras consecutivas</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Sostener el nivel sin un solo tropiezo durante tres fechas seguidas. La consistencia a corto plazo tiene su recompensa.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(52,152,219,0.03);border:1px solid rgba(52,152,219,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(52,152,219,0.06);border:1px solid rgba(52,152,219,0.12);">
+                    <span class="logro-emoji">🇦🇷</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Hincha de Franco</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Posición exacta de Colapinto en 4 carreras</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Con su variabilidad de resultados, acertar 4 posiciones exactas de Franco Colapinto es una hazaña real.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(192,57,43,0.03);border:1px solid rgba(192,57,43,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(192,57,43,0.06);border:1px solid rgba(192,57,43,0.12);">
+                    <span class="logro-emoji">💣</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Bomba de Puntos</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Top-1 absoluto en puntaje en 4 carreras distintas</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Ganar una fecha es suerte. Ganar cuatro en la temporada es dominio real. Sin empates, techo absoluto del grupo.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-desbloqueado"
+                 style="background:rgba(155,89,182,0.07);border:1px solid rgba(155,89,182,0.35);">
+                
+                <div class="logro-emoji-wrap" style="background:rgba(155,89,182,0.15);border:1px solid rgba(155,89,182,0.35);">
+                    <span class="logro-emoji">🔮</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#FFFFFF;">Adivino</div>
+                    <div class="logro-desc-corta" style="color:#9B59B6;">5+ aciertos exactos en una sola carrera</div>
+                    <div class="logro-desc-larga" style="color:#888888;">Acertar la mitad exacta de las 10 posiciones predichas es estadísticamente raro con 20 pilotos en pista.</div>
+                    <div class="badge-ganadores"><span class="badge-ganador-chip">miriquero</span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="logros-nivel-block">
+            <div class="logros-nivel-header" style="border-left:3px solid #C0C0C0;">
+                <span class="logros-nivel-label" style="color:#C0C0C0;">🥈 PLATA</span>
+                <span class="logros-nivel-sub">
+                    1 / 5 desbloqueados
+                </span>
+            </div>
+            <div class="logros-cards-grid">
+                
+            <div class="logro-card logro-desbloqueado"
+                 style="background:rgba(149,165,166,0.07);border:1px solid rgba(149,165,166,0.35);">
+                
+                <div class="logro-emoji-wrap" style="background:rgba(149,165,166,0.15);border:1px solid rgba(149,165,166,0.35);">
+                    <span class="logro-emoji">🛡️</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#FFFFFF;">Muralla</div>
+                    <div class="logro-desc-corta" style="color:#95A5A6;">Nunca terminar último en el ranking de ninguna carrera</div>
+                    <div class="logro-desc-larga" style="color:#888888;">Con 10-12 jugadores, evitar el fondo absoluto durante toda la temporada es un logro de consistencia pura.</div>
+                    <div class="badge-ganadores"><span class="badge-ganador-chip">alinaiaraceleste</span><span class="badge-ganador-chip">riqueropetiniha</span><span class="badge-ganador-chip">friquero</span><span class="badge-ganador-chip">damiantourres</span><span class="badge-ganador-chip">lautarotourres</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(39,174,96,0.03);border:1px solid rgba(39,174,96,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.12);">
+                    <span class="logro-emoji">📈</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Remontada Épica</div>
+                    <div class="logro-desc-corta" style="color:#444444;">De los últimos 3 del ranking a top-3 en 4 fechas</div>
+                    <div class="logro-desc-larga" style="color:#333333;">La remontada tiene que ser profunda (desde el fondo) y sostenida (mantenerse 4 fechas consecutivas en el top).</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(22,160,133,0.03);border:1px solid rgba(22,160,133,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(22,160,133,0.06);border:1px solid rgba(22,160,133,0.12);">
+                    <span class="logro-emoji">🧠</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Estratega</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Top-5 completo exacto (P1-P5 en orden) en una carrera</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Cinco posiciones exactas de diez en una carrera de F1. Brutal. La probabilidad estadística es mínima.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(127,140,141,0.03);border:1px solid rgba(127,140,141,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(127,140,141,0.06);border:1px solid rgba(127,140,141,0.12);">
+                    <span class="logro-emoji">⚙️</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Consistente</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Top-50% del grupo en 17 de las 22 carreras</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Solo 5 fechas malas permitidas en toda la temporada. No hay margen para rachas negativas prolongadas.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(142,68,173,0.03);border:1px solid rgba(142,68,173,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(142,68,173,0.06);border:1px solid rgba(142,68,173,0.12);">
+                    <span class="logro-emoji">🎰</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Apostador Nato</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Acierto exacto entre P7-P10 en 6 carreras distintas</div>
+                    <div class="logro-desc-larga" style="color:#333333;">La zona del caos total. Acertar 6 posiciones exactas entre P7 y P10 a lo largo de la temporada es excepcional.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="logros-nivel-block">
+            <div class="logros-nivel-header" style="border-left:3px solid #FFD700;">
+                <span class="logros-nivel-label" style="color:#FFD700;">🥇 ORO</span>
+                <span class="logros-nivel-sub">
+                    1 / 2 desbloqueados
+                </span>
+            </div>
+            <div class="logros-cards-grid">
+                
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(36,113,163,0.03);border:1px solid rgba(36,113,163,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(36,113,163,0.06);border:1px solid rgba(36,113,163,0.12);">
+                    <span class="logro-emoji">🌊</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Marea Alta</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Top-1 del grupo en 7 o más carreras individuales</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Una de cada tres carreras tiene que ser tuya. Ganar el ranking general y este badge a la vez es rarísimo.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-desbloqueado"
+                 style="background:rgba(211,84,0,0.07);border:1px solid rgba(211,84,0,0.35);">
+                
+                <div class="logro-emoji-wrap" style="background:rgba(211,84,0,0.15);border:1px solid rgba(211,84,0,0.35);">
+                    <span class="logro-emoji">🏗️</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#FFFFFF;">Arquitecto</div>
+                    <div class="logro-desc-corta" style="color:#D35400;">Mayor puntaje acumulado en predicciones P6-P10</div>
+                    <div class="logro-desc-larga" style="color:#888888;">Premia el conocimiento profundo del pelotón medio, no solo adivinar a los favoritos de siempre.</div>
+                    <div class="badge-ganadores"><span class="badge-ganador-chip">miriquero</span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="logros-nivel-block">
+            <div class="logros-nivel-header" style="border-left:3px solid #4A90E2;">
+                <span class="logros-nivel-label" style="color:#4A90E2;">💎 LEGENDARIO</span>
+                <span class="logros-nivel-sub">
+                    0 / 2 desbloqueados
+                </span>
+            </div>
+            <div class="logros-cards-grid">
+                
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(74,144,226,0.03);border:1px solid rgba(74,144,226,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(74,144,226,0.06);border:1px solid rgba(74,144,226,0.12);">
+                    <span class="logro-emoji">🌌</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Oráculo</div>
+                    <div class="logro-desc-corta" style="color:#444444;">Podio exacto (P1, P2 y P3) en 5 carreras distintas</div>
+                    <div class="logro-desc-larga" style="color:#333333;">El podio exacto cinco veces. La probabilidad estadística de lograrlo en una sola carrera ya es ridículamente baja.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            <div class="logro-card logro-bloqueado"
+                 style="background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.12);">
+                <span class="badge-lock">🔒</span>
+                <div class="logro-emoji-wrap" style="background:rgba(0,188,212,0.06);border:1px solid rgba(0,188,212,0.12);">
+                    <span class="logro-emoji">💎</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#555555;">Perfeccionista</div>
+                    <div class="logro-desc-corta" style="color:#444444;">7+ aciertos exactos en una sola carrera</div>
+                    <div class="logro-desc-larga" style="color:#333333;">Casi imposible. Si alguien lo logra en alguna fecha, es el momento de la temporada. Estadísticamente brutal.</div>
+                    <div class="badge-ganadores"><span class="badge-nadie">Sin desbloquear aún</span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="logros-nivel-block">
+            <div class="logros-nivel-header" style="border-left:3px solid #F39C12;">
+                <span class="logros-nivel-label" style="color:#F39C12;">🏆 CAMPEÓN</span>
+                <span class="logros-nivel-sub">
+                    1 / 1 desbloqueados
+                </span>
+            </div>
+            <div class="logros-cards-grid">
+                
+            <div class="logro-card logro-desbloqueado"
+                 style="background:rgba(243,156,18,0.07);border:1px solid rgba(243,156,18,0.35);">
+                
+                <div class="logro-emoji-wrap" style="background:rgba(243,156,18,0.15);border:1px solid rgba(243,156,18,0.35);">
+                    <span class="logro-emoji">👑</span>
+                </div>
+                <div class="logro-content">
+                    <div class="logro-nombre" style="color:#FFFFFF;">Rey de la Temporada</div>
+                    <div class="logro-desc-corta" style="color:#F39C12;">Primero en el ranking general al cierre de la temporada</div>
+                    <div class="logro-desc-larga" style="color:#888888;">El logro más grande del torneo. Solo uno puede tenerlo por temporada. No hay nada por encima de este badge.</div>
+                    <div class="badge-ganadores"><span class="badge-ganador-chip">miriquero</span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
 </main>
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    Generado automáticamente · 28/05/2026 · 15:13
+    Generado automáticamente · 04/06/2026 · 10:09
 </footer>
 
 <script>
@@ -1486,9 +2115,6 @@ function irPerfil(idx) {
 })();
 
 // ===== BADGE TOOLTIP — PORTAL GLOBAL =====
-// Un único div #global-badge-tip vive en <body>.
-// showBadge() lo posiciona con JS justo antes de mostrarlo,
-// calculando si cabe arriba o abajo y ajustando para no salirse del viewport.
 var _gTip = null;
 function _getTip() {
     if (_gTip) return _gTip;
@@ -1501,16 +2127,12 @@ function _getTip() {
 function showBadge(chip) {
     var desc = chip.getAttribute('data-desc');
     if (!desc) return;
-
     var tip = _getTip();
     tip.textContent = desc;
-    tip.className = '';           // quitar tip-show para medir sin transición
-
+    tip.className = '';
     var W = 248, GAP = 10, MARGIN = 12;
     var vw = window.innerWidth, vh = window.innerHeight;
     var r = chip.getBoundingClientRect();
-
-    // ── Mobile: centrar en pantalla ──────────────────────────────────────────
     if (vw <= 640) {
         tip.style.width  = Math.min(W, vw - MARGIN * 2) + 'px';
         tip.style.left   = '50%';
@@ -1521,21 +2143,14 @@ function showBadge(chip) {
         tip.className = 'tip-show';
         return;
     }
-
-    // ── Desktop: posición relativa al chip ───────────────────────────────────
     tip.style.transform = '';
     tip.style.width = W + 'px';
-    // Colocar temporalmente fuera de pantalla para medir la altura real
     tip.style.left = '-9999px';
     tip.style.top  = '-9999px';
-    tip.style.display = 'block';           // asegurar que sea medible
+    tip.style.display = 'block';
     var tipH = tip.offsetHeight;
-
-    // Calcular left: centrado sobre el chip, clampeado al viewport
     var idealLeft = r.left + r.width / 2 - W / 2;
     var clampedLeft = Math.max(MARGIN, Math.min(idealLeft, vw - W - MARGIN));
-
-    // Decidir si va arriba o abajo
     var spaceAbove = r.top;
     var spaceBelow = vh - r.bottom;
     var pos, top;
@@ -1546,11 +2161,8 @@ function showBadge(chip) {
         pos = 'below';
         top = r.bottom + GAP;
     }
-
-    // Posición horizontal de la flecha: apunta al centro del chip
     var arrowLeft = (r.left + r.width / 2) - clampedLeft;
     arrowLeft = Math.max(14, Math.min(arrowLeft, W - 14));
-
     tip.setAttribute('data-pos', pos);
     tip.style.setProperty('--al', arrowLeft + 'px');
     tip.style.left = clampedLeft + 'px';
@@ -1564,7 +2176,6 @@ function hideBadge(chip) {
 }
 
 function toggleBadge(chip) {
-    // En mobile (sin hover) alterna el tooltip con tap
     var wasOpen = chip.classList.contains('open');
     document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
     if (wasOpen) {
@@ -1575,7 +2186,6 @@ function toggleBadge(chip) {
     }
 }
 
-// Cerrar al tocar fuera de cualquier chip
 document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.badge-chip')) {
@@ -1583,14 +2193,13 @@ document.addEventListener('DOMContentLoaded', function() {
             hideBadge(null);
         }
     });
-    // Ocultar también si se hace scroll (evita que quede flotando)
     window.addEventListener('scroll', function() {
         hideBadge(null);
         document.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
     }, { passive: true });
 });
 
-// ===== CARGAR html2canvas (una sola vez, on demand) =====
+// ===== CARGAR html2canvas =====
 function cargarHtml2Canvas(cb) {
     if (window.html2canvas) { cb(); return; }
     var s = document.createElement('script');
@@ -1601,18 +2210,13 @@ function cargarHtml2Canvas(cb) {
 }
 
 // ===== EXPORTAR TARJETA DE PERFIL =====
-// Recibe el botón directamente (this) para evitar problemas con el objeto event.
 function exportarPerfil(btnEl, idx, nombre) {
     var originalText = btnEl.textContent;
     btnEl.textContent = '⏳ Generando...';
     btnEl.disabled = true;
-
     cargarHtml2Canvas(function() {
         var card = document.getElementById('perfil-' + idx);
-
-        // Cerrar tooltips y acordeones antes de capturar
         card.querySelectorAll('.badge-chip.open').forEach(function(c) { c.classList.remove('open'); });
-
         html2canvas(card, {
             backgroundColor: '#111111',
             scale: 2,
@@ -1620,7 +2224,6 @@ function exportarPerfil(btnEl, idx, nombre) {
             allowTaint: true,
             logging: false,
             ignoreElements: function(el) {
-                // Ignorar el botón de exportar y los acordeones de historial
                 return el.classList.contains('perfil-export-bar') ||
                        el.classList.contains('perfil-hist-toggle');
             }
@@ -1671,6 +2274,23 @@ function exportarCSV() {
     link.href = url; link.download = 'ranking_f1_2026.csv'; link.click();
     URL.revokeObjectURL(url);
 }
+
+
+// Animar barras de progreso al activar la pestaña de logros
+(function() {
+    var originalOpenTab = window.openTab;
+    window.openTab = function(evt, panelId) {
+        originalOpenTab(evt, panelId);
+        if (panelId === 'panel-logros') {
+            document.querySelectorAll('.logros-lider-bar-fill').forEach(function(el) {
+                var w = el.style.width;
+                el.style.width = '0';
+                setTimeout(function() { el.style.width = w; }, 80);
+            });
+        }
+    };
+})();
+
 </script>
 </body>
 </html>
