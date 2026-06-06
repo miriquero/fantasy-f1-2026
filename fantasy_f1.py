@@ -61,7 +61,6 @@ NIVEL_CONFIG = {
     "CAMPEÓN":   {"color": "#F39C12", "bg": "rgba(243,156,18,0.08)",  "border": "rgba(243,156,18,0.3)",   "label": "🏆 CAMPEÓN",   "order": 5},
 }
 
-# También mantenemos BADGES_DEF como alias para compatibilidad con calcular_badges()
 BADGES_DEF = {
     "francotirador":  {
         "emoji": "🎯", "nombre": "Francotirador",    "hex": "#E74C3C",
@@ -145,10 +144,8 @@ def hex_to_rgba(hex_color: str, alpha: float) -> str:
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
     return f"rgba({r},{g},{b},{alpha})"
 
-# alias para las funciones del panel de logros
 hex_to_rgba_logros = hex_to_rgba
 
-# Fechas ISO para el countdown (año-mes-día hora:minuto en hora argentina GMT-3)
 CALENDARIO = [
     {"Jornada": "R01", "Carrera": "AUSTRALIA",      "Fecha": "8 MAR",   "Hora Local": "15:00", "Hora Argentina": "01:00",              "FechaISO": "2026-03-08T01:00:00"},
     {"Jornada": "R02", "Carrera": "CHINA",           "Fecha": "15 MAR",  "Hora Local": "15:00", "Hora Argentina": "04:00",              "FechaISO": "2026-03-15T04:00:00"},
@@ -178,9 +175,6 @@ CALENDARIO = [
 
 COLORES_PARTICIPANTES = ['#E10600','#00C8FF','#FFD700','#C77DFF','#39FF14','#FF6B35','#00E5CC','#FF69B4']
 
-# =========================
-# HELPER: ORDEN DE CARRERAS SEGÚN CALENDARIO
-# =========================
 def get_orden_carreras() -> List[str]:
     orden = []
     for entry in CALENDARIO:
@@ -192,7 +186,6 @@ def get_orden_carreras() -> List[str]:
             orden.append(nombre)
     return orden
 
-
 def carreras_en_orden(available: List[str]) -> List[str]:
     orden_cal = get_orden_carreras()
     available_set = set(available)
@@ -202,10 +195,6 @@ def carreras_en_orden(available: List[str]) -> List[str]:
             ordenadas.append(c)
     return ordenadas
 
-
-# =========================
-# FUNCIÓN PUNTOS POR POSICIÓN
-# =========================
 def puntos_posicion(predicha: int, real: int) -> int:
     if predicha == real:
         return 10
@@ -214,14 +203,10 @@ def puntos_posicion(predicha: int, real: int) -> int:
     else:
         return 1
 
-# =========================
-# CALCULAR PUNTOS Y DETALLES
-# =========================
 def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int],
                                 vuelta_rapida_real: str, colapinto_real: int) -> Tuple[int, str]:
     puntos = 0
     detalles = []
-
     for i, col in enumerate(COL_PUESTOS):
         piloto = str(row.get(col, "")).strip()
         if not piloto:
@@ -237,12 +222,10 @@ def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int]
                 detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
             elif pts == 1:
                 detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
-
     vr = str(row.get("Vuelta Rápida", "")).strip()
     if vr == vuelta_rapida_real:
         puntos += 10
         detalles.append(f"Vuelta rápida: {vr} (+10)")
-
     try:
         pred_colapinto_str = str(row.get("Franco Colapinto", "")).strip()
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
@@ -254,13 +237,9 @@ def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int]
             detalles.append(f"Colapinto: diferencia de 1 (+5 puntos)")
     except (ValueError, TypeError):
         pass
-
     detalle_str = "<br>".join(detalles) if detalles else "Sin puntos detallados"
     return puntos, detalle_str
 
-# =========================
-# CONVERTIR POSICIÓN TEXTUAL A NÚMERO
-# =========================
 def convertir_posicion_a_numero(pos_str: str) -> int:
     mapa = {
         "Primero": 1, "Segundo": 2, "Tercer": 3, "Cuarto": 4, "Quinto": 5,
@@ -276,32 +255,24 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
             return mapa[key]
     return int(pos_str)
 
-# =========================
-# PROCESAR UNA CARRERA
-# =========================
 def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
     df = pd.read_csv(archivo_csv)
     df.columns = df.columns.str.strip().str.replace(r'\s+', ' ', regex=True)
-
     resultado_carrera = resultados.get("resultado_carrera", [])
     vuelta_rapida_real = resultados.get("vuelta_rapida", "")
     colapinto_real = resultados.get("colapinto", 0)
-
     if isinstance(colapinto_real, str):
         try:
             colapinto_real = convertir_posicion_a_numero(colapinto_real)
         except:
             colapinto_real = 0
-
     posiciones_reales = {piloto: i+1 for i, piloto in enumerate(resultado_carrera)}
-
     df[["Puntos", "Detalles"]] = df.apply(
         lambda row: pd.Series(calcular_puntos_y_detalles(
             row, posiciones_reales, vuelta_rapida_real, colapinto_real)),
         axis=1
     )
     df["Carrera"] = nombre_carrera
-
     ranking = df.groupby("Dirección de correo electrónico", as_index=False).agg({
         "Puntos": "sum",
         "Detalles": lambda x: "<br><br>".join(x)
@@ -309,17 +280,12 @@ def procesar_carrera(nombre_carrera: str, archivo_csv: str, resultados: Dict) ->
     ranking["Posición"] = ranking.index + 1
     ranking = ranking[["Posición", "Dirección de correo electrónico", "Puntos", "Detalles"]]
     ranking["Carrera"] = nombre_carrera
-
     return ranking, df
 
-# =========================
-# CALCULAR CAMBIO DE POSICIONES
-# =========================
 def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: pd.DataFrame) -> pd.DataFrame:
     if len(all_rankings['Carrera'].unique()) < 2:
         ranking_acumulado['Cambio'] = '-'
         return ranking_acumulado
-
     carreras = carreras_en_orden(all_rankings['Carrera'].unique().tolist())
     prev_rankings = all_rankings[all_rankings['Carrera'] != carreras[-1]]
     if prev_rankings.empty:
@@ -329,7 +295,6 @@ def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: p
             .sort_values(ascending=False).reset_index()
         acum_prev["Posición"] = acum_prev.index + 1
         acum_prev = acum_prev.set_index('Dirección de correo electrónico')['Posición']
-
     cambios = {}
     for email in ranking_acumulado['Dirección de correo electrónico']:
         pos_actual = ranking_acumulado[
@@ -345,13 +310,9 @@ def calcular_cambios_posiciones(all_rankings: pd.DataFrame, ranking_acumulado: p
             cambios[email] = f'<span class="trend-down">▼{int(-diff)}</span>'
         else:
             cambios[email] = '<span class="trend-neutral">—</span>'
-
     ranking_acumulado['Cambio'] = ranking_acumulado['Dirección de correo electrónico'].map(cambios)
     return ranking_acumulado
 
-# =========================
-# HISTORIAL DE POSICIONES POR CARRERA
-# =========================
 def calcular_historial_posiciones(all_rankings: pd.DataFrame) -> pd.DataFrame:
     if all_rankings.empty:
         return pd.DataFrame()
@@ -456,11 +417,11 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                 consec += 1; max_consec = max(max_consec, consec)
             else:
                 consec = 0
-        if max_consec >= 4:
+        if max_consec >= 3:
             badges.append({**BADGES_DEF["racha_caliente"],
                 "desc": (f"{BADGES_DEF['racha_caliente']['nivel_emoji']} BRONCE · "
                          f"Quedaste en el top-3 del grupo {max_consec} carreras seguidas. "
-                         f"Criterio: 4+ fechas consecutivas en el podio grupal.")})
+                         f"Criterio: 3+ fechas consecutivas en el podio grupal.")})
 
         # 🇦🇷 HINCHA DE FRANCO
         cola_ok = sum(1 for _, r in part_df.iterrows() if 'Colapinto: EXACTO' in str(r['Detalles']))
@@ -472,11 +433,11 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
 
         # 💣 BOMBA DE PUNTOS
         bomba_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
-        if bomba_n >= 3:
+        if bomba_n >= 4:
             badges.append({**BADGES_DEF["bomba_puntos"],
                 "desc": (f"{BADGES_DEF['bomba_puntos']['nivel_emoji']} BRONCE · "
                          f"Fuiste el máximo anotador del grupo en {bomba_n} carreras distintas. "
-                         f"Criterio: 3+ victorias de fecha.")})
+                         f"Criterio: 4+ victorias de fecha.")})
 
         # 🔮 ADIVINO
         adivino_max = adivino_carrera = 0
@@ -484,23 +445,22 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             ex = exactos_en_fila(r['Detalles'])
             if ex > adivino_max:
                 adivino_max = ex; adivino_carrera = r['Carrera']
-        if adivino_max >= 6:
+        if adivino_max >= 5:
             badges.append({**BADGES_DEF["adivino"],
                 "desc": (f"{BADGES_DEF['adivino']['nivel_emoji']} BRONCE · "
                          f"Lograste {adivino_max} predicciones exactas en {adivino_carrera}. "
-                         f"Criterio: 6+ aciertos exactos en una carrera (sobre 10).")})
+                         f"Criterio: 5+ aciertos exactos en una carrera (sobre 10).")})
 
         # 🛡️ MURALLA
         muralla = all(
-            my_rp.get(c, 1) < n_part_per_race.get(c, n_part) - 1
+            my_rp.get(c, 1) < n_part_per_race.get(c, n_part)
             for c in carreras
         ) and n_disp > 0
         if muralla:
             badges.append({**BADGES_DEF["muralla"],
                 "desc": (f"{BADGES_DEF['muralla']['nivel_emoji']} PLATA · "
-                         f"Nunca terminaste en los últimos 2 del ranking en ninguna "
-                         f"de las {n_disp} carreras disputadas. "
-                         f"Se verifica carrera a carrera, de la R01 a la R{n_disp:02d}.")})
+                         f"Nunca terminaste en el último lugar del ranking en ninguna "
+                         f"de las {n_disp} carreras disputadas.")})
 
         # 📈 REMONTADA ÉPICA
         remontada_epica = False
@@ -510,13 +470,13 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                 if pos_t is None or pos_t < (n_part - 2):
                     continue
                 siguientes = [my_cp.get(carreras[i + j + 1]) for j in range(4)]
-                if all(p is not None and p <= 2 for p in siguientes):
+                if all(p is not None and p <= 3 for p in siguientes):
                     remontada_epica = True; break
         if remontada_epica:
             badges.append({**BADGES_DEF["remontada_epica"],
                 "desc": (f"{BADGES_DEF['remontada_epica']['nivel_emoji']} PLATA · "
-                         f"Pasaste de estar en los últimos 3 del ranking general a top-2 y "
-                         f"lo sostuviste 4 carreras seguidas. La remontada más épica del torneo.")})
+                         f"Pasaste de estar en los últimos 3 del ranking general a top-3 y "
+                         f"lo sostuviste 4 carreras seguidas.")})
 
         # 🧠 ESTRATEGA
         estratega_carrera = None
@@ -551,39 +511,31 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"{len(apuesta_carreras)} carreras distintas. "
                          f"Criterio: 6+ carreras. La zona del caos total.")})
 
-        # 👑 REY DE LA TEMPORADA
-        if pos_gral == 1:
-            badges.append({**BADGES_DEF["rey_temporada"],
-                "desc": (f"{BADGES_DEF['rey_temporada']['nivel_emoji']} ORO · "
-                         f"Líder del ranking general acumulado. "
-                         f"Solo uno puede tenerlo. El más codiciado del torneo.")})
-
         # 🌊 MAREA ALTA
         marea_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
         if marea_n >= 7:
             badges.append({**BADGES_DEF["marea_alta"],
                 "desc": (f"{BADGES_DEF['marea_alta']['nivel_emoji']} ORO · "
                          f"Fuiste el top-1 del grupo en {marea_n} carreras individuales. "
-                         f"Criterio: 7+ victorias de fecha. Una de cada tres tiene que ser tuya.")})
+                         f"Criterio: 7+ victorias de fecha.")})
 
         # 🏗️ ARQUITECTO
         if arch_pts.get(email, 0) >= max_arch > 0:
             badges.append({**BADGES_DEF["arquitecto"],
                 "desc": (f"{BADGES_DEF['arquitecto']['nivel_emoji']} ORO · "
                          f"Mayor puntaje del grupo en predicciones de P6 a P10: "
-                         f"{arch_pts.get(email,0)} pts. Conoce el pelotón del fondo como nadie.")})
+                         f"{arch_pts.get(email,0)} pts.")})
 
         # 🌌 ORÁCULO
         oraculo_n = sum(
             1 for _, r in part_df.iterrows()
             if all(f'Exacto en P{p}' in str(r['Detalles']) for p in range(1, 4))
         )
-        if oraculo_n >= 4:
+        if oraculo_n >= 5:
             badges.append({**BADGES_DEF["oraculo"],
                 "desc": (f"{BADGES_DEF['oraculo']['nivel_emoji']} LEGENDARIO · "
                          f"Acertaste el podio completo (P1, P2 y P3 exactos en orden) en "
-                         f"{oraculo_n} carreras. Criterio: 4+ carreras. "
-                         f"Estadísticamente casi imposible.")})
+                         f"{oraculo_n} carreras. Criterio: 5+ carreras.")})
 
         # 💎 PERFECCIONISTA
         perf_max = perf_carrera = 0
@@ -595,8 +547,14 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             badges.append({**BADGES_DEF["perfeccionista"],
                 "desc": (f"{BADGES_DEF['perfeccionista']['nivel_emoji']} LEGENDARIO · "
                          f"Lograste {perf_max} predicciones exactas en {perf_carrera}. "
-                         f"Criterio: 7+ aciertos exactos en una carrera. "
-                         f"Si alguien lo logra, es el momento de la temporada.")})
+                         f"Criterio: 7+ aciertos exactos en una carrera.")})
+
+        # 👑 REY DE LA TEMPORADA
+        if pos_gral == 1:
+            badges.append({**BADGES_DEF["rey_temporada"],
+                "desc": (f"{BADGES_DEF['rey_temporada']['nivel_emoji']} CAMPEÓN · "
+                         f"Líder del ranking general acumulado. "
+                         f"El logro más grande del torneo. Solo uno puede tenerlo.")})
 
         badges_resultado[email] = badges
 
@@ -604,7 +562,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
 
 
 # =========================
-# PANEL DE LOGROS (pestaña dedicada)
+# PANEL DE LOGROS
 # =========================
 def generar_logros_panel_html(badges_por_participante: dict) -> str:
     ganadores_por_badge: dict = {k: [] for k in BADGES_META}
@@ -968,7 +926,6 @@ LOGROS_JS = """
 })();
 """
 
-
 # =========================
 # GRÁFICO DE BARRAS ACUMULADO
 # =========================
@@ -992,80 +949,6 @@ def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     ax.set_axisbelow(True); ax.xaxis.grid(True, color='#1E1E1E', linewidth=0.8)
     plt.tight_layout(pad=1.5)
     buf = BytesIO(); fig.savefig(buf, format="png", bbox_inches='tight', dpi=130); buf.seek(0)
-    plt.close(fig)
-    return base64.b64encode(buf.read()).decode('utf-8')
-
-# =========================
-# GRÁFICO EVOLUCIÓN LÍNEAS
-# =========================
-def generar_grafico_evolucion(all_rankings: pd.DataFrame, top_n=5) -> str:
-    if all_rankings.empty:
-        return ""
-    pivot = all_rankings.pivot_table(
-        index="Dirección de correo electrónico", columns="Carrera",
-        values="Puntos", fill_value=0).cumsum(axis=1)
-    top_emails = pivot.iloc[:, -1].nlargest(top_n).index
-    carreras_ordenadas = carreras_en_orden(pivot.columns.tolist())
-    pivot = pivot[carreras_ordenadas]
-    fig, ax = plt.subplots(figsize=(12, 6))
-    for i, email in enumerate(top_emails):
-        c = COLORES_PARTICIPANTES[i % len(COLORES_PARTICIPANTES)]
-        ax.plot(pivot.columns, pivot.loc[email], marker='o', linewidth=2.5,
-                markersize=7, label=email.split('@')[0], color=c,
-                markerfacecolor='#0D0D0D', markeredgecolor=c, markeredgewidth=2)
-    ax.set_title('Evolución de puntos · Top 5', color='#FFFFFF', fontsize=13, pad=15, loc='left', fontweight='bold')
-    ax.set_ylabel('Puntos acumulados', color='#888888', fontsize=9)
-    ax.legend(loc='upper left', frameon=False, labelcolor='#DDDDDD', fontsize=9)
-    ax.grid(True, color='#1E1E1E', linewidth=0.8)
-    ax.tick_params(colors='#888888', labelsize=8)
-    ax.set_facecolor('#0D0D0D'); fig.patch.set_facecolor('#0D0D0D')
-    for spine in ax.spines.values(): spine.set_color('#333333')
-    plt.tight_layout(pad=1.5)
-    buf = BytesIO(); fig.savefig(buf, format="png", bbox_inches='tight', dpi=130); buf.seek(0)
-    plt.close(fig)
-    return base64.b64encode(buf.read()).decode('utf-8')
-
-# =========================
-# BUMP CHART
-# =========================
-def generar_bump_chart(all_rankings: pd.DataFrame) -> str:
-    if all_rankings.empty:
-        return ""
-    historial = calcular_historial_posiciones(all_rankings)
-    if historial.empty:
-        return ""
-    carreras = carreras_en_orden(historial['Carrera'].unique().tolist())
-    participantes = historial.groupby("Dirección de correo electrónico")["Puntos"]\
-        .sum().sort_values(ascending=False).index.tolist()
-    n_carr = len(carreras); n_part = len(participantes)
-    fig_h = max(5, n_part * 0.6 + 1.5)
-    fig, ax = plt.subplots(figsize=(max(8, n_carr * 1.4), fig_h))
-    x_pos = list(range(n_carr))
-    for i, email in enumerate(participantes):
-        color = COLORES_PARTICIPANTES[i % len(COLORES_PARTICIPANTES)]
-        nombre = email.split('@')[0]
-        data = historial[historial["Dirección de correo electrónico"] == email]
-        data = data.set_index("Carrera").reindex(carreras)
-        ys = data["Posición"].tolist()
-        ax.plot(x_pos, ys, color=color, linewidth=2.5, zorder=2, solid_capstyle='round', solid_joinstyle='round')
-        for xi, yi in enumerate(ys):
-            if pd.isna(yi): continue
-            ax.scatter(xi, yi, s=70, color=color, zorder=3, edgecolors='#0D0D0D', linewidths=1.5)
-        if not pd.isna(ys[0]):
-            ax.text(-0.15, ys[0], nombre, ha='right', va='center', color=color, fontsize=8, fontweight='bold')
-        last_valid = next((ys[-(j+1)] for j in range(len(ys)) if not pd.isna(ys[-(j+1)])), None)
-        if last_valid is not None:
-            ax.text(n_carr - 0.85, last_valid, f'P{int(last_valid)}', ha='left', va='center', color=color, fontsize=8, fontweight='bold')
-    ax.set_xticks(x_pos); ax.set_xticklabels([c[:3] for c in carreras], color='#AAAAAA', fontsize=8)
-    ax.set_yticks(range(1, n_part + 1)); ax.set_yticklabels([f'P{p}' for p in range(1, n_part + 1)], color='#AAAAAA', fontsize=8)
-    ax.invert_yaxis(); ax.set_ylim(n_part + 0.5, 0.5); ax.set_xlim(-1.5, n_carr + 0.3)
-    ax.set_title('Historial de posiciones · Bump chart', color='#FFFFFF', fontsize=13, pad=15, loc='left', fontweight='bold')
-    ax.set_facecolor('#0D0D0D'); fig.patch.set_facecolor('#0D0D0D')
-    ax.grid(True, color='#1E1E1E', linewidth=0.6, axis='both')
-    for spine in ax.spines.values(): spine.set_color('#333333')
-    ax.tick_params(colors='#555555')
-    plt.tight_layout(pad=1.5)
-    buf = BytesIO(); fig.savefig(buf, format="png", bbox_inches='tight', dpi=140); buf.seek(0)
     plt.close(fig)
     return base64.b64encode(buf.read()).decode('utf-8')
 
@@ -1332,8 +1215,8 @@ def obtener_proxima_carrera() -> Tuple[str, str]:
 # =========================
 def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  ranking_acumulado: pd.DataFrame,
-                 grafico_barras: str, grafico_evolucion: str,
-                 bump_chart: str, stats_adicionales: str,
+                 grafico_barras: str,
+                 stats_adicionales: str,
                  perfiles_html: str,
                  badges_por_participante: Dict[str, List[Dict]]) -> str:
 
@@ -1432,9 +1315,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
     # ---- Panel de logros ----
     logros_panel_html = generar_logros_panel_html(badges_por_participante)
 
-    bump_html        = (f'<img src="data:image/png;base64,{bump_chart}" alt="Historial posiciones" class="chart-img">') if bump_chart else '<p class="empty-msg">Se necesitan al menos 2 carreras.</p>'
     graf_barras_html = (f'<img src="data:image/png;base64,{grafico_barras}" alt="Puntos acumulados" class="chart-img">') if grafico_barras else '<p class="empty-msg">Sin datos.</p>'
-    graf_evol_html   = (f'<img src="data:image/png;base64,{grafico_evolucion}" alt="Evolución" class="chart-img">') if grafico_evolucion else '<p class="empty-msg">Sin datos.</p>'
     fecha_actual     = datetime.now().strftime("%d/%m/%Y · %H:%M")
 
     return f"""<!DOCTYPE html>
@@ -1772,11 +1653,10 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 <div class="tab-nav-inner">
     <button class="tab-btn active" onclick="openTab(event,'panel-acumulado')">Acumulado</button>
     <button class="tab-btn" onclick="openTab(event,'panel-carreras')">Por Carrera</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-graficos')">Gráficos</button>
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
     <button class="tab-btn" onclick="openTab(event,'panel-stats')">Estadísticas</button>
     <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
 </div>
 </nav>
 
@@ -1804,24 +1684,13 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     {rankings_por_carrera_html}
 </div>
 
-<div id="panel-graficos" class="tab-panel">
-    <h2 class="section-heading">Gráficos <span>&amp; Datos</span></h2>
-    <p class="section-label" style="margin-bottom:20px;">Visualizaciones de la temporada</p>
-    <div class="chart-block">
-        <div class="chart-title">Evolución de puntos · Top 5</div>
-        {graf_evol_html}
-    </div>
-    <div class="chart-block">
-        <div class="chart-title">Historial de posiciones carrera a carrera (bump chart)</div>
-        {bump_html}
-    </div>
-</div>
-
 <div id="panel-perfiles" class="tab-panel">
     <h2 class="section-heading">Per<span>files</span></h2>
     <p class="section-label" style="margin-bottom:20px;">Estadísticas individuales · Tocá 📸 para compartir tu tarjeta</p>
     <div class="perfiles-grid">{perfiles_html}</div>
 </div>
+
+{logros_panel_html}
 
 <div id="panel-stats" class="tab-panel">
     <h2 class="section-heading">Esta<span>dísticas</span></h2>
@@ -1834,8 +1703,6 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     <p class="section-label" style="margin-bottom:20px;">F1 World Championship 2026 · Horarios ARG (GMT−3)</p>
     {calendario_html}
 </div>
-
-{logros_panel_html}
 
 </main>
 
@@ -2120,15 +1987,14 @@ def main():
 
     badges_por_participante = calcular_badges(all_rankings, all_dfs, ranking_acumulado)
 
+    # Solo generamos el gráfico de barras (el más útil, va en la pestaña Acumulado)
     grafico_barras    = generar_grafico_barras_acumulado(ranking_acumulado)
-    grafico_evolucion = generar_grafico_evolucion(all_rankings)
-    bump_chart        = generar_bump_chart(all_rankings)
     stats_adicionales = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
     perfiles_html     = generar_perfiles_html(all_rankings, all_dfs, ranking_acumulado, badges_por_participante)
 
     html_content = generar_html(
         rankings_por_carrera, ranking_acumulado,
-        grafico_barras, grafico_evolucion, bump_chart,
+        grafico_barras,
         stats_adicionales, perfiles_html,
         badges_por_participante
     )
