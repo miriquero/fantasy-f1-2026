@@ -170,11 +170,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     text-transform: uppercase; letter-spacing: 0.5px; }
 .leader-email { font-size: 0.8rem; color: var(--muted); margin-left: auto; }
 
-/* CALENDARIO */
-.cal-table { min-width: 560px; }
-.cal-jornada { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--red); }
+/* Cal name clase heredada usada en perfiles */
 .cal-carrera { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; }
-.cal-cancelled td { opacity: 0.35; }
 
 /* PERFILES */
 .perfiles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
@@ -296,6 +293,89 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     .perfil-stat:nth-child(3) { border-top: 1px solid var(--border); }
     .countdown-wrap { gap: 6px; }
 }
+
+
+/* ═══════════════════ CALENDARIO VISUAL ═══════════════════ */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 10px;
+}
+.cal-card {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    padding: 14px 14px 12px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, opacity 0.2s;
+}
+.cal-card:not(.cancelled):hover { transform: translateY(-2px); }
+.cal-card.past { opacity: 0.42; filter: saturate(0.25); }
+.cal-card.cancelled { opacity: 0.22; filter: saturate(0); pointer-events: none; }
+.cal-card.next { border-color: rgba(225,6,0,0.45); background: rgba(225,6,0,0.05); }
+.cal-card.next::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--red);
+}
+.cal-card.future { opacity: 0.68; }
+.rnd-badge {
+    font-family: var(--font-display); font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 1.5px; color: var(--muted-2); margin-bottom: 8px; display: block;
+}
+.cal-flag { font-size: 1.5rem; margin-bottom: 6px; display: block; line-height: 1; }
+.cal-name {
+    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 6px;
+}
+.cal-date-row { font-size: 0.76rem; color: var(--muted); margin-bottom: 3px; }
+.cal-time-arg { font-size: 0.72rem; color: var(--muted-2); margin-bottom: 10px; }
+.status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-display); font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px;
+}
+.status-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; display: inline-block; }
+.status-done   { background: rgba(34,197,94,0.1);   color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+.status-next   { background: rgba(225,6,0,0.12);    color: var(--red); border: 1px solid rgba(225,6,0,0.3); }
+.status-future { background: rgba(255,255,255,0.05); color: var(--muted-2); border: 1px solid var(--border); }
+.status-cancel { background: rgba(255,255,255,0.03); color: #333; border: 1px solid rgba(255,255,255,0.05); }
+.cd-mini {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(225,6,0,0.2);
+}
+.cd-mini-label {
+    font-family: var(--font-display); font-size: 0.6rem; color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
+}
+.cd-mini-nums { display: flex; gap: 4px; align-items: baseline; flex-wrap: wrap; }
+.cd-num {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+    color: var(--text); line-height: 1; min-width: 28px; text-align: center;
+}
+.cd-unit-row { display: flex; gap: 0; margin-top: 2px; }
+.cd-unit {
+    font-size: 0.58rem; color: var(--muted-2); letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.cd-sep {
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+    color: var(--red); align-self: flex-start; margin-top: 2px; line-height: 1;
+}
+.cal-progress-bar {
+    height: 3px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden;
+}
+.cal-progress-fill {
+    height: 100%; background: var(--red); border-radius: 3px;
+    transition: width 1s cubic-bezier(0.22,1,0.36,1);
+}
+@media (max-width: 640px) {
+    .cal-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .cd-num { font-size: 1.1rem; min-width: 22px; }
+}
+/* ═══════════════════════════════════════════════════════════ */
 
 
 /* ═══════════════════ LOGROS TAB ═══════════════════ */
@@ -2144,74 +2224,100 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     <h2 class="section-heading">Calen<span>dario</span></h2>
     <p class="section-label" style="margin-bottom:20px;">F1 World Championship 2026 · Horarios ARG (GMT−3)</p>
     
-    <div class="table-wrapper">
-    <table class="data-table cal-table">
-        <thead><tr><th>Jornada</th><th>Gran Premio</th><th>Fecha</th><th>Hora Local</th><th>ARG (GMT-3)</th></tr></thead>
-        <tbody><tr class=''><td class='cal-jornada'>R01</td><td class='cal-carrera'>AUSTRALIA</td><td>8 MAR</td><td>15:00</td><td>01:00</td></tr><tr class=''><td class='cal-jornada'>R02</td><td class='cal-carrera'>CHINA</td><td>15 MAR</td><td>15:00</td><td>04:00</td></tr><tr class=''><td class='cal-jornada'>R03</td><td class='cal-carrera'>JAPON</td><td>29 MAR</td><td>14:00</td><td>02:00</td></tr><tr class='cal-cancelled'><td class='cal-jornada'><s>R04</s></td><td class='cal-carrera'><s>BAHREIN</s></td><td><s>12 ABR</s></td><td><s>18:00</s></td><td><s>12:00</s></td></tr><tr class='cal-cancelled'><td class='cal-jornada'><s>R05</s></td><td class='cal-carrera'><s>ARABIA SAUDITA</s></td><td><s>19 ABR</s></td><td><s>20:00</s></td><td><s>14:00</s></td></tr><tr class=''><td class='cal-jornada'>R06</td><td class='cal-carrera'>MIAMI</td><td>03 MAY</td><td>16:00</td><td>17:00</td></tr><tr class=''><td class='cal-jornada'>R07</td><td class='cal-carrera'>CANADA</td><td>24 MAY</td><td>16:00</td><td>17:00</td></tr><tr class=''><td class='cal-jornada'>R08</td><td class='cal-carrera'>MÓNACO</td><td>07 JUN</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R09</td><td class='cal-carrera'>BARCELONA</td><td>14 JUN</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R10</td><td class='cal-carrera'>AUSTRIA</td><td>28 JUN</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R11</td><td class='cal-carrera'>GRAN BRETAÑA</td><td>05 JUL</td><td>15:00</td><td>11:00</td></tr><tr class=''><td class='cal-jornada'>R12</td><td class='cal-carrera'>BÉLGICA</td><td>19 JUL</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R13</td><td class='cal-carrera'>HUNGRÍA</td><td>26 JUL</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R14</td><td class='cal-carrera'>PAÍSES BAJOS</td><td>23 AGO</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R15</td><td class='cal-carrera'>ITALIA</td><td>06 SEP</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R16</td><td class='cal-carrera'>MADRID</td><td>13 SEP</td><td>15:00</td><td>10:00</td></tr><tr class=''><td class='cal-jornada'>R17</td><td class='cal-carrera'>AZERBAIYN</td><td>26 SEP</td><td>15:00</td><td>08:00</td></tr><tr class=''><td class='cal-jornada'>R18</td><td class='cal-carrera'>SINGAPUR</td><td>11 OCT</td><td>20:00</td><td>09:00</td></tr><tr class=''><td class='cal-jornada'>R19</td><td class='cal-carrera'>AUSTIN</td><td>25 OCT</td><td>15:00</td><td>17:00</td></tr><tr class=''><td class='cal-jornada'>R20</td><td class='cal-carrera'>MEXICO</td><td>01 NOV</td><td>14:00</td><td>17:00</td></tr><tr class=''><td class='cal-jornada'>R21</td><td class='cal-carrera'>BRASIL</td><td>08 NOV</td><td>14:00</td><td>14:00</td></tr><tr class=''><td class='cal-jornada'>R22</td><td class='cal-carrera'>LAS VEGAS</td><td>21 NOV</td><td>20:00</td><td>01:00 (Domingo 22)</td></tr><tr class=''><td class='cal-jornada'>R23</td><td class='cal-carrera'>QATAR</td><td>29 NOV</td><td>19:00</td><td>13:00</td></tr><tr class=''><td class='cal-jornada'>R24</td><td class='cal-carrera'>ABU DHABI</td><td>06 DIC</td><td>17:00</td><td>10:00</td></tr></tbody>
-    </table></div>
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
+    <div class="section-label" style="margin:0;">Progreso de temporada:</div>
+    <div style="flex:1;min-width:120px;max-width:340px;">
+        <div class="cal-progress-bar">
+            <div class="cal-progress-fill" style="width:27%;"></div>
+        </div>
+    </div>
+    <div style="font-size:.8rem;color:var(--muted);font-weight:600;">
+        6/22 carreras disputadas · 2 canceladas
+    </div>
+</div>
+<div class="cal-grid">
+<div class="cal-card past"><span class="rnd-badge">R01</span><span class="cal-flag">🇦🇺</span><div class="cal-name">AUSTRALIA</div><div class="cal-date-row">8 MAR</div><div class="cal-time-arg">ARG 01:00</div><span class="status-pill status-done"><span class="dot"></span>Completada</span></div><div class="cal-card past"><span class="rnd-badge">R02</span><span class="cal-flag">🇨🇳</span><div class="cal-name">CHINA</div><div class="cal-date-row">15 MAR</div><div class="cal-time-arg">ARG 04:00</div><span class="status-pill status-done"><span class="dot"></span>Completada</span></div><div class="cal-card past"><span class="rnd-badge">R03</span><span class="cal-flag">🇯🇵</span><div class="cal-name">JAPON</div><div class="cal-date-row">29 MAR</div><div class="cal-time-arg">ARG 02:00</div><span class="status-pill status-done"><span class="dot"></span>Completada</span></div><div class="cal-card cancelled"><span class="rnd-badge"><s>R04</s></span><span class="cal-flag">🇧🇭</span><div class="cal-name"><s>BAHREIN</s></div><div class="cal-date-row"><s>12 ABR</s></div><div class="cal-time-arg">ARG <s>12:00</s></div><span class="status-pill status-cancel"><span class="dot"></span>Cancelada</span></div><div class="cal-card cancelled"><span class="rnd-badge"><s>R05</s></span><span class="cal-flag">🇸🇦</span><div class="cal-name"><s>ARABIA SAUDITA</s></div><div class="cal-date-row"><s>19 ABR</s></div><div class="cal-time-arg">ARG <s>14:00</s></div><span class="status-pill status-cancel"><span class="dot"></span>Cancelada</span></div><div class="cal-card past"><span class="rnd-badge">R06</span><span class="cal-flag">🇺🇸</span><div class="cal-name">MIAMI</div><div class="cal-date-row">03 MAY</div><div class="cal-time-arg">ARG 17:00</div><span class="status-pill status-done"><span class="dot"></span>Completada</span></div><div class="cal-card past"><span class="rnd-badge">R07</span><span class="cal-flag">🇨🇦</span><div class="cal-name">CANADA</div><div class="cal-date-row">24 MAY</div><div class="cal-time-arg">ARG 17:00</div><span class="status-pill status-done"><span class="dot"></span>Completada</span></div><div class="cal-card past"><span class="rnd-badge">R08</span><span class="cal-flag">🇲🇨</span><div class="cal-name">MÓNACO</div><div class="cal-date-row">07 JUN</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-done"><span class="dot"></span>Completada</span></div><div class="cal-card next"><span class="rnd-badge">R09</span><span class="cal-flag">🇪🇸</span><div class="cal-name">BARCELONA</div><div class="cal-date-row">14 JUN</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-next"><span class="dot"></span>Próxima</span><div class="cd-mini"><div class="cd-mini-label">Faltan</div><div class="cd-mini-nums"><div class="cd-num" id="cdn-d">--</div><span class="cd-sep">:</span><div class="cd-num" id="cdn-h">--</div><span class="cd-sep">:</span><div class="cd-num" id="cdn-m">--</div><span class="cd-sep">:</span><div class="cd-num" id="cdn-s">--</div></div><div class="cd-unit-row" style="display:flex;gap:0;margin-top:3px;"><span class="cd-unit" style="min-width:34px;text-align:center;">días</span><span class="cd-unit" style="min-width:16px;"></span><span class="cd-unit" style="min-width:34px;text-align:center;">hrs</span><span class="cd-unit" style="min-width:16px;"></span><span class="cd-unit" style="min-width:34px;text-align:center;">min</span><span class="cd-unit" style="min-width:16px;"></span><span class="cd-unit" style="min-width:34px;text-align:center;">seg</span></div></div></div><div class="cal-card future"><span class="rnd-badge">R10</span><span class="cal-flag">🇦🇹</span><div class="cal-name">AUSTRIA</div><div class="cal-date-row">28 JUN</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R11</span><span class="cal-flag">🇬🇧</span><div class="cal-name">GRAN BRETAÑA</div><div class="cal-date-row">05 JUL</div><div class="cal-time-arg">ARG 11:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R12</span><span class="cal-flag">🇧🇪</span><div class="cal-name">BÉLGICA</div><div class="cal-date-row">19 JUL</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R13</span><span class="cal-flag">🇭🇺</span><div class="cal-name">HUNGRÍA</div><div class="cal-date-row">26 JUL</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R14</span><span class="cal-flag">🇳🇱</span><div class="cal-name">PAÍSES BAJOS</div><div class="cal-date-row">23 AGO</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R15</span><span class="cal-flag">🇮🇹</span><div class="cal-name">ITALIA</div><div class="cal-date-row">06 SEP</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R16</span><span class="cal-flag">🇪🇸</span><div class="cal-name">MADRID</div><div class="cal-date-row">13 SEP</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R17</span><span class="cal-flag">🇦🇿</span><div class="cal-name">AZERBAIYN</div><div class="cal-date-row">26 SEP</div><div class="cal-time-arg">ARG 08:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R18</span><span class="cal-flag">🇸🇬</span><div class="cal-name">SINGAPUR</div><div class="cal-date-row">11 OCT</div><div class="cal-time-arg">ARG 09:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R19</span><span class="cal-flag">🇺🇸</span><div class="cal-name">AUSTIN</div><div class="cal-date-row">25 OCT</div><div class="cal-time-arg">ARG 17:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R20</span><span class="cal-flag">🇲🇽</span><div class="cal-name">MEXICO</div><div class="cal-date-row">01 NOV</div><div class="cal-time-arg">ARG 17:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R21</span><span class="cal-flag">🇧🇷</span><div class="cal-name">BRASIL</div><div class="cal-date-row">08 NOV</div><div class="cal-time-arg">ARG 14:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R22</span><span class="cal-flag">🇺🇸</span><div class="cal-name">LAS VEGAS</div><div class="cal-date-row">21 NOV</div><div class="cal-time-arg">ARG 01:00 (Domingo 22)</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R23</span><span class="cal-flag">🇶🇦</span><div class="cal-name">QATAR</div><div class="cal-date-row">29 NOV</div><div class="cal-time-arg">ARG 13:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div><div class="cal-card future"><span class="rnd-badge">R24</span><span class="cal-flag">🇦🇪</span><div class="cal-name">ABU DHABI</div><div class="cal-date-row">06 DIC</div><div class="cal-time-arg">ARG 10:00</div><span class="status-pill status-future"><span class="dot"></span>Pendiente</span></div>
+</div>
 </div>
 
 </main>
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    Generado automáticamente · 07/06/2026 · 17:49
+    Generado automáticamente · 07/06/2026 · 18:08
 </footer>
 
 <script>
+// ===== COUNTDOWN GLOBAL — corre en todas las pestañas =====
+// Una sola instancia maneja TANTO el header como la tarjeta del calendario.
+// Al usar IDs explícitos, no importa si la tarjeta está visible o no.
+(function() {
+    var iso = "2026-06-14T10:00:00-03:00";
+    if (!iso) {
+        var t = document.getElementById('cd-timer');
+        if (t) t.style.display = 'none';
+        return;
+    }
+    var target = new Date(iso);
+    var pad = function(n) { return String(n).padStart(2, '0'); };
+
+    function tick() {
+        var diff = target - new Date();
+        var vals;
+        if (diff <= 0) {
+            vals = [0, 0, 0, 0];
+        } else {
+            vals = [
+                Math.floor(diff / 86400000),
+                Math.floor((diff % 86400000) / 3600000),
+                Math.floor((diff % 3600000) / 60000),
+                Math.floor((diff % 60000) / 1000)
+            ];
+        }
+        // Header
+        var ids = ['cd-d', 'cd-h', 'cd-m', 'cd-s'];
+        ids.forEach(function(id, i) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = pad(vals[i]);
+        });
+        // Tarjeta calendario (mismos valores, IDs distintos)
+        var calIds = ['cdn-d', 'cdn-h', 'cdn-m', 'cdn-s'];
+        calIds.forEach(function(id, i) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = pad(vals[i]);
+        });
+    }
+
+    tick();
+    setInterval(tick, 1000);
+})();
+
 // ===== TABS =====
 function openTab(evt, panelId) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
     document.getElementById(panelId).classList.add('active');
     evt.currentTarget.classList.add('active');
 }
 
 // ===== ACCORDION =====
 function toggleDetail(id) {
-    const el = document.getElementById(id);
-    const icon = document.getElementById('icon-' + id);
-    const open = el.style.display === 'block';
+    var el = document.getElementById(id);
+    var icon = document.getElementById('icon-' + id);
+    var open = el.style.display === 'block';
     el.style.display = open ? 'none' : 'block';
     if (icon) icon.textContent = open ? '＋' : '－';
 }
 
 // ===== IR A PERFIL =====
 function irPerfil(idx) {
-    const btn = document.querySelector('.tab-btn[onclick*="panel-perfiles"]');
+    var btn = document.querySelector('.tab-btn[onclick*="panel-perfiles"]');
     if (btn) btn.click();
-    setTimeout(() => {
-        const card = document.getElementById('perfil-' + idx);
+    setTimeout(function() {
+        var card = document.getElementById('perfil-' + idx);
         if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 120);
 }
-
-// ===== COUNTDOWN =====
-// proxima_iso tiene el offset -03:00 explícito, por ejemplo:
-//   "2026-06-14T10:00:00-03:00"
-// new Date() lo convierte a UTC internamente, y la resta funciona
-// igual en cualquier país sin importar la hora local del navegador.
-(function() {
-    const iso = "2026-06-14T10:00:00-03:00";
-    if (!iso) { document.getElementById('cd-timer').style.display = 'none'; return; }
-    const target = new Date(iso);   // ← Date entiende el offset ISO 8601
-    function tick() {
-        const diff = target - new Date();   // ambos en milisegundos UTC
-        if (diff <= 0) {
-            ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00');
-            return;
-        }
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
-        document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
-        document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
-        document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
-    }
-    tick(); setInterval(tick, 1000);
-})();
 
 // ===== BADGE TOOLTIP — PORTAL GLOBAL =====
 var _gTip = null;

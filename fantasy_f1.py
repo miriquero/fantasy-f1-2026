@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
-from datetime import datetime, timezone, timedelta  # ← añadido timezone y timedelta
+from datetime import datetime, timezone, timedelta
 import numpy as np
 import re
 
@@ -148,9 +148,6 @@ hex_to_rgba_logros = hex_to_rgba
 
 # =========================
 # CALENDARIO
-# Todas las FechaISO incluyen el offset -03:00 (hora Argentina)
-# Así el navegador interpreta la hora correctamente sin importar
-# en qué país esté el usuario que abre el HTML.
 # =========================
 CALENDARIO = [
     {"Jornada": "R01", "Carrera": "AUSTRALIA",      "Fecha": "8 MAR",   "Hora Local": "15:00", "Hora Argentina": "01:00",              "FechaISO": "2026-03-08T01:00:00-03:00"},
@@ -180,6 +177,17 @@ CALENDARIO = [
 ]
 
 COLORES_PARTICIPANTES = ['#E10600','#00C8FF','#FFD700','#C77DFF','#39FF14','#FF6B35','#00E5CC','#FF69B4']
+
+FLAG_MAP = {
+    "Australia": "🇦🇺", "China": "🇨🇳", "Japon": "🇯🇵", "Bahrein": "🇧🇭",
+    "Arabia saudita": "🇸🇦", "Miami": "🇺🇸", "Canada": "🇨🇦", "Mónaco": "🇲🇨",
+    "Monaco": "🇲🇨", "Barcelona": "🇪🇸", "Austria": "🇦🇹", "Gran bretaña": "🇬🇧",
+    "Gran bretana": "🇬🇧", "Bélgica": "🇧🇪", "Belgica": "🇧🇪", "Hungría": "🇭🇺",
+    "Hungria": "🇭🇺", "Países bajos": "🇳🇱", "Paises bajos": "🇳🇱", "Italia": "🇮🇹",
+    "Madrid": "🇪🇸", "Azerbaiyn": "🇦🇿", "Singapur": "🇸🇬", "Austin": "🇺🇸",
+    "Mexico": "🇲🇽", "Brasil": "🇧🇷", "Las vegas": "🇺🇸", "Qatar": "🇶🇦",
+    "Abu dhabi": "🇦🇪",
+}
 
 def get_orden_carreras() -> List[str]:
     orden = []
@@ -932,6 +940,90 @@ LOGROS_JS = """
 })();
 """
 
+CAL_CSS = """
+/* ═══════════════════ CALENDARIO VISUAL ═══════════════════ */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 10px;
+}
+.cal-card {
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    padding: 14px 14px 12px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, opacity 0.2s;
+}
+.cal-card:not(.cancelled):hover { transform: translateY(-2px); }
+.cal-card.past { opacity: 0.42; filter: saturate(0.25); }
+.cal-card.cancelled { opacity: 0.22; filter: saturate(0); pointer-events: none; }
+.cal-card.next { border-color: rgba(225,6,0,0.45); background: rgba(225,6,0,0.05); }
+.cal-card.next::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--red);
+}
+.cal-card.future { opacity: 0.68; }
+.rnd-badge {
+    font-family: var(--font-display); font-size: 0.62rem; font-weight: 800;
+    letter-spacing: 1.5px; color: var(--muted-2); margin-bottom: 8px; display: block;
+}
+.cal-flag { font-size: 1.5rem; margin-bottom: 6px; display: block; line-height: 1; }
+.cal-name {
+    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 6px;
+}
+.cal-date-row { font-size: 0.76rem; color: var(--muted); margin-bottom: 3px; }
+.cal-time-arg { font-size: 0.72rem; color: var(--muted-2); margin-bottom: 10px; }
+.status-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-display); font-size: 0.66rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px;
+}
+.status-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; display: inline-block; }
+.status-done   { background: rgba(34,197,94,0.1);   color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+.status-next   { background: rgba(225,6,0,0.12);    color: var(--red); border: 1px solid rgba(225,6,0,0.3); }
+.status-future { background: rgba(255,255,255,0.05); color: var(--muted-2); border: 1px solid var(--border); }
+.status-cancel { background: rgba(255,255,255,0.03); color: #333; border: 1px solid rgba(255,255,255,0.05); }
+.cd-mini {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(225,6,0,0.2);
+}
+.cd-mini-label {
+    font-family: var(--font-display); font-size: 0.6rem; color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
+}
+.cd-mini-nums { display: flex; gap: 4px; align-items: baseline; flex-wrap: wrap; }
+.cd-num {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
+    color: var(--text); line-height: 1; min-width: 28px; text-align: center;
+}
+.cd-unit-row { display: flex; gap: 0; margin-top: 2px; }
+.cd-unit {
+    font-size: 0.58rem; color: var(--muted-2); letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.cd-sep {
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+    color: var(--red); align-self: flex-start; margin-top: 2px; line-height: 1;
+}
+.cal-progress-bar {
+    height: 3px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden;
+}
+.cal-progress-fill {
+    height: 100%; background: var(--red); border-radius: 3px;
+    transition: width 1s cubic-bezier(0.22,1,0.36,1);
+}
+@media (max-width: 640px) {
+    .cal-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+    .cd-num { font-size: 1.1rem; min-width: 22px; }
+}
+/* ═══════════════════════════════════════════════════════════ */
+"""
+
 # =========================
 # GRÁFICO DE BARRAS ACUMULADO
 # =========================
@@ -1202,26 +1294,143 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
 
 # =========================
 # PRÓXIMA CARRERA PARA COUNTDOWN
-# ─────────────────────────────
-# CORRECCIÓN: se usa datetime.now(timezone.utc) para comparar fechas
-# con timezone aware (las FechaISO ahora incluyen -03:00).
-# Así la detección de "próxima carrera" es correcta sin importar
-# en qué servidor o huso horario se ejecute el script.
 # =========================
 def obtener_proxima_carrera() -> Tuple[str, str]:
-    # Momento actual en UTC, con timezone info
     ahora = datetime.now(timezone.utc)
     for item in CALENDARIO:
         if item.get("FechaISO") is None:
             continue
         try:
-            # fromisoformat entiende el offset -03:00 en Python 3.7+
             fecha = datetime.fromisoformat(item["FechaISO"])
             if fecha > ahora:
                 return item["Carrera"], item["FechaISO"]
         except Exception:
             continue
     return "FIN DE TEMPORADA", ""
+
+# =========================
+# GENERAR CALENDARIO VISUAL HTML
+# =========================
+def generar_calendario_visual(proxima_iso: str) -> str:
+    ahora_utc = datetime.now(timezone.utc)
+    total_validas = sum(1 for e in CALENDARIO if e.get("FechaISO"))
+    completadas = 0
+    proxima_encontrada = False
+    cal_cards = []
+
+    STATUS_LABEL = {
+        "past": "Completada", "next": "Próxima",
+        "future": "Pendiente", "cancelled": "Cancelada"
+    }
+    STATUS_CLASS = {
+        "past": "status-done", "next": "status-next",
+        "future": "status-future", "cancelled": "status-cancel"
+    }
+
+    for entry in CALENDARIO:
+        raw_nombre  = entry["Carrera"]
+        raw_jornada = entry["Jornada"]
+        is_cancelled = "<s>" in raw_nombre
+
+        nombre_limpio  = re.sub(r'<[^>]+>', '', raw_nombre).strip()
+        jornada_limpio = re.sub(r'<[^>]+>', '', raw_jornada).strip()
+        fecha_limpio   = re.sub(r'<[^>]+>', '', entry["Fecha"]).strip()
+        hora_arg_limpio = re.sub(r'<[^>]+>', '', entry["Hora Argentina"]).strip()
+
+        # Buscar bandera con variantes de nombre
+        nombre_key = nombre_limpio.capitalize()
+        flag = FLAG_MAP.get(nombre_key, "🏁")
+        # Intentar con title case si no encontró
+        if flag == "🏁":
+            for k, v in FLAG_MAP.items():
+                if k.lower() == nombre_limpio.lower():
+                    flag = v
+                    break
+
+        iso = entry.get("FechaISO")
+
+        if is_cancelled or iso is None:
+            status = "cancelled"
+        else:
+            try:
+                fecha_dt = datetime.fromisoformat(iso)
+                if fecha_dt < ahora_utc:
+                    status = "past"
+                    completadas += 1
+                elif not proxima_encontrada:
+                    status = "next"
+                    proxima_encontrada = True
+                else:
+                    status = "future"
+            except Exception:
+                status = "future"
+
+        # Aplicar tachado visual
+        def td(s):
+            return f"<s>{s}</s>" if is_cancelled else s
+
+        pill = (f'<span class="status-pill {STATUS_CLASS[status]}">'
+                f'<span class="dot"></span>{STATUS_LABEL[status]}</span>')
+
+        # Countdown embebido solo en la tarjeta "next"
+        cd_html = ""
+        if status == "next":
+            cd_html = (
+                '<div class="cd-mini">'
+                '<div class="cd-mini-label">Faltan</div>'
+                '<div class="cd-mini-nums">'
+                '<div class="cd-num" id="cdn-d">--</div>'
+                '<span class="cd-sep">:</span>'
+                '<div class="cd-num" id="cdn-h">--</div>'
+                '<span class="cd-sep">:</span>'
+                '<div class="cd-num" id="cdn-m">--</div>'
+                '<span class="cd-sep">:</span>'
+                '<div class="cd-num" id="cdn-s">--</div>'
+                '</div>'
+                '<div class="cd-unit-row" style="display:flex;gap:0;margin-top:3px;">'
+                '<span class="cd-unit" style="min-width:34px;text-align:center;">días</span>'
+                '<span class="cd-unit" style="min-width:16px;"></span>'
+                '<span class="cd-unit" style="min-width:34px;text-align:center;">hrs</span>'
+                '<span class="cd-unit" style="min-width:16px;"></span>'
+                '<span class="cd-unit" style="min-width:34px;text-align:center;">min</span>'
+                '<span class="cd-unit" style="min-width:16px;"></span>'
+                '<span class="cd-unit" style="min-width:34px;text-align:center;">seg</span>'
+                '</div>'
+                '</div>'
+            )
+
+        card = (
+            f'<div class="cal-card {status}">'
+            f'<span class="rnd-badge">{td(jornada_limpio)}</span>'
+            f'<span class="cal-flag">{flag}</span>'
+            f'<div class="cal-name">{td(nombre_limpio)}</div>'
+            f'<div class="cal-date-row">{td(fecha_limpio)}</div>'
+            f'<div class="cal-time-arg">ARG {td(hora_arg_limpio)}</div>'
+            f'{pill}'
+            f'{cd_html}'
+            f'</div>'
+        )
+        cal_cards.append(card)
+
+    pct = round(completadas / total_validas * 100) if total_validas > 0 else 0
+    canceladas_n = sum(1 for e in CALENDARIO if "<s>" in e["Carrera"] or e.get("FechaISO") is None)
+
+    return f"""
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
+    <div class="section-label" style="margin:0;">Progreso de temporada:</div>
+    <div style="flex:1;min-width:120px;max-width:340px;">
+        <div class="cal-progress-bar">
+            <div class="cal-progress-fill" style="width:{pct}%;"></div>
+        </div>
+    </div>
+    <div style="font-size:.8rem;color:var(--muted);font-weight:600;">
+        {completadas}/{total_validas} carreras disputadas · {canceladas_n} canceladas
+    </div>
+</div>
+<div class="cal-grid">
+{''.join(cal_cards)}
+</div>"""
+
 
 # =========================
 # GENERAR HTML COMPLETO
@@ -1233,7 +1442,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  perfiles_html: str,
                  badges_por_participante: Dict[str, List[Dict]]) -> str:
 
-    calendario_df = pd.DataFrame(CALENDARIO)
     proxima_carrera, proxima_iso = obtener_proxima_carrera()
 
     # ---- Ranking acumulado ----
@@ -1308,36 +1516,14 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
             </div>
         </div>"""
 
-    # ---- Calendario ----
-    cal_rows = ""
-    for _, row in calendario_df.iterrows():
-        tachado = '<s>' in str(row['Jornada']); rc = "cal-cancelled" if tachado else ""
-        cal_rows += (f"<tr class='{rc}'>"
-                     f"<td class='cal-jornada'>{row['Jornada']}</td>"
-                     f"<td class='cal-carrera'>{row['Carrera']}</td>"
-                     f"<td>{row['Fecha']}</td>"
-                     f"<td>{row['Hora Local']}</td>"
-                     f"<td>{row['Hora Argentina']}</td></tr>")
-    calendario_html = f"""
-    <div class="table-wrapper">
-    <table class="data-table cal-table">
-        <thead><tr><th>Jornada</th><th>Gran Premio</th><th>Fecha</th><th>Hora Local</th><th>ARG (GMT-3)</th></tr></thead>
-        <tbody>{cal_rows}</tbody>
-    </table></div>"""
-
     # ---- Panel de logros ----
     logros_panel_html = generar_logros_panel_html(badges_por_participante)
 
+    # ---- Calendario visual ----
+    calendario_html = generar_calendario_visual(proxima_iso)
+
     graf_barras_html = (f'<img src="data:image/png;base64,{grafico_barras}" alt="Puntos acumulados" class="chart-img">') if grafico_barras else '<p class="empty-msg">Sin datos.</p>'
     fecha_actual     = datetime.now().strftime("%d/%m/%Y · %H:%M")
-
-    # ─────────────────────────────────────────────────────────────────
-    # COUNTDOWN EN EL HTML
-    # El string proxima_iso lleva el offset "-03:00" explícito.
-    # JS hace: new Date("2026-06-07T10:00:00-03:00") → objeto Date UTC
-    # correcto. La resta con new Date() (hora del navegador) funciona
-    # igual en cualquier país/dispositivo.
-    # ─────────────────────────────────────────────────────────────────
 
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -1511,11 +1697,8 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     text-transform: uppercase; letter-spacing: 0.5px; }}
 .leader-email {{ font-size: 0.8rem; color: var(--muted); margin-left: auto; }}
 
-/* CALENDARIO */
-.cal-table {{ min-width: 560px; }}
-.cal-jornada {{ font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; color: var(--red); }}
+/* Cal name clase heredada usada en perfiles */
 .cal-carrera {{ font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; }}
-.cal-cancelled td {{ opacity: 0.35; }}
 
 /* PERFILES */
 .perfiles-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }}
@@ -1638,6 +1821,7 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     .countdown-wrap {{ gap: 6px; }}
 }}
 
+{CAL_CSS}
 {LOGROS_CSS}
 </style>
 </head>
@@ -1733,59 +1917,76 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 </footer>
 
 <script>
+// ===== COUNTDOWN GLOBAL — corre en todas las pestañas =====
+// Una sola instancia maneja TANTO el header como la tarjeta del calendario.
+// Al usar IDs explícitos, no importa si la tarjeta está visible o no.
+(function() {{
+    var iso = "{proxima_iso}";
+    if (!iso) {{
+        var t = document.getElementById('cd-timer');
+        if (t) t.style.display = 'none';
+        return;
+    }}
+    var target = new Date(iso);
+    var pad = function(n) {{ return String(n).padStart(2, '0'); }};
+
+    function tick() {{
+        var diff = target - new Date();
+        var vals;
+        if (diff <= 0) {{
+            vals = [0, 0, 0, 0];
+        }} else {{
+            vals = [
+                Math.floor(diff / 86400000),
+                Math.floor((diff % 86400000) / 3600000),
+                Math.floor((diff % 3600000) / 60000),
+                Math.floor((diff % 60000) / 1000)
+            ];
+        }}
+        // Header
+        var ids = ['cd-d', 'cd-h', 'cd-m', 'cd-s'];
+        ids.forEach(function(id, i) {{
+            var el = document.getElementById(id);
+            if (el) el.textContent = pad(vals[i]);
+        }});
+        // Tarjeta calendario (mismos valores, IDs distintos)
+        var calIds = ['cdn-d', 'cdn-h', 'cdn-m', 'cdn-s'];
+        calIds.forEach(function(id, i) {{
+            var el = document.getElementById(id);
+            if (el) el.textContent = pad(vals[i]);
+        }});
+    }}
+
+    tick();
+    setInterval(tick, 1000);
+}})();
+
 // ===== TABS =====
 function openTab(evt, panelId) {{
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(function(p) {{ p.classList.remove('active'); }});
+    document.querySelectorAll('.tab-btn').forEach(function(b) {{ b.classList.remove('active'); }});
     document.getElementById(panelId).classList.add('active');
     evt.currentTarget.classList.add('active');
 }}
 
 // ===== ACCORDION =====
 function toggleDetail(id) {{
-    const el = document.getElementById(id);
-    const icon = document.getElementById('icon-' + id);
-    const open = el.style.display === 'block';
+    var el = document.getElementById(id);
+    var icon = document.getElementById('icon-' + id);
+    var open = el.style.display === 'block';
     el.style.display = open ? 'none' : 'block';
     if (icon) icon.textContent = open ? '＋' : '－';
 }}
 
 // ===== IR A PERFIL =====
 function irPerfil(idx) {{
-    const btn = document.querySelector('.tab-btn[onclick*="panel-perfiles"]');
+    var btn = document.querySelector('.tab-btn[onclick*="panel-perfiles"]');
     if (btn) btn.click();
-    setTimeout(() => {{
-        const card = document.getElementById('perfil-' + idx);
+    setTimeout(function() {{
+        var card = document.getElementById('perfil-' + idx);
         if (card) card.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
     }}, 120);
 }}
-
-// ===== COUNTDOWN =====
-// proxima_iso tiene el offset -03:00 explícito, por ejemplo:
-//   "2026-06-14T10:00:00-03:00"
-// new Date() lo convierte a UTC internamente, y la resta funciona
-// igual en cualquier país sin importar la hora local del navegador.
-(function() {{
-    const iso = "{proxima_iso}";
-    if (!iso) {{ document.getElementById('cd-timer').style.display = 'none'; return; }}
-    const target = new Date(iso);   // ← Date entiende el offset ISO 8601
-    function tick() {{
-        const diff = target - new Date();   // ambos en milisegundos UTC
-        if (diff <= 0) {{
-            ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00');
-            return;
-        }}
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
-        document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
-        document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
-        document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
-    }}
-    tick(); setInterval(tick, 1000);
-}})();
 
 // ===== BADGE TOOLTIP — PORTAL GLOBAL =====
 var _gTip = null;
