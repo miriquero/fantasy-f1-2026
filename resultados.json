@@ -81,6 +81,24 @@
     ],
     "vuelta_rapida": "Kimi Antonelli",
     "colapinto": "6"
+  },
+
+  "Monaco": {
+    "resultado_carrera": [
+      "Kimi Antonelli",
+      "Lewis Hamilton",
+      "Isack Hadjar",
+      "Oscar Piastri",
+      "Liam Lawson",
+      "Arvid Lindblad",
+      "Pierre Gasly",
+      "Alex Albon",
+      "Esteban Ocon",
+      "Sergio Perez",
+      "Fernando Alonso"
+    ],
+    "vuelta_rapida": "Kimi Antonelli",
+    "colapinto": "15"
   }
   
 }
