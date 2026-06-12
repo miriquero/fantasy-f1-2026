@@ -171,7 +171,7 @@ CALENDARIO = [
     {"Jornada": "R19", "Carrera": "AUSTIN",         "Fecha": "25 OCT",  "Hora Local": "15:00", "Hora Argentina": "17:00",              "FechaISO": "2026-10-25T17:00:00-03:00"},
     {"Jornada": "R20", "Carrera": "MEXICO",         "Fecha": "01 NOV",  "Hora Local": "14:00", "Hora Argentina": "17:00",              "FechaISO": "2026-11-01T17:00:00-03:00"},
     {"Jornada": "R21", "Carrera": "BRASIL",         "Fecha": "08 NOV",  "Hora Local": "14:00", "Hora Argentina": "14:00",              "FechaISO": "2026-11-08T14:00:00-03:00"},
-    {"Jornada": "R22", "Carrera": "LAS VEGAS",      "Fecha": "21 NOV",  "Hora Local": "20:00", "Hora Argentina": "01:00 (Domingo 22)", "FechaISO": "2026-11-22T01:00:00-03:00"},
+    {"Jornada": "R22", "Carrera": "LAS VEGAS",      "Fecha": "21 NOV",  "Hora Local": "20:00", "Hora Argentina": "01:00 (Dom 22)", "FechaISO": "2026-11-22T01:00:00-03:00"},
     {"Jornada": "R23", "Carrera": "QATAR",          "Fecha": "29 NOV",  "Hora Local": "19:00", "Hora Argentina": "13:00",              "FechaISO": "2026-11-29T13:00:00-03:00"},
     {"Jornada": "R24", "Carrera": "ABU DHABI",      "Fecha": "06 DIC",  "Hora Local": "17:00", "Hora Argentina": "10:00",              "FechaISO": "2026-12-06T10:00:00-03:00"},
 ]
@@ -749,13 +749,13 @@ LOGROS_CSS = """
 .logros-hero-bg::after {
     content: '🏆';
     position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
-    font-size: clamp(80px, 14vw, 160px);
+    font-size: clamp(60px, 14vw, 160px);
     opacity: 0.06; filter: blur(1px);
     pointer-events: none; user-select: none;
 }
 .logros-hero-content {
     position: relative; z-index: 1;
-    padding: 32px 36px; width: 100%;
+    padding: 24px 20px; width: 100%;
 }
 .logros-eyebrow {
     font-family: var(--font-display); font-size: 0.68rem; font-weight: 800;
@@ -763,44 +763,45 @@ LOGROS_CSS = """
     margin-bottom: 10px;
 }
 .logros-title {
-    font-family: var(--font-display); font-size: clamp(2.8rem, 7vw, 5rem);
+    font-family: var(--font-display); font-size: clamp(2.2rem, 7vw, 5rem);
     font-weight: 800; letter-spacing: -1px; text-transform: uppercase;
-    line-height: 0.9; color: #FFFFFF; margin-bottom: 16px;
+    line-height: 0.9; color: #FFFFFF; margin-bottom: 12px;
 }
 .logros-title span { color: var(--red); }
 .logros-subtitle {
-    font-size: 0.85rem; color: #888888; margin-bottom: 24px; max-width: 500px;
-    letter-spacing: 0.3px;
+    font-size: 0.82rem; color: #888888; margin-bottom: 20px; max-width: 500px;
+    letter-spacing: 0.3px; line-height: 1.4;
 }
 .logros-hero-stats {
-    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
 }
 .logros-hero-stat { text-align: left; }
 .logros-hero-num {
-    font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+    font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
     color: #FFFFFF; line-height: 1; display: block;
 }
 .logros-hero-desc {
-    font-size: 0.7rem; color: #666666; text-transform: uppercase;
+    font-size: 0.65rem; color: #666666; text-transform: uppercase;
     letter-spacing: 1.5px; display: block; margin-top: 3px;
     font-family: var(--font-display);
 }
 .logros-hero-divider {
-    width: 1px; height: 40px;
+    width: 1px; height: 36px;
     background: rgba(255,255,255,0.1);
 }
 .logros-main-grid {
     display: grid;
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 20px;
     align-items: start;
 }
 @media (max-width: 860px) {
     .logros-main-grid { grid-template-columns: 1fr; }
+    .logros-sidebar-inner { position: static !important; }
 }
 .logros-sidebar-inner {
     background: #111111; border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 14px; padding: 20px; position: sticky; top: 80px;
+    border-radius: 14px; padding: 16px; position: sticky; top: 80px;
 }
 .logros-sidebar-title {
     font-family: var(--font-display); font-size: 0.7rem; font-weight: 800;
@@ -816,7 +817,7 @@ LOGROS_CSS = """
     display: flex; align-items: center; gap: 8px;
 }
 .logros-lider-left {
-    display: flex; align-items: center; gap: 6px; min-width: 90px;
+    display: flex; align-items: center; gap: 6px; min-width: 80px;
 }
 .logros-lider-pos {
     font-family: var(--font-display); font-size: 0.75rem; font-weight: 800;
@@ -852,25 +853,28 @@ LOGROS_CSS = """
 .logros-catalogo { display: flex; flex-direction: column; gap: 28px; }
 .logros-nivel-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 16px; margin-bottom: 14px;
+    padding: 10px 14px; margin-bottom: 14px;
     background: rgba(255,255,255,0.03); border-radius: 8px;
 }
 .logros-nivel-label {
-    font-family: var(--font-display); font-size: 0.9rem; font-weight: 800;
+    font-family: var(--font-display); font-size: 0.88rem; font-weight: 800;
     letter-spacing: 2px; text-transform: uppercase;
 }
 .logros-nivel-sub {
-    font-size: 0.72rem; color: #555555; font-family: var(--font-display);
+    font-size: 0.7rem; color: #555555; font-family: var(--font-display);
     font-weight: 600; letter-spacing: 1px;
 }
 .logros-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+@media (max-width: 600px) {
+    .logros-cards-grid { grid-template-columns: 1fr; }
 }
 .logro-card {
     position: relative; border-radius: 12px;
-    padding: 18px 18px 16px; display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 16px 14px; display: flex; align-items: flex-start; gap: 12px;
     transition: transform 0.18s, box-shadow 0.18s;
     overflow: hidden;
 }
@@ -890,23 +894,23 @@ LOGROS_CSS = """
     font-size: 0.8rem; opacity: 0.35;
 }
 .logro-emoji-wrap {
-    width: 52px; height: 52px; border-radius: 12px;
+    width: 48px; height: 48px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
 }
-.logro-emoji { font-size: 1.6rem; line-height: 1; }
+.logro-emoji { font-size: 1.5rem; line-height: 1; }
 .logro-content { flex: 1; min-width: 0; }
 .logro-nombre {
-    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+    font-family: var(--font-display); font-size: 0.95rem; font-weight: 800;
     letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 4px;
     line-height: 1.1;
 }
 .logro-desc-corta {
-    font-family: var(--font-display); font-size: 0.78rem; font-weight: 600;
-    letter-spacing: 0.2px; margin-bottom: 6px; line-height: 1.4;
+    font-family: var(--font-display); font-size: 0.76rem; font-weight: 600;
+    letter-spacing: 0.2px; margin-bottom: 5px; line-height: 1.4;
 }
 .logro-desc-larga {
-    font-size: 0.73rem; line-height: 1.55; margin-bottom: 10px;
+    font-size: 0.72rem; line-height: 1.55; margin-bottom: 10px;
 }
 .badge-ganadores { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
 .badge-ganador-chip {
@@ -944,14 +948,17 @@ CAL_CSS = """
 /* ═══════════════════ CALENDARIO VISUAL ═══════════════════ */
 .cal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 10px;
+}
+@media (max-width: 480px) {
+    .cal-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
 .cal-card {
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--bg-2);
-    padding: 14px 14px 12px;
+    padding: 12px 12px 10px;
     position: relative;
     overflow: hidden;
     transition: transform 0.15s, opacity 0.2s;
@@ -967,21 +974,21 @@ CAL_CSS = """
 }
 .cal-card.future { opacity: 0.68; }
 .rnd-badge {
-    font-family: var(--font-display); font-size: 0.62rem; font-weight: 800;
-    letter-spacing: 1.5px; color: var(--muted-2); margin-bottom: 8px; display: block;
+    font-family: var(--font-display); font-size: 0.6rem; font-weight: 800;
+    letter-spacing: 1.5px; color: var(--muted-2); margin-bottom: 6px; display: block;
 }
-.cal-flag { font-size: 1.5rem; margin-bottom: 6px; display: block; line-height: 1; }
+.cal-flag { font-size: 1.4rem; margin-bottom: 5px; display: block; line-height: 1; }
 .cal-name {
-    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 6px;
+    font-family: var(--font-display); font-size: 0.9rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.1; margin-bottom: 5px;
 }
-.cal-date-row { font-size: 0.76rem; color: var(--muted); margin-bottom: 3px; }
-.cal-time-arg { font-size: 0.72rem; color: var(--muted-2); margin-bottom: 10px; }
+.cal-date-row { font-size: 0.72rem; color: var(--muted); margin-bottom: 2px; }
+.cal-time-arg { font-size: 0.68rem; color: var(--muted-2); margin-bottom: 8px; }
 .status-pill {
     display: inline-flex; align-items: center; gap: 4px;
-    font-family: var(--font-display); font-size: 0.66rem; font-weight: 700;
+    font-family: var(--font-display); font-size: 0.62rem; font-weight: 700;
     letter-spacing: 1px; text-transform: uppercase;
-    padding: 3px 8px; border-radius: 20px;
+    padding: 3px 7px; border-radius: 20px;
 }
 .status-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; display: inline-block; }
 .status-done   { background: rgba(34,197,94,0.1);   color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
@@ -993,21 +1000,21 @@ CAL_CSS = """
     border-top: 1px solid rgba(225,6,0,0.2);
 }
 .cd-mini-label {
-    font-family: var(--font-display); font-size: 0.6rem; color: var(--muted);
+    font-family: var(--font-display); font-size: 0.58rem; color: var(--muted);
     letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
 }
-.cd-mini-nums { display: flex; gap: 4px; align-items: baseline; flex-wrap: wrap; }
+.cd-mini-nums { display: flex; gap: 2px; align-items: baseline; flex-wrap: wrap; }
 .cd-num {
-    font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
-    color: var(--text); line-height: 1; min-width: 28px; text-align: center;
+    font-family: var(--font-display); font-size: 1.2rem; font-weight: 800;
+    color: var(--text); line-height: 1; min-width: 24px; text-align: center;
 }
 .cd-unit-row { display: flex; gap: 0; margin-top: 2px; }
 .cd-unit {
-    font-size: 0.58rem; color: var(--muted-2); letter-spacing: 1px;
+    font-size: 0.55rem; color: var(--muted-2); letter-spacing: 0.8px;
     text-transform: uppercase;
 }
 .cd-sep {
-    font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
     color: var(--red); align-self: flex-start; margin-top: 2px; line-height: 1;
 }
 .cal-progress-bar {
@@ -1016,10 +1023,6 @@ CAL_CSS = """
 .cal-progress-fill {
     height: 100%; background: var(--red); border-radius: 3px;
     transition: width 1s cubic-bezier(0.22,1,0.36,1);
-}
-@media (max-width: 640px) {
-    .cal-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-    .cd-num { font-size: 1.1rem; min-width: 22px; }
 }
 /* ═══════════════════════════════════════════════════════════ */
 """
@@ -1167,11 +1170,10 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
                     )
             badges_section = (
                 f'<div class="perfil-badges-wrap">'
-                f'<div class="section-label" style="display:flex;align-items:center;gap:8px;">'
+                f'<div class="section-label" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
                 f'LOGROS '
                 f'<span class="badge-counter">{n_badges}/15</span>'
-                f'<span style="font-size:0.62rem;color:var(--muted-2);font-weight:400;letter-spacing:0;margin-left:2px;">'
-                f'· Pasá el mouse o tocá para ver qué significa</span>'
+                f'<span class="badge-hint">Tocá para ver qué significa</span>'
                 f'</div>'
                 f'<div class="badges-row">{chips}</div>'
                 f'</div>'
@@ -1207,10 +1209,10 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
             </div>
 
             <div class="perfil-stats-mini">
-                <div class="perfil-stat"><div class="perfil-stat-num">{promedio}</div><div class="perfil-stat-label">Prom. carrera</div></div>
-                <div class="perfil-stat"><div class="perfil-stat-num">{mejor_pts}</div><div class="perfil-stat-label">Mejor carrera</div></div>
-                <div class="perfil-stat"><div class="perfil-stat-num">{exactos_total}</div><div class="perfil-stat-label">Exactos totales</div></div>
-                <div class="perfil-stat"><div class="perfil-stat-num">{racha_max}</div><div class="perfil-stat-label">Racha mejorando</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">{promedio}</div><div class="perfil-stat-label">Prom.</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">{mejor_pts}</div><div class="perfil-stat-label">Mejor</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">{exactos_total}</div><div class="perfil-stat-label">Exactos</div></div>
+                <div class="perfil-stat"><div class="perfil-stat-num">{racha_max}</div><div class="perfil-stat-label">Racha</div></div>
             </div>
 
             {badges_section}
@@ -1228,7 +1230,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
                 <div id="phist-{idx}" class="detail-body">
                     <div class="table-wrapper" style="margin-top:12px;">
                         <table class="data-table">
-                            <thead><tr><th>Gran Premio</th><th>Posición general</th><th>Puntos</th></tr></thead>
+                            <thead><tr><th>Gran Premio</th><th>Posición</th><th>Puntos</th></tr></thead>
                             <tbody>{hist_rows}</tbody>
                         </table>
                     </div>
@@ -1337,10 +1339,8 @@ def generar_calendario_visual(proxima_iso: str) -> str:
         fecha_limpio   = re.sub(r'<[^>]+>', '', entry["Fecha"]).strip()
         hora_arg_limpio = re.sub(r'<[^>]+>', '', entry["Hora Argentina"]).strip()
 
-        # Buscar bandera con variantes de nombre
         nombre_key = nombre_limpio.capitalize()
         flag = FLAG_MAP.get(nombre_key, "🏁")
-        # Intentar con title case si no encontró
         if flag == "🏁":
             for k, v in FLAG_MAP.items():
                 if k.lower() == nombre_limpio.lower():
@@ -1365,14 +1365,12 @@ def generar_calendario_visual(proxima_iso: str) -> str:
             except Exception:
                 status = "future"
 
-        # Aplicar tachado visual
         def td(s):
             return f"<s>{s}</s>" if is_cancelled else s
 
         pill = (f'<span class="status-pill {STATUS_CLASS[status]}">'
                 f'<span class="dot"></span>{STATUS_LABEL[status]}</span>')
 
-        # Countdown embebido solo en la tarjeta "next"
         cd_html = ""
         if status == "next":
             cd_html = (
@@ -1388,13 +1386,13 @@ def generar_calendario_visual(proxima_iso: str) -> str:
                 '<div class="cd-num" id="cdn-s">--</div>'
                 '</div>'
                 '<div class="cd-unit-row" style="display:flex;gap:0;margin-top:3px;">'
-                '<span class="cd-unit" style="min-width:34px;text-align:center;">días</span>'
-                '<span class="cd-unit" style="min-width:16px;"></span>'
-                '<span class="cd-unit" style="min-width:34px;text-align:center;">hrs</span>'
-                '<span class="cd-unit" style="min-width:16px;"></span>'
-                '<span class="cd-unit" style="min-width:34px;text-align:center;">min</span>'
-                '<span class="cd-unit" style="min-width:16px;"></span>'
-                '<span class="cd-unit" style="min-width:34px;text-align:center;">seg</span>'
+                '<span class="cd-unit" style="min-width:30px;text-align:center;">días</span>'
+                '<span class="cd-unit" style="min-width:14px;"></span>'
+                '<span class="cd-unit" style="min-width:30px;text-align:center;">hrs</span>'
+                '<span class="cd-unit" style="min-width:14px;"></span>'
+                '<span class="cd-unit" style="min-width:30px;text-align:center;">min</span>'
+                '<span class="cd-unit" style="min-width:14px;"></span>'
+                '<span class="cd-unit" style="min-width:30px;text-align:center;">seg</span>'
                 '</div>'
                 '</div>'
             )
@@ -1423,8 +1421,8 @@ def generar_calendario_visual(proxima_iso: str) -> str:
             <div class="cal-progress-fill" style="width:{pct}%;"></div>
         </div>
     </div>
-    <div style="font-size:.8rem;color:var(--muted);font-weight:600;">
-        {completadas}/{total_validas} carreras disputadas · {canceladas_n} canceladas
+    <div style="font-size:.78rem;color:var(--muted);font-weight:600;">
+        {completadas}/{total_validas} carreras · {canceladas_n} canceladas
     </div>
 </div>
 <div class="cal-grid">
@@ -1463,7 +1461,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                 <td>{cambio}</td>
             </tr>"""
         ranking_acumulado_html = f"""
-        <p class="section-label" style="margin-bottom:8px;color:var(--muted);">Hacé click en cualquier fila para ver el perfil del participante</p>
+        <p class="section-label" style="margin-bottom:8px;color:var(--muted);">Tocá una fila para ver el perfil</p>
         <div class="table-wrapper">
         <table class="data-table leaderboard">
             <thead><tr><th>#</th><th>Participante</th><th>Puntos</th><th>Cambio</th></tr></thead>
@@ -1550,219 +1548,377 @@ html {{ scroll-behavior: smooth; }}
 body {{ font-family: var(--font-body); background: var(--bg); color: var(--text);
         min-height: 100vh; font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }}
 
-/* HEADER */
-.site-header {{ position: sticky; top: 0; z-index: 100;
-    background: rgba(8,8,8,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border); }}
-.header-inner {{ max-width: 1200px; margin: 0 auto; padding: 6px 20px;
+/* ═══ HEADER ═══ */
+.site-header {{
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,8,0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}}
+.header-inner {{
+    max-width: 1200px; margin: 0 auto; padding: 0 16px;
     display: flex; align-items: center; justify-content: space-between;
-    min-height: 64px; gap: 16px; flex-wrap: wrap; }}
-.header-brand {{ display: flex; align-items: center; gap: 12px; flex-shrink: 0; }}
-.brand-stripe {{ width: 4px; height: 32px; background: var(--red); border-radius: 2px; }}
-.brand-text {{ font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
+    min-height: 56px; gap: 12px;
+}}
+.header-brand {{ display: flex; align-items: center; gap: 10px; flex-shrink: 0; }}
+.brand-stripe {{ width: 3px; height: 28px; background: var(--red); border-radius: 2px; }}
+.brand-text {{ font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
                letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.1; }}
-.brand-sub {{ font-size: 0.7rem; color: var(--muted); font-weight: 400;
-              letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; }}
-.countdown-wrap {{ display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }}
-.countdown-label {{ font-family: var(--font-display); font-size: 0.65rem; font-weight: 700;
-    letter-spacing: 2px; color: var(--muted); text-transform: uppercase; white-space: nowrap; }}
-.countdown-race {{ font-family: var(--font-display); font-size: 0.85rem; font-weight: 800;
-    color: var(--red); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }}
-.countdown-timer {{ display: flex; gap: 6px; }}
-.countdown-unit {{ text-align: center; }}
-.countdown-num {{ font-family: var(--font-display); font-size: 1.5rem; font-weight: 800;
-    color: var(--text); line-height: 1; display: block; min-width: 34px; }}
-.countdown-unit-label {{ font-size: 0.58rem; color: var(--muted); letter-spacing: 1px;
-    text-transform: uppercase; display: block; }}
-.countdown-sep {{ font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
-    color: var(--red); align-self: flex-start; margin-top: 2px; }}
+.brand-sub {{ font-size: 0.62rem; color: var(--muted); font-weight: 400;
+              letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; display: block; }}
 
-/* NAV */
-.tab-nav {{ background: var(--bg-2); border-bottom: 1px solid var(--border);
-    overflow-x: auto; scrollbar-width: none; }}
+/* Countdown en header — colapsa en pantallas muy chicas */
+.countdown-wrap {{ display: flex; align-items: center; gap: 8px; overflow: hidden; }}
+.countdown-label {{
+    font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+    white-space: nowrap; display: none;
+}}
+@media (min-width: 480px) {{ .countdown-label {{ display: block; }} }}
+.countdown-race {{
+    font-family: var(--font-display); font-size: 0.78rem; font-weight: 800;
+    color: var(--red); text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap; display: none;
+}}
+@media (min-width: 380px) {{ .countdown-race {{ display: block; }} }}
+.countdown-timer {{ display: flex; gap: 4px; flex-shrink: 0; }}
+.countdown-unit {{ text-align: center; }}
+.countdown-num {{
+    font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
+    color: var(--text); line-height: 1; display: block; min-width: 28px;
+}}
+.countdown-unit-label {{
+    font-size: 0.52rem; color: var(--muted); letter-spacing: 0.8px;
+    text-transform: uppercase; display: block;
+}}
+.countdown-sep {{
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+    color: var(--red); align-self: flex-start; margin-top: 2px; line-height: 1;
+}}
+/* Ocultar días en mobile para ahorrar espacio si es necesario */
+.cd-days-unit {{ display: none; }}
+.cd-days-sep  {{ display: none; }}
+@media (min-width: 420px) {{
+    .cd-days-unit {{ display: block; }}
+    .cd-days-sep  {{ display: block; }}
+}}
+
+/* ═══ NAV TABS ═══ */
+.tab-nav {{
+    background: var(--bg-2); border-bottom: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}}
 .tab-nav::-webkit-scrollbar {{ display: none; }}
-.tab-nav-inner {{ max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; }}
-.tab-btn {{ font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+.tab-nav-inner {{
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 12px; display: flex;
+    /* No forzar min-width — que scrollee naturalmente */
+}}
+.tab-btn {{
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
     background: none; border: none; border-bottom: 3px solid transparent;
-    padding: 14px 18px; cursor: pointer; white-space: nowrap;
-    transition: color 0.2s, border-color 0.2s; }}
+    padding: 12px 14px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    transition: color 0.2s, border-color 0.2s;
+    /* Tap target mínimo */
+    min-height: 44px; display: inline-flex; align-items: center;
+}}
 .tab-btn:hover {{ color: var(--text); }}
 .tab-btn.active {{ color: var(--text); border-bottom-color: var(--red); }}
 
-/* MAIN */
-.main {{ max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px; }}
+/* ═══ MAIN ═══ */
+.main {{ max-width: 1200px; margin: 0 auto; padding: 24px 14px 80px; }}
 .tab-panel {{ display: none; }}
 .tab-panel.active {{ display: block; animation: fadeIn 0.25s ease; }}
 @keyframes fadeIn {{ from {{ opacity: 0; transform: translateY(6px); }} to {{ opacity: 1; }} }}
-.section-heading {{ font-family: var(--font-display); font-size: 2rem; font-weight: 800;
-    letter-spacing: -0.5px; text-transform: uppercase; margin-bottom: 8px; line-height: 1; }}
+.section-heading {{
+    font-family: var(--font-display); font-size: clamp(1.6rem, 5vw, 2rem);
+    font-weight: 800; letter-spacing: -0.5px; text-transform: uppercase;
+    margin-bottom: 8px; line-height: 1;
+}}
 .section-heading span {{ color: var(--red); }}
-.section-label {{ font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
+.section-label {{
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
     letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted);
-    margin-bottom: 12px; margin-top: 4px; }}
+    margin-bottom: 12px; margin-top: 4px;
+}}
 
-/* TABLA */
-.table-wrapper {{ overflow-x: auto; border-radius: 12px; border: 1px solid var(--border);
-    background: var(--bg-2); -webkit-overflow-scrolling: touch; }}
-.data-table {{ width: 100%; border-collapse: collapse; min-width: 480px; }}
-.data-table th {{ font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
-    padding: 14px 16px; border-bottom: 1px solid var(--border);
-    text-align: left; background: var(--bg-3); white-space: nowrap; }}
-.data-table td {{ padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }}
+/* ═══ TABLA ═══ */
+.table-wrapper {{
+    overflow-x: auto; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--bg-2); -webkit-overflow-scrolling: touch;
+    /* Asegurar que el scroll sea suave */
+    scroll-snap-type: x proximity;
+}}
+.data-table {{
+    width: 100%; border-collapse: collapse;
+    /* min-width adaptable: no forzar ancho que rompe mobile */
+}}
+.data-table th {{
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    text-align: left; background: var(--bg-3); white-space: nowrap;
+}}
+.data-table td {{ padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }}
 .data-table tr:last-child td {{ border-bottom: none; }}
 .data-table tr:hover td {{ background: rgba(255,255,255,0.025); }}
 .data-table .row-first td {{ background: rgba(225,6,0,0.05); }}
-.leaderboard {{ min-width: 520px; }}
-.medal {{ display: inline-flex; align-items: center; justify-content: center;
+.medal {{
+    display: inline-flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 50%;
-    font-family: var(--font-display); font-weight: 800; font-size: 0.85rem; }}
+    font-family: var(--font-display); font-weight: 800; font-size: 0.85rem;
+}}
 .medal.gold   {{ background: rgba(255,215,0,0.15);   color: var(--gold);   border: 1px solid rgba(255,215,0,0.3); }}
 .medal.silver {{ background: rgba(192,192,192,0.12); color: var(--silver); border: 1px solid rgba(192,192,192,0.25); }}
 .medal.bronze {{ background: rgba(205,127,50,0.12);  color: var(--bronze); border: 1px solid rgba(205,127,50,0.25); }}
 .medal.plain  {{ background: var(--bg-4); color: var(--muted); border: 1px solid var(--border); }}
-.driver-name  {{ display: block; font-weight: 600; font-size: 0.92rem; }}
-.driver-email {{ display: block; font-size: 0.76rem; color: var(--muted); margin-top: 1px; }}
-.pts-big  {{ font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; }}
-.pts-chip {{ font-family: var(--font-display); font-size: 1rem; font-weight: 700;
-    background: var(--bg-4); padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border); }}
+.driver-name  {{ display: block; font-weight: 600; font-size: 0.9rem; }}
+.driver-email {{ display: block; font-size: 0.72rem; color: var(--muted); margin-top: 1px; }}
+.pts-big  {{ font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; }}
+.pts-chip {{
+    font-family: var(--font-display); font-size: 0.95rem; font-weight: 700;
+    background: var(--bg-4); padding: 3px 9px; border-radius: 6px; border: 1px solid var(--border);
+}}
 .pts-tag {{ font-size: 0.7rem; color: var(--muted); font-weight: 400; }}
 .trend-up      {{ color: var(--green);   font-weight: 700; font-size: 0.85rem; }}
 .trend-down    {{ color: var(--danger);  font-weight: 700; font-size: 0.85rem; }}
 .trend-neutral {{ color: var(--muted-2); font-weight: 700; }}
-.divider {{ height: 1px; background: var(--border); margin: 28px 0; }}
+.divider {{ height: 1px; background: var(--border); margin: 24px 0; }}
 
-/* CHARTS */
-.chart-block {{ background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px; margin-bottom: 20px; }}
-.chart-title {{ font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }}
+/* ═══ CHARTS ═══ */
+.chart-block {{
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px; margin-bottom: 20px;
+}}
+.chart-title {{
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+}}
 .chart-img {{ width: 100%; height: auto; display: block; border-radius: 8px; }}
 
-/* EXPORT */
-.export-bar {{ display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }}
-.export-btn {{ font-family: var(--font-display); font-size: 0.78rem; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase; background: var(--bg-3);
+/* ═══ EXPORT ═══ */
+.export-bar {{ display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }}
+.export-btn {{
+    font-family: var(--font-display); font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; background: var(--bg-3);
     border: 1px solid var(--border-bright); color: var(--text);
-    padding: 9px 18px; border-radius: 8px; cursor: pointer;
-    transition: background 0.15s, border-color 0.15s; }}
+    padding: 9px 16px; border-radius: 8px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    min-height: 42px; display: inline-flex; align-items: center;
+}}
 .export-btn:hover {{ background: var(--bg-4); border-color: var(--red); color: var(--red); }}
 .export-btn.primary {{ background: var(--red); border-color: var(--red); color: #fff; }}
 .export-btn.primary:hover {{ background: #c50500; }}
-.export-btn-sm {{ font-size: 0.72rem; padding: 7px 14px; letter-spacing: 1px; }}
+.export-btn-sm {{ font-size: 0.72rem; padding: 7px 13px; letter-spacing: 0.8px; }}
 .export-btn:disabled {{ opacity: 0.6; cursor: wait; }}
 
-/* RACE ACCORDION */
-.race-block {{ border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
-    margin-bottom: 10px; background: var(--bg-2); }}
-.race-header {{ width: 100%; background: var(--bg-3); border: none; color: var(--text);
-    padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer; transition: background 0.15s; gap: 12px; }}
+/* ═══ RACE ACCORDION ═══ */
+.race-block {{
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    margin-bottom: 10px; background: var(--bg-2);
+}}
+.race-header {{
+    width: 100%; background: var(--bg-3); border: none; color: var(--text);
+    padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: background 0.15s; gap: 10px;
+    min-height: 52px;
+}}
 .race-header:hover {{ background: var(--bg-4); }}
-.race-title-wrap {{ display: flex; align-items: center; gap: 12px; }}
-.race-badge {{ font-family: var(--font-display); font-size: 0.72rem; font-weight: 800;
+.race-title-wrap {{ display: flex; align-items: center; gap: 10px; min-width: 0; }}
+.race-badge {{
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 800;
     letter-spacing: 1.5px; background: var(--red); color: #fff;
-    padding: 3px 8px; border-radius: 5px; flex-shrink: 0; }}
-.race-title {{ font-family: var(--font-display); font-size: 1.05rem; font-weight: 700;
-    letter-spacing: 0.5px; text-transform: uppercase; }}
-.toggle-icon {{ font-size: 1.3rem; color: var(--muted); font-style: normal;
-    transition: transform 0.2s; flex-shrink: 0; line-height: 1; }}
-.race-body {{ display: none; padding: 20px; border-top: 1px solid var(--border); }}
-.detail-row {{ border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }}
-.detail-toggle {{ width: 100%; background: var(--bg-4); border: none; color: var(--text);
-    padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer; font-size: 0.88rem; font-weight: 600; transition: background 0.15s; gap: 8px; }}
+    padding: 3px 7px; border-radius: 5px; flex-shrink: 0;
+}}
+.race-title {{
+    font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+    letter-spacing: 0.3px; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}}
+.toggle-icon {{
+    font-size: 1.2rem; color: var(--muted); font-style: normal;
+    transition: transform 0.2s; flex-shrink: 0; line-height: 1;
+}}
+.race-body {{ display: none; padding: 16px; border-top: 1px solid var(--border); }}
+.detail-row {{
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 8px;
+}}
+.detail-toggle {{
+    width: 100%; background: var(--bg-4); border: none; color: var(--text);
+    padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; font-size: 0.88rem; font-weight: 600; transition: background 0.15s; gap: 8px;
+    min-height: 48px;
+}}
 .detail-toggle:hover {{ background: #262626; }}
-.detail-body {{ display: none; padding: 14px 16px; background: var(--bg-2);
-    border-top: 1px solid var(--border); }}
-.detail-text {{ font-size: 0.85rem; color: #CCCCCC; line-height: 1.7; }}
+.detail-body {{
+    display: none; padding: 12px 14px; background: var(--bg-2);
+    border-top: 1px solid var(--border);
+}}
+.detail-text {{ font-size: 0.84rem; color: #CCCCCC; line-height: 1.7; }}
 
-/* STATS */
-.stats-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px; margin-bottom: 24px; }}
-.stat-card {{ background: var(--bg-2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px 16px; text-align: center; }}
+/* ═══ STATS ═══ */
+.stats-grid {{
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 10px; margin-bottom: 20px;
+}}
+@media (min-width: 600px) {{
+    .stats-grid {{ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }}
+}}
+.stat-card {{
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 14px; text-align: center;
+}}
 .stat-card.accent {{ border-color: var(--red); background: rgba(225,6,0,0.06); }}
-.stat-num  {{ font-family: var(--font-display); font-size: 2.4rem; font-weight: 800;
-    color: var(--text); line-height: 1; margin-bottom: 6px; }}
-.stat-desc {{ font-size: 0.76rem; color: var(--muted); text-transform: uppercase;
-    letter-spacing: 1px; font-family: var(--font-display); }}
-.leader-banner {{ background: rgba(225,6,0,0.08); border: 1px solid rgba(225,6,0,0.25);
-    border-radius: 12px; padding: 20px 24px; margin-bottom: 28px;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }}
-.leader-label {{ font-family: var(--font-display); font-size: 0.68rem; letter-spacing: 3px;
-    font-weight: 800; color: var(--red); text-transform: uppercase; flex-shrink: 0; }}
-.leader-name  {{ font-family: var(--font-display); font-size: 1.4rem; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.5px; }}
-.leader-email {{ font-size: 0.8rem; color: var(--muted); margin-left: auto; }}
+.stat-num  {{
+    font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+    color: var(--text); line-height: 1; margin-bottom: 5px;
+}}
+.stat-desc {{
+    font-size: 0.72rem; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 1px; font-family: var(--font-display);
+}}
+.leader-banner {{
+    background: rgba(225,6,0,0.08); border: 1px solid rgba(225,6,0,0.25);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}}
+.leader-label {{
+    font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 3px;
+    font-weight: 800; color: var(--red); text-transform: uppercase; flex-shrink: 0;
+}}
+.leader-name  {{
+    font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px;
+}}
+.leader-email {{ font-size: 0.78rem; color: var(--muted); margin-left: auto; }}
+@media (max-width: 480px) {{ .leader-email {{ display: none; }} }}
 
-/* Cal name clase heredada usada en perfiles */
-.cal-carrera {{ font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; }}
+.cal-carrera {{ font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.3px; }}
 
-/* PERFILES */
-.perfiles-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }}
-.perfil-card {{ background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }}
-.perfil-header {{ display: flex; align-items: center; gap: 14px; padding: 18px 20px;
-    background: var(--bg-3); border-bottom: 1px solid var(--border); }}
-.perfil-avatar {{ width: 48px; height: 48px; border-radius: 50%; display: flex;
+/* ═══ PERFILES ═══ */
+.perfiles-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+}}
+@media (max-width: 480px) {{
+    .perfiles-grid {{ grid-template-columns: 1fr; gap: 12px; }}
+}}
+.perfil-card {{
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+}}
+.perfil-header {{
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+    background: var(--bg-3); border-bottom: 1px solid var(--border);
+}}
+.perfil-avatar {{
+    width: 44px; height: 44px; border-radius: 50%; display: flex;
     align-items: center; justify-content: center; font-family: var(--font-display);
-    font-weight: 800; font-size: 1.1rem; flex-shrink: 0; }}
+    font-weight: 800; font-size: 1rem; flex-shrink: 0;
+}}
 .perfil-info {{ flex: 1; min-width: 0; }}
-.perfil-nombre {{ font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis; }}
-.perfil-email {{ font-size: 0.75rem; color: var(--muted); white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis; }}
-.perfil-pos-wrap {{ display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }}
-.perfil-pts {{ font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; line-height: 1; }}
-.perfil-stats-mini {{ display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--border); }}
-.perfil-stat {{ padding: 14px 10px; text-align: center; border-right: 1px solid var(--border); }}
+.perfil-nombre {{
+    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}}
+.perfil-email {{
+    font-size: 0.7rem; color: var(--muted); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+}}
+.perfil-pos-wrap {{ display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }}
+.perfil-pts {{ font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; line-height: 1; }}
+
+/* Stats mini: 4 col en desktop, 2x2 en mobile */
+.perfil-stats-mini {{
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--border);
+}}
+@media (max-width: 400px) {{
+    .perfil-stats-mini {{
+        grid-template-columns: repeat(2, 1fr);
+    }}
+    .perfil-stat {{ border-bottom: 1px solid var(--border); }}
+    .perfil-stat:nth-child(3),
+    .perfil-stat:nth-child(4) {{ border-bottom: none; }}
+    .perfil-stat:nth-child(2),
+    .perfil-stat:nth-child(4) {{ border-right: none; }}
+}}
+.perfil-stat {{
+    padding: 12px 8px; text-align: center;
+    border-right: 1px solid var(--border);
+}}
 .perfil-stat:last-child {{ border-right: none; }}
-.perfil-stat-num   {{ font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; }}
-.perfil-stat-label {{ font-size: 0.65rem; color: var(--muted); text-transform: uppercase;
-    letter-spacing: 0.8px; margin-top: 3px; line-height: 1.3; }}
-.perfil-spark-wrap {{ padding: 16px 16px 8px; border-bottom: 1px solid var(--border); }}
+.perfil-stat-num   {{
+    font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+    color: var(--text); line-height: 1;
+}}
+.perfil-stat-label {{
+    font-size: 0.62rem; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.8px; margin-top: 3px; line-height: 1.3;
+}}
+.perfil-spark-wrap {{ padding: 14px 14px 8px; border-bottom: 1px solid var(--border); }}
 .spark-img {{ width: 100%; height: auto; display: block; border-radius: 6px; }}
 .perfil-hist-toggle {{ padding: 4px 0; }}
-.perfil-export-bar {{ padding: 10px 16px 14px; display: flex; justify-content: flex-end; }}
+.perfil-export-bar {{ padding: 10px 14px 12px; display: flex; justify-content: flex-end; }}
 
-/* BADGES */
-.perfil-badges-wrap {{ padding: 14px 16px; border-bottom: 1px solid var(--border); }}
-.badges-row {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }}
+/* ═══ BADGES EN PERFIL ═══ */
+.perfil-badges-wrap {{ padding: 12px 14px; border-bottom: 1px solid var(--border); }}
+.badges-row {{ display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }}
+.badge-hint {{
+    font-size: 0.6rem; color: var(--muted-2); font-weight: 400;
+    letter-spacing: 0; margin-left: 2px;
+}}
 .badge-chip {{
     position: relative;
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 13px; border-radius: 20px;
-    font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 11px; border-radius: 20px;
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.3px;
     cursor: pointer; border: none;
     transition: opacity 0.15s, transform 0.1s;
     user-select: none; -webkit-user-select: none;
+    /* Tap target adecuado */
+    min-height: 36px;
 }}
-.badge-chip:hover {{ opacity: 0.88; transform: translateY(-1px); }}
-.badge-chip:active {{ transform: translateY(0); }}
-.badge-emoji {{ font-size: 1rem; line-height: 1; }}
+.badge-chip:hover {{ opacity: 0.88; }}
+@media (hover: hover) {{
+    .badge-chip:hover {{ transform: translateY(-1px); }}
+}}
+.badge-chip:active {{ transform: scale(0.97); }}
+.badge-emoji {{ font-size: 0.95rem; line-height: 1; }}
 .badge-nombre {{ white-space: nowrap; }}
-.badge-nivel-tag {{ font-size: 0.75rem; line-height: 1; margin-left: 1px; opacity: 0.85; }}
+.badge-nivel-tag {{ font-size: 0.72rem; line-height: 1; margin-left: 1px; opacity: 0.85; }}
 .badge-counter {{
     display: inline-flex; align-items: center;
     background: rgba(255,255,255,0.08); color: var(--muted);
     padding: 2px 8px; border-radius: 10px;
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 1px;
 }}
+
+/* Tooltip de badge — usa absolute dentro de un wrapper para evitar
+   el problema de position:fixed en mobile que colapsa la ventana */
+.badge-tip-overlay {{
+    display: none;
+    position: fixed; inset: 0; z-index: 9990;
+    background: rgba(0,0,0,0.01);
+    /* Solo para capturar clicks fuera */
+}}
+.badge-tip-overlay.show {{ display: block; }}
+
 #global-badge-tip {{
     position: fixed;
-    width: 248px;
+    width: min(260px, calc(100vw - 24px));
     background: #1C1C1C;
-    border: 1px solid rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.18);
     color: #E8E8E8;
     font-family: var(--font-body);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 400;
     line-height: 1.55;
     padding: 10px 14px;
     border-radius: 10px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.65);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.7);
     pointer-events: none;
     z-index: 9999;
     white-space: normal;
@@ -1786,39 +1942,21 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     border-bottom-color: #1C1C1C;
 }}
 
-/* EMPTY */
-.empty-msg {{ color: var(--muted); font-size: 0.9rem; font-style: italic; padding: 24px 0; }}
+/* ═══ EMPTY ═══ */
+.empty-msg {{ color: var(--muted); font-size: 0.9rem; font-style: italic; padding: 20px 0; }}
 
-/* FOOTER */
-.site-footer {{ border-top: 1px solid var(--border); padding: 20px;
-    text-align: center; font-size: 0.78rem; color: var(--muted-2); }}
-.footer-stripe {{ width: 32px; height: 3px; background: var(--red); border-radius: 2px; margin: 0 auto 12px; }}
+/* ═══ FOOTER ═══ */
+.site-footer {{
+    border-top: 1px solid var(--border); padding: 18px;
+    text-align: center; font-size: 0.75rem; color: var(--muted-2);
+}}
+.footer-stripe {{ width: 28px; height: 3px; background: var(--red); border-radius: 2px; margin: 0 auto 10px; }}
 
-/* PRINT */
+/* ═══ PRINT ═══ */
 @media print {{
     .site-header, .tab-nav, .export-bar, .detail-toggle, .race-header {{ display: none !important; }}
     .tab-panel {{ display: block !important; page-break-after: always; }}
     body {{ background: #fff; color: #000; }}
-}}
-
-/* RESPONSIVE */
-@media (max-width: 640px) {{
-    .header-inner {{ min-height: 56px; padding: 8px 14px; }}
-    .brand-text {{ font-size: 1rem; }}
-    .countdown-num {{ font-size: 1.2rem; min-width: 26px; }}
-    .main {{ padding: 20px 14px 60px; }}
-    .section-heading {{ font-size: 1.5rem; }}
-    .tab-btn {{ padding: 12px 12px; font-size: 0.78rem; letter-spacing: 1px; }}
-    .stats-grid {{ grid-template-columns: 1fr 1fr; }}
-    .leader-email {{ display: none; }}
-    .race-body, .race-header {{ padding: 14px; }}
-    .data-table th, .data-table td {{ padding: 11px 12px; }}
-    .stat-num {{ font-size: 2rem; }}
-    .perfiles-grid {{ grid-template-columns: 1fr; }}
-    .perfil-stats-mini {{ grid-template-columns: repeat(2, 1fr); }}
-    .perfil-stat:nth-child(2) {{ border-right: none; }}
-    .perfil-stat:nth-child(3) {{ border-top: 1px solid var(--border); }}
-    .countdown-wrap {{ gap: 6px; }}
 }}
 
 {CAL_CSS}
@@ -1833,22 +1971,34 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
         <div class="brand-stripe"></div>
         <div>
             <div class="brand-text">F1 Predictions</div>
-            <div class="brand-sub">Torneo Familiar · 2026</div>
+            <span class="brand-sub">Torneo · 2026</span>
         </div>
     </div>
     <div class="countdown-wrap">
-        <div>
-            <div class="countdown-label">Próxima carrera</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;margin-right:6px;">
+            <div class="countdown-label">Próxima</div>
             <div class="countdown-race" id="cd-race">{proxima_carrera}</div>
         </div>
         <div class="countdown-timer" id="cd-timer">
-            <div class="countdown-unit"><span class="countdown-num" id="cd-d">--</span><span class="countdown-unit-label">días</span></div>
+            <div class="countdown-unit cd-days-unit">
+                <span class="countdown-num" id="cd-d">--</span>
+                <span class="countdown-unit-label">días</span>
+            </div>
+            <span class="countdown-sep cd-days-sep">:</span>
+            <div class="countdown-unit">
+                <span class="countdown-num" id="cd-h">--</span>
+                <span class="countdown-unit-label">hrs</span>
+            </div>
             <span class="countdown-sep">:</span>
-            <div class="countdown-unit"><span class="countdown-num" id="cd-h">--</span><span class="countdown-unit-label">horas</span></div>
+            <div class="countdown-unit">
+                <span class="countdown-num" id="cd-m">--</span>
+                <span class="countdown-unit-label">min</span>
+            </div>
             <span class="countdown-sep">:</span>
-            <div class="countdown-unit"><span class="countdown-num" id="cd-m">--</span><span class="countdown-unit-label">min</span></div>
-            <span class="countdown-sep">:</span>
-            <div class="countdown-unit"><span class="countdown-num" id="cd-s">--</span><span class="countdown-unit-label">seg</span></div>
+            <div class="countdown-unit">
+                <span class="countdown-num" id="cd-s">--</span>
+                <span class="countdown-unit-label">seg</span>
+            </div>
         </div>
     </div>
 </div>
@@ -1857,10 +2007,10 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 <nav class="tab-nav">
 <div class="tab-nav-inner">
     <button class="tab-btn active" onclick="openTab(event,'panel-acumulado')">Acumulado</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-carreras')">Por Carrera</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-carreras')">Carreras</button>
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
     <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-stats')">Estadísticas</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-stats')">Stats</button>
     <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
 </div>
 </nav>
@@ -1869,11 +2019,11 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 
 <div id="panel-acumulado" class="tab-panel active">
     <h2 class="section-heading">Ranking <span>General</span></h2>
-    <p class="section-label" style="margin-bottom:16px;">Puntos acumulados · Todas las carreras</p>
+    <p class="section-label" style="margin-bottom:14px;">Puntos acumulados · Todas las carreras</p>
     <div class="export-bar">
-        <button class="export-btn primary" onclick="exportarImagen()">⬇ Exportar imagen</button>
-        <button class="export-btn" onclick="exportarCSV()">⬇ Exportar CSV</button>
-        <button class="export-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+        <button class="export-btn primary" onclick="exportarImagen()">⬇ Imagen</button>
+        <button class="export-btn" onclick="exportarCSV()">⬇ CSV</button>
+        <button class="export-btn" onclick="window.print()">🖨 Imprimir</button>
     </div>
     <div id="ranking-export-target">{ranking_acumulado_html}</div>
     <div class="divider"></div>
@@ -1885,13 +2035,13 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 
 <div id="panel-carreras" class="tab-panel">
     <h2 class="section-heading">Rankings <span>por Carrera</span></h2>
-    <p class="section-label" style="margin-bottom:20px;">Seleccioná una carrera para ver el detalle</p>
+    <p class="section-label" style="margin-bottom:18px;">Seleccioná una carrera para ver el detalle</p>
     {rankings_por_carrera_html}
 </div>
 
 <div id="panel-perfiles" class="tab-panel">
     <h2 class="section-heading">Per<span>files</span></h2>
-    <p class="section-label" style="margin-bottom:20px;">Estadísticas individuales · Tocá 📸 para compartir tu tarjeta</p>
+    <p class="section-label" style="margin-bottom:18px;">Estadísticas individuales</p>
     <div class="perfiles-grid">{perfiles_html}</div>
 </div>
 
@@ -1899,13 +2049,13 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 
 <div id="panel-stats" class="tab-panel">
     <h2 class="section-heading">Esta<span>dísticas</span></h2>
-    <p class="section-label" style="margin-bottom:20px;">Resumen general de la temporada</p>
+    <p class="section-label" style="margin-bottom:18px;">Resumen general de la temporada</p>
     {stats_adicionales}
 </div>
 
 <div id="panel-calendario" class="tab-panel">
     <h2 class="section-heading">Calen<span>dario</span></h2>
-    <p class="section-label" style="margin-bottom:20px;">F1 World Championship 2026 · Horarios ARG (GMT−3)</p>
+    <p class="section-label" style="margin-bottom:18px;">F1 2026 · Horarios ARG (GMT−3)</p>
     {calendario_html}
 </div>
 
@@ -1916,10 +2066,11 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     Generado automáticamente · {fecha_actual}
 </footer>
 
+<!-- Overlay para cerrar tooltip de badge al tocar fuera -->
+<div class="badge-tip-overlay" id="badge-overlay" onclick="closeBadgeTip()"></div>
+
 <script>
-// ===== COUNTDOWN GLOBAL — corre en todas las pestañas =====
-// Una sola instancia maneja TANTO el header como la tarjeta del calendario.
-// Al usar IDs explícitos, no importa si la tarjeta está visible o no.
+// ===== COUNTDOWN GLOBAL =====
 (function() {{
     var iso = "{proxima_iso}";
     if (!iso) {{
@@ -1943,13 +2094,11 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
                 Math.floor((diff % 60000) / 1000)
             ];
         }}
-        // Header
         var ids = ['cd-d', 'cd-h', 'cd-m', 'cd-s'];
         ids.forEach(function(id, i) {{
             var el = document.getElementById(id);
             if (el) el.textContent = pad(vals[i]);
         }});
-        // Tarjeta calendario (mismos valores, IDs distintos)
         var calIds = ['cdn-d', 'cdn-h', 'cdn-m', 'cdn-s'];
         calIds.forEach(function(id, i) {{
             var el = document.getElementById(id);
@@ -1967,6 +2116,8 @@ function openTab(evt, panelId) {{
     document.querySelectorAll('.tab-btn').forEach(function(b) {{ b.classList.remove('active'); }});
     document.getElementById(panelId).classList.add('active');
     evt.currentTarget.classList.add('active');
+    // Scroll tab button into view en mobile
+    try {{ evt.currentTarget.scrollIntoView({{ behavior: 'smooth', block: 'nearest', inline: 'center' }}); }} catch(e) {{}}
 }}
 
 // ===== ACCORDION =====
@@ -1985,10 +2136,15 @@ function irPerfil(idx) {{
     setTimeout(function() {{
         var card = document.getElementById('perfil-' + idx);
         if (card) card.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
-    }}, 120);
+    }}, 180);
 }}
 
-// ===== BADGE TOOLTIP — PORTAL GLOBAL =====
+// ===== BADGE TOOLTIP =====
+// Detectar si es touch device
+var isTouchDevice = (function() {{
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+}})();
+
 var _gTip = null;
 function _getTip() {{
     if (_gTip) return _gTip;
@@ -1998,79 +2154,100 @@ function _getTip() {{
     return _gTip;
 }}
 
-function showBadge(chip) {{
-    var desc = chip.getAttribute('data-desc');
-    if (!desc) return;
+function positionTip(chip) {{
     var tip = _getTip();
-    tip.textContent = desc;
-    tip.className = '';
-    var W = 248, GAP = 10, MARGIN = 12;
+    var W = Math.min(260, window.innerWidth - 24);
+    var GAP = 10, MARGIN = 12;
     var vw = window.innerWidth, vh = window.innerHeight;
     var r = chip.getBoundingClientRect();
-    if (vw <= 640) {{
-        tip.style.width  = Math.min(W, vw - MARGIN * 2) + 'px';
-        tip.style.left   = '50%';
-        tip.style.top    = '50%';
-        tip.style.transform = 'translate(-50%, -50%)';
-        tip.removeAttribute('data-pos');
-        tip.style.removeProperty('--al');
-        tip.className = 'tip-show';
-        return;
-    }}
-    tip.style.transform = '';
+
     tip.style.width = W + 'px';
     tip.style.left = '-9999px';
     tip.style.top  = '-9999px';
     tip.style.display = 'block';
     var tipH = tip.offsetHeight;
+
     var idealLeft = r.left + r.width / 2 - W / 2;
     var clampedLeft = Math.max(MARGIN, Math.min(idealLeft, vw - W - MARGIN));
     var spaceAbove = r.top;
     var spaceBelow = vh - r.bottom;
     var pos, top;
-    if (spaceAbove >= tipH + GAP || spaceAbove >= spaceBelow) {{
-        pos = 'above';
-        top = r.top - tipH - GAP;
+
+    if (spaceAbove >= tipH + GAP && spaceAbove >= spaceBelow) {{
+        pos = 'above'; top = r.top - tipH - GAP;
     }} else {{
-        pos = 'below';
-        top = r.bottom + GAP;
+        pos = 'below'; top = r.bottom + GAP;
+        // Si no cabe abajo, centrarlo verticalmente en pantalla
+        if (top + tipH > vh - MARGIN) {{
+            top = Math.max(MARGIN, (vh - tipH) / 2);
+        }}
     }}
+
     var arrowLeft = (r.left + r.width / 2) - clampedLeft;
     arrowLeft = Math.max(14, Math.min(arrowLeft, W - 14));
     tip.setAttribute('data-pos', pos);
     tip.style.setProperty('--al', arrowLeft + 'px');
     tip.style.left = clampedLeft + 'px';
     tip.style.top  = top + 'px';
-    tip.className  = 'tip-show';
+}}
+
+function showBadge(chip) {{
+    if (isTouchDevice) return; // En touch solo funciona via toggleBadge
+    var desc = chip.getAttribute('data-desc');
+    if (!desc) return;
+    var tip = _getTip();
+    tip.textContent = desc;
+    tip.className = '';
+    positionTip(chip);
+    tip.className = 'tip-show';
 }}
 
 function hideBadge(chip) {{
+    if (isTouchDevice) return;
     var tip = document.getElementById('global-badge-tip');
     if (tip) tip.className = '';
 }}
 
+function closeBadgeTip() {{
+    var tip = document.getElementById('global-badge-tip');
+    if (tip) tip.className = '';
+    var overlay = document.getElementById('badge-overlay');
+    if (overlay) overlay.classList.remove('show');
+    document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
+}}
+
 function toggleBadge(chip) {{
     var wasOpen = chip.classList.contains('open');
-    document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
-    if (wasOpen) {{
-        hideBadge(chip);
-    }} else {{
+    closeBadgeTip();
+    if (!wasOpen) {{
+        var desc = chip.getAttribute('data-desc');
+        if (!desc) return;
+        var tip = _getTip();
+        tip.textContent = desc;
+        tip.className = '';
+        positionTip(chip);
+        tip.className = 'tip-show';
         chip.classList.add('open');
-        showBadge(chip);
+        // En touch, mostrar overlay para cerrar al tocar fuera
+        if (isTouchDevice) {{
+            var overlay = document.getElementById('badge-overlay');
+            if (overlay) overlay.classList.add('show');
+        }}
     }}
 }}
 
 document.addEventListener('DOMContentLoaded', function() {{
+    // Cerrar tip al hacer scroll
+    window.addEventListener('scroll', function() {{
+        closeBadgeTip();
+    }}, {{ passive: true }});
+
+    // Cerrar al tocar fuera (no-touch también)
     document.addEventListener('click', function(e) {{
         if (!e.target.closest('.badge-chip')) {{
-            document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
-            hideBadge(null);
+            closeBadgeTip();
         }}
     }});
-    window.addEventListener('scroll', function() {{
-        hideBadge(null);
-        document.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
-    }}, {{ passive: true }});
 }});
 
 // ===== CARGAR html2canvas =====
@@ -2079,7 +2256,7 @@ function cargarHtml2Canvas(cb) {{
     var s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
     s.onload = cb;
-    s.onerror = function() {{ alert('No se pudo cargar html2canvas. Verificá tu conexión a internet.'); }};
+    s.onerror = function() {{ alert('No se pudo cargar html2canvas. Verificá tu conexión.'); }};
     document.head.appendChild(s);
 }}
 
@@ -2093,10 +2270,7 @@ function exportarPerfil(btnEl, idx, nombre) {{
         card.querySelectorAll('.badge-chip.open').forEach(function(c) {{ c.classList.remove('open'); }});
         html2canvas(card, {{
             backgroundColor: '#111111',
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
+            scale: 2, useCORS: true, allowTaint: true, logging: false,
             ignoreElements: function(el) {{
                 return el.classList.contains('perfil-export-bar') ||
                        el.classList.contains('perfil-hist-toggle');
