@@ -98,6 +98,24 @@
     ],
     "vuelta_rapida": "Kimi Antonelli",
     "colapinto": "Décimo Cuarto Puesto"
+  },
+
+  "Barcelona": {
+    "resultado_carrera": [
+      "Lewis Hamilton",
+      "George Russell",
+      "Lando Norris",
+      "Max Verstappen",
+      "Oscar Piastri",
+      "Isack Hadjar",
+      "Pierre Gasly",
+      "Franco Colapinto",
+      "Liam Lawson",
+      "Arvid Lindblad",
+      "Gabriel Bortoletto"
+    ],
+    "vuelta_rapida": "Lewis Hamilton",
+    "colapinto": "Octavo Puesto"
   }
   
 }
