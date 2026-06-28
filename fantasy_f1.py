@@ -1559,11 +1559,6 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     display: flex; align-items: center; justify-content: space-between;
     min-height: 56px; gap: 12px; flex-wrap: wrap; row-gap: 6px;
 }}
-/* En pantallas muy angostas el countdown pasa a su propia fila para no cortarse */
-@media (max-width: 480px) {{
-    .header-inner {{ padding: 8px 16px; }}
-    .countdown-wrap {{ width: 100%; justify-content: flex-end; }}
-}}
 .header-brand {{ display: flex; align-items: center; gap: 10px; flex-shrink: 0; }}
 .brand-stripe {{ width: 3px; height: 28px; background: var(--red); border-radius: 2px; }}
 .brand-text {{ font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
@@ -1611,6 +1606,18 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 @media (max-width: 480px) {{
     .cd-sec-unit {{ display: none; }}
     .cd-sec-sep  {{ display: none; }}
+}}
+/* En pantallas muy angostas el countdown pasa a su propia fila, ocupando todo el ancho
+   como una mini barra (carrera a la izquierda, reloj a la derecha) en vez de quedar
+   flotando con un hueco vacío en el medio */
+@media (max-width: 480px) {{
+    .header-inner {{ padding: 10px 16px 8px; }}
+    .countdown-wrap {{
+        width: 100%; justify-content: space-between;
+        padding-top: 8px; margin-top: 2px; border-top: 1px solid var(--border);
+    }}
+    .countdown-label {{ display: block; }}
+    .countdown-race {{ display: block; max-width: 55vw; }}
 }}
 
 /* ═══ NAV TABS ═══ */
