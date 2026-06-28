@@ -77,14 +77,9 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     .cd-days-unit { display: block; }
     .cd-days-sep  { display: block; }
 }
-/* Ocultar segundos en pantallas muy chicas: ahorra ancho y evita que el header se corte */
-@media (max-width: 480px) {
-    .cd-sec-unit { display: none; }
-    .cd-sec-sep  { display: none; }
-}
-/* En pantallas muy angostas el countdown pasa a su propia fila, ocupando todo el ancho
-   como una mini barra (carrera a la izquierda, reloj a la derecha) en vez de quedar
-   flotando con un hueco vacío en el medio */
+/* En la barra mobile de ancho completo hay espacio de sobra: mostramos
+   días, horas, minutos y segundos siempre (antes se ocultaban por error
+   pensando en el layout viejo, más angosto) */
 @media (max-width: 480px) {
     .header-inner { padding: 10px 16px 8px; }
     .countdown-wrap {
@@ -93,6 +88,10 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     }
     .countdown-label { display: block; }
     .countdown-race { display: block; max-width: 55vw; }
+    .cd-days-unit { display: block; }
+    .cd-days-sep  { display: block; }
+    .cd-sec-unit  { display: block; }
+    .cd-sec-sep   { display: block; }
 }
 
 /* ═══ NAV TABS ═══ */
@@ -2617,7 +2616,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    Generado automáticamente · 28/06/2026 · 17:15
+    Generado automáticamente · 28/06/2026 · 17:19
 </footer>
 
 <!-- Overlay para cerrar tooltip de badge al tocar fuera -->
