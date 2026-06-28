@@ -116,6 +116,25 @@
     ],
     "vuelta_rapida": "Lewis Hamilton",
     "colapinto": "Décimo Puesto"
+  },
+
+
+  "Austria": {
+    "resultado_carrera": [
+      "George Russell",
+      "Max Verstappen",
+      "Kimi Antonelli",
+      "Oscar Piastri",
+      "Lewis Hamilton",
+      "Isack Hadjar",
+      "Lando Norris",
+      "Charles Leclerc",
+      "Liam Lawson",
+      "Arvid Lindblad",
+      "Gabriel Bortoletto"
+    ],
+    "vuelta_rapida": "Kimi Antonelli",
+    "colapinto": "Decimo Quinto Puesto"
   }
   
 }
