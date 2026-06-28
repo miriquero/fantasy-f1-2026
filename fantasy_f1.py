@@ -1557,7 +1557,12 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 .header-inner {{
     max-width: 1200px; margin: 0 auto; padding: 0 16px;
     display: flex; align-items: center; justify-content: space-between;
-    min-height: 56px; gap: 12px;
+    min-height: 56px; gap: 12px; flex-wrap: wrap; row-gap: 6px;
+}}
+/* En pantallas muy angostas el countdown pasa a su propia fila para no cortarse */
+@media (max-width: 480px) {{
+    .header-inner {{ padding: 8px 16px; }}
+    .countdown-wrap {{ width: 100%; justify-content: flex-end; }}
 }}
 .header-brand {{ display: flex; align-items: center; gap: 10px; flex-shrink: 0; }}
 .brand-stripe {{ width: 3px; height: 28px; background: var(--red); border-radius: 2px; }}
@@ -1567,7 +1572,7 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
               letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; display: block; }}
 
 /* Countdown en header — colapsa en pantallas muy chicas */
-.countdown-wrap {{ display: flex; align-items: center; gap: 8px; overflow: hidden; }}
+.countdown-wrap {{ display: flex; align-items: center; gap: 8px; }}
 .countdown-label {{
     font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
     letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
@@ -1578,6 +1583,7 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     font-family: var(--font-display); font-size: 0.78rem; font-weight: 800;
     color: var(--red); text-transform: uppercase; letter-spacing: 0.5px;
     white-space: nowrap; display: none;
+    max-width: 38vw; overflow: hidden; text-overflow: ellipsis;
 }}
 @media (min-width: 380px) {{ .countdown-race {{ display: block; }} }}
 .countdown-timer {{ display: flex; gap: 4px; flex-shrink: 0; }}
@@ -1600,6 +1606,11 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 @media (min-width: 420px) {{
     .cd-days-unit {{ display: block; }}
     .cd-days-sep  {{ display: block; }}
+}}
+/* Ocultar segundos en pantallas muy chicas: ahorra ancho y evita que el header se corte */
+@media (max-width: 480px) {{
+    .cd-sec-unit {{ display: none; }}
+    .cd-sec-sep  {{ display: none; }}
 }}
 
 /* ═══ NAV TABS ═══ */
@@ -1660,6 +1671,12 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     text-align: left; background: var(--bg-3); white-space: nowrap;
 }}
 .data-table td {{ padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }}
+@media (max-width: 400px) {{
+    .data-table th {{ padding: 10px 8px; font-size: 0.62rem; letter-spacing: 1px; }}
+    .data-table td {{ padding: 10px 8px; }}
+    .leaderboard .medal {{ width: 24px; height: 24px; font-size: 0.75rem; }}
+    .leaderboard .pts-big {{ font-size: 1.1rem; }}
+}}
 .data-table tr:last-child td {{ border-bottom: none; }}
 .data-table tr:hover td {{ background: rgba(255,255,255,0.025); }}
 .data-table .row-first td {{ background: rgba(225,6,0,0.05); }}
@@ -1674,6 +1691,9 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 .medal.plain  {{ background: var(--bg-4); color: var(--muted); border: 1px solid var(--border); }}
 .driver-name  {{ display: block; font-weight: 600; font-size: 0.9rem; }}
 .driver-email {{ display: block; font-size: 0.72rem; color: var(--muted); margin-top: 1px; }}
+@media (max-width: 480px) {{
+    .driver-email {{ display: none; }}
+}}
 .pts-big  {{ font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; }}
 .pts-chip {{
     font-family: var(--font-display); font-size: 0.95rem; font-weight: 700;
@@ -1879,7 +1899,7 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     transition: opacity 0.15s, transform 0.1s;
     user-select: none; -webkit-user-select: none;
     /* Tap target adecuado */
-    min-height: 36px;
+    min-height: 40px;
 }}
 .badge-chip:hover {{ opacity: 0.88; }}
 @media (hover: hover) {{
@@ -1994,8 +2014,8 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
                 <span class="countdown-num" id="cd-m">--</span>
                 <span class="countdown-unit-label">min</span>
             </div>
-            <span class="countdown-sep">:</span>
-            <div class="countdown-unit">
+            <span class="countdown-sep cd-sec-sep">:</span>
+            <div class="countdown-unit cd-sec-unit">
                 <span class="countdown-num" id="cd-s">--</span>
                 <span class="countdown-unit-label">seg</span>
             </div>
