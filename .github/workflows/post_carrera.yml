@@ -2,28 +2,51 @@ name: Post Carrera - Actualizar Ranking
 
 on:
   schedule:
-    - cron: '0 6 8 3 *'
-    - cron: '0 9 15 3 *'
-    - cron: '0 7 29 3 *'
-    - cron: '0 22 3 5 *'
-    - cron: '0 22 24 5 *'
-    - cron: '0 15 7 6 *'
-    - cron: '0 15 14 6 *'
-    - cron: '0 15 28 6 *'
-    - cron: '0 16 5 7 *'
-    - cron: '0 15 19 7 *'
-    - cron: '0 15 26 7 *'
-    - cron: '0 15 23 8 *'
-    - cron: '0 15 6 9 *'
-    - cron: '0 15 13 9 *'
-    - cron: '0 13 26 9 *'
-    - cron: '0 14 11 10 *'
-    - cron: '0 22 25 10 *'
-    - cron: '0 22 1 11 *'
-    - cron: '0 19 8 11 *'
-    - cron: '0 6 22 11 *'
-    - cron: '0 18 29 11 *'
-    - cron: '0 15 6 12 *'
+    # Australia    08-MAR  ARG 01:00 = UTC 04:00  -> +5h = 09:00 UTC
+    - cron: '0 9 8 3 *'
+    # China        15-MAR  ARG 04:00 = UTC 07:00  -> +5h = 12:00 UTC
+    - cron: '0 12 15 3 *'
+    # Japon        29-MAR  ARG 02:00 = UTC 05:00  -> +5h = 10:00 UTC
+    - cron: '0 10 29 3 *'
+    # Miami        03-MAY  ARG 17:00 = UTC 20:00  -> +5h = 01:00 UTC (dia 4)
+    - cron: '0 1 4 5 *'
+    # Canada       24-MAY  ARG 17:00 = UTC 20:00  -> +5h = 01:00 UTC (dia 25)
+    - cron: '0 1 25 5 *'
+    # Monaco       07-JUN  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 7 6 *'
+    # Barcelona    14-JUN  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 14 6 *'
+    # Austria      28-JUN  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 28 6 *'
+    # Gran Bretana 05-JUL  ARG 11:00 = UTC 14:00  -> +5h = 19:00 UTC
+    - cron: '0 19 5 7 *'
+    # Belgica      19-JUL  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 19 7 *'
+    # Hungria      26-JUL  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 26 7 *'
+    # Paises Bajos 23-AGO  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 23 8 *'
+    # Italia       06-SEP  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 6 9 *'
+    # Madrid       13-SEP  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 13 9 *'
+    # Azerbaiyn    26-SEP  ARG 08:00 = UTC 11:00  -> +5h = 16:00 UTC
+    - cron: '0 16 26 9 *'
+    # Singapur     11-OCT  ARG 09:00 = UTC 12:00  -> +5h = 17:00 UTC
+    - cron: '0 17 11 10 *'
+    # Austin       25-OCT  ARG 17:00 = UTC 20:00  -> +5h = 01:00 UTC (dia 26)
+    - cron: '0 1 26 10 *'
+    # Mexico       01-NOV  ARG 17:00 = UTC 20:00  -> +5h = 01:00 UTC (dia 2)
+    - cron: '0 1 2 11 *'
+    # Brasil       08-NOV  ARG 14:00 = UTC 17:00  -> +5h = 22:00 UTC
+    - cron: '0 22 8 11 *'
+    # Las Vegas    21-NOV  ARG 01:00 = UTC 04:00  -> +5h = 09:00 UTC (dia 22)
+    - cron: '0 9 22 11 *'
+    # Qatar        29-NOV  ARG 13:00 = UTC 16:00  -> +5h = 21:00 UTC
+    - cron: '0 21 29 11 *'
+    # Abu Dhabi    06-DIC  ARG 10:00 = UTC 13:00  -> +5h = 18:00 UTC
+    - cron: '0 18 6 12 *'
+
   workflow_dispatch:
 
 jobs:
