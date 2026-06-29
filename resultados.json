@@ -11,9 +11,10 @@
       "Arvid Lindblad",
       "Gabriel Bortoletto",
       "Pierre Gasly",
-      "Esteban Ocon"],
+      "Esteban Ocon"
+    ],
     "vuelta_rapida": "Max Verstappen",
-    "colapinto": "Décimo Cuarto Puesto"
+    "colapinto": "14"
   },
   "China": {
     "resultado_carrera": [
@@ -46,7 +47,7 @@
       "Nico Hulkenberg"
     ],
     "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "16 "
+    "colapinto": "16"
   },
   "Miami": {
     "resultado_carrera": [
@@ -97,9 +98,8 @@
       "Gabriel Bortoletto"
     ],
     "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "Décimo Cuarto Puesto"
+    "colapinto": "14"
   },
-
   "Barcelona": {
     "resultado_carrera": [
       "Lewis Hamilton",
@@ -115,10 +115,8 @@
       "Gabriel Bortoletto"
     ],
     "vuelta_rapida": "Lewis Hamilton",
-    "colapinto": "Décimo Puesto"
+    "colapinto": "10"
   },
-
-
   "Austria": {
     "resultado_carrera": [
       "George Russell",
@@ -134,7 +132,6 @@
       "Gabriel Bortoletto"
     ],
     "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "Decimo Quinto Puesto"
+    "colapinto": "15"
   }
-  
 }

@@ -35,22 +35,112 @@ COL_PUESTOS = [
 # =========================
 # BADGES META (sistema de logros completo)
 # =========================
-BADGES_META = {
-    "francotirador":   {"emoji":"🎯","nombre":"Francotirador",    "nivel":"BRONCE",    "nivel_emoji":"🥉","hex":"#E74C3C","desc_corta":"Acertar P1 exacto en 5 carreras distintas","desc_larga":"No tienen que ser seguidas. Pero acertar 5 ganadores en 22 carreras requiere leer bien hasta las fechas más impredecibles.","progreso_max":5},
-    "racha_caliente":  {"emoji":"🔥","nombre":"Racha Caliente",   "nivel":"BRONCE",    "nivel_emoji":"🥉","hex":"#E67E22","desc_corta":"Top-3 del grupo en 3 carreras consecutivas","desc_larga":"Sostener el nivel sin un solo tropiezo durante tres fechas seguidas. La consistencia a corto plazo tiene su recompensa.","progreso_max":3},
-    "hincha_franco":   {"emoji":"🇦🇷","nombre":"Hincha de Franco","nivel":"BRONCE",    "nivel_emoji":"🥉","hex":"#3498DB","desc_corta":"Posición exacta de Colapinto en 4 carreras","desc_larga":"Con su variabilidad de resultados, acertar 4 posiciones exactas de Franco Colapinto es una hazaña real.","progreso_max":4},
-    "bomba_puntos":    {"emoji":"💣","nombre":"Bomba de Puntos",  "nivel":"BRONCE",    "nivel_emoji":"🥉","hex":"#C0392B","desc_corta":"Top-1 absoluto en puntaje en 4 carreras distintas","desc_larga":"Ganar una fecha es suerte. Ganar cuatro en la temporada es dominio real. Sin empates, techo absoluto del grupo.","progreso_max":4},
-    "adivino":         {"emoji":"🔮","nombre":"Adivino",          "nivel":"BRONCE",    "nivel_emoji":"🥉","hex":"#9B59B6","desc_corta":"5+ aciertos exactos en una sola carrera","desc_larga":"Acertar la mitad exacta de las 10 posiciones predichas es estadísticamente raro con 20 pilotos en pista.","progreso_max":5},
-    "muralla":         {"emoji":"🛡️","nombre":"Muralla",          "nivel":"PLATA",     "nivel_emoji":"🥈","hex":"#95A5A6","desc_corta":"Nunca terminar último en el ranking de ninguna carrera","desc_larga":"Con 10-12 jugadores, evitar el fondo absoluto durante toda la temporada es un logro de consistencia pura.","progreso_max":22},
-    "remontada_epica": {"emoji":"📈","nombre":"Remontada Épica",  "nivel":"PLATA",     "nivel_emoji":"🥈","hex":"#27AE60","desc_corta":"De los últimos 3 del ranking a top-3 en 4 fechas","desc_larga":"La remontada tiene que ser profunda (desde el fondo) y sostenida (mantenerse 4 fechas consecutivas en el top).","progreso_max":1},
-    "estratega":       {"emoji":"🧠","nombre":"Estratega",        "nivel":"PLATA",     "nivel_emoji":"🥈","hex":"#16A085","desc_corta":"Top-5 completo exacto (P1-P5 en orden) en una carrera","desc_larga":"Cinco posiciones exactas de diez en una carrera de F1. Brutal. La probabilidad estadística es mínima.","progreso_max":1},
-    "consistente":     {"emoji":"⚙️","nombre":"Consistente",      "nivel":"PLATA",     "nivel_emoji":"🥈","hex":"#7F8C8D","desc_corta":"Top-50% del grupo en 17 de las 22 carreras","desc_larga":"Solo 5 fechas malas permitidas en toda la temporada. No hay margen para rachas negativas prolongadas.","progreso_max":17},
-    "apostador_nato":  {"emoji":"🎰","nombre":"Apostador Nato",   "nivel":"PLATA",     "nivel_emoji":"🥈","hex":"#8E44AD","desc_corta":"Acierto exacto entre P7-P10 en 6 carreras distintas","desc_larga":"La zona del caos total. Acertar 6 posiciones exactas entre P7 y P10 a lo largo de la temporada es excepcional.","progreso_max":6},
-    "marea_alta":      {"emoji":"🌊","nombre":"Marea Alta",       "nivel":"ORO",       "nivel_emoji":"🥇","hex":"#2471A3","desc_corta":"Top-1 del grupo en 7 o más carreras individuales","desc_larga":"Una de cada tres carreras tiene que ser tuya. Ganar el ranking general y este badge a la vez es rarísimo.","progreso_max":7},
-    "arquitecto":      {"emoji":"🏗️","nombre":"Arquitecto",       "nivel":"ORO",       "nivel_emoji":"🥇","hex":"#D35400","desc_corta":"Mayor puntaje acumulado en predicciones P6-P10","desc_larga":"Premia el conocimiento profundo del pelotón medio, no solo adivinar a los favoritos de siempre.","progreso_max":1},
-    "oraculo":         {"emoji":"🌌","nombre":"Oráculo",          "nivel":"LEGENDARIO","nivel_emoji":"💎","hex":"#4A90E2","desc_corta":"Podio exacto (P1, P2 y P3) en 5 carreras distintas","desc_larga":"El podio exacto cinco veces. La probabilidad estadística de lograrlo en una sola carrera ya es ridículamente baja.","progreso_max":5},
-    "perfeccionista":  {"emoji":"💎","nombre":"Perfeccionista",   "nivel":"LEGENDARIO","nivel_emoji":"💎","hex":"#00BCD4","desc_corta":"7+ aciertos exactos en una sola carrera","desc_larga":"Casi imposible. Si alguien lo logra en alguna fecha, es el momento de la temporada. Estadísticamente brutal.","progreso_max":7},
-    "rey_temporada":   {"emoji":"👑","nombre":"Rey de la Temporada","nivel":"CAMPEÓN", "nivel_emoji":"🏆","hex":"#F39C12","desc_corta":"Primero en el ranking general al cierre de la temporada","desc_larga":"El logro más grande del torneo. Solo uno puede tenerlo por temporada. No hay nada por encima de este badge.","progreso_max":1},
+BADGES = {
+    "francotirador":  {
+        "emoji": "🎯", "nombre": "Francotirador",       "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#E74C3C",
+        "desc_corta":  "Acertar P1 exacto en 5 carreras distintas",
+        "desc_larga":  "No tienen que ser seguidas. Pero acertar 5 ganadores en 22 carreras requiere leer bien hasta las fechas más impredecibles.",
+        "criterio":    "Acertar la posición exacta del ganador (P1) en 5 o más carreras de la temporada.",
+        "progreso_max": 5,
+    },
+    "racha_caliente": {
+        "emoji": "🔥", "nombre": "Racha Caliente",       "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#E67E22",
+        "desc_corta":  "Top-3 del grupo en 3 carreras consecutivas",
+        "desc_larga":  "Sostener el nivel sin un solo tropiezo durante tres fechas seguidas. La consistencia a corto plazo tiene su recompensa.",
+        "criterio":    "Terminar en el top-3 del ranking grupal en 3 carreras consecutivas.",
+        "progreso_max": 3,
+    },
+    "hincha_franco":  {
+        "emoji": "🇦🇷", "nombre": "Hincha de Franco",   "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#3498DB",
+        "desc_corta":  "Posición exacta de Colapinto en 4 carreras",
+        "desc_larga":  "Con su variabilidad de resultados, acertar 4 posiciones exactas de Franco Colapinto es una hazaña real.",
+        "criterio":    "Acertar la posición exacta de Franco Colapinto en 4 o más carreras.",
+        "progreso_max": 4,
+    },
+    "bomba_puntos":   {
+        "emoji": "💣", "nombre": "Bomba de Puntos",      "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#C0392B",
+        "desc_corta":  "Top-1 absoluto en puntaje en 4 carreras distintas",
+        "desc_larga":  "Ganar una fecha es suerte. Ganar cuatro en la temporada es dominio real. Sin empates, techo absoluto del grupo.",
+        "criterio":    "Ser el máximo anotador individual del grupo en 4 o más carreras distintas.",
+        "progreso_max": 4,
+    },
+    "adivino":        {
+        "emoji": "🔮", "nombre": "Adivino",              "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#9B59B6",
+        "desc_corta":  "5+ aciertos exactos en una sola carrera",
+        "desc_larga":  "Acertar la mitad exacta de las 10 posiciones predichas es estadísticamente raro con 20 pilotos en pista.",
+        "criterio":    "Lograr 5 o más predicciones de posición exacta en una misma carrera.",
+        "progreso_max": 5,
+    },
+    "muralla":        {
+        "emoji": "🛡️", "nombre": "Muralla",              "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#95A5A6",
+        "desc_corta":  "Nunca terminar último en el ranking de ninguna carrera",
+        "desc_larga":  "Con 10-12 jugadores, evitar el fondo absoluto durante toda la temporada es un logro de consistencia pura.",
+        "criterio":    "No terminar nunca último en el ranking individual de ninguna carrera disputada.",
+        "progreso_max": 22,
+    },
+    "remontada_epica":{
+        "emoji": "📈", "nombre": "Remontada Épica",       "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#27AE60",
+        "desc_corta":  "De los últimos 3 del ranking a top-3 en 4 fechas",
+        "desc_larga":  "La remontada tiene que ser profunda (desde el fondo) y sostenida (mantenerse 4 fechas consecutivas en el top).",
+        "criterio":    "Pasar de los últimos 3 del ranking general a top-3 y sostenerlo 4 fechas seguidas.",
+        "progreso_max": 1,
+    },
+    "estratega":      {
+        "emoji": "🧠", "nombre": "Estratega",             "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#16A085",
+        "desc_corta":  "Top-5 completo exacto (P1-P5 en orden) en una carrera",
+        "desc_larga":  "Cinco posiciones exactas de diez en una carrera de F1. Brutal. La probabilidad estadística es mínima.",
+        "criterio":    "Acertar P1, P2, P3, P4 y P5 exactos en orden en una misma carrera.",
+        "progreso_max": 1,
+    },
+    "consistente":    {
+        "emoji": "⚙️", "nombre": "Consistente",           "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#7F8C8D",
+        "desc_corta":  "Top-50% del grupo en 17 de las 22 carreras",
+        "desc_larga":  "Solo 5 fechas malas permitidas en toda la temporada. No hay margen para rachas negativas prolongadas.",
+        "criterio":    "Terminar en el top-50% del grupo en al menos 17 de las 22 carreras.",
+        "progreso_max": 17,
+    },
+    "apostador_nato": {
+        "emoji": "🎰", "nombre": "Apostador Nato",         "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#8E44AD",
+        "desc_corta":  "Acierto exacto entre P7-P10 en 6 carreras distintas",
+        "desc_larga":  "La zona del caos total. Acertar 6 posiciones exactas entre P7 y P10 a lo largo de la temporada es excepcional.",
+        "criterio":    "Acertar una posición exacta entre P7 y P10 en 6 o más carreras distintas.",
+        "progreso_max": 6,
+    },
+    "marea_alta":     {
+        "emoji": "🌊", "nombre": "Marea Alta",             "nivel": "ORO",       "nivel_emoji": "🥇", "hex": "#2471A3",
+        "desc_corta":  "Top-1 del grupo en 7 o más carreras individuales",
+        "desc_larga":  "Una de cada tres carreras tiene que ser tuya. Ganar el ranking general y este badge a la vez es rarísimo.",
+        "criterio":    "Ser el top-1 del grupo en el puntaje individual de 7 o más carreras.",
+        "progreso_max": 7,
+    },
+    "arquitecto":     {
+        "emoji": "🏗️", "nombre": "Arquitecto",             "nivel": "ORO",       "nivel_emoji": "🥇", "hex": "#D35400",
+        "desc_corta":  "Mayor puntaje acumulado en predicciones P6-P10",
+        "desc_larga":  "Premia el conocimiento profundo del pelotón medio, no solo adivinar a los favoritos de siempre.",
+        "criterio":    "Tener el mayor puntaje acumulado del grupo en predicciones de P6 a P10.",
+        "progreso_max": 1,
+    },
+    "oraculo":        {
+        "emoji": "🌌", "nombre": "Oráculo",                "nivel": "LEGENDARIO","nivel_emoji": "💎", "hex": "#4A90E2",
+        "desc_corta":  "Podio exacto (P1, P2 y P3) en 5 carreras distintas",
+        "desc_larga":  "El podio exacto cinco veces. La probabilidad estadística de lograrlo en una sola carrera ya es ridículamente baja.",
+        "criterio":    "Acertar el podio completo (P1, P2 y P3 en orden exacto) en 5 o más carreras.",
+        "progreso_max": 5,
+    },
+    "perfeccionista": {
+        "emoji": "💎", "nombre": "Perfeccionista",          "nivel": "LEGENDARIO","nivel_emoji": "💎", "hex": "#00BCD4",
+        "desc_corta":  "7+ aciertos exactos en una sola carrera",
+        "desc_larga":  "Casi imposible. Si alguien lo logra en alguna fecha, es el momento de la temporada. Estadísticamente brutal.",
+        "criterio":    "Lograr 7 o más predicciones de posición exacta en una misma carrera.",
+        "progreso_max": 7,
+    },
+    "rey_temporada":  {
+        "emoji": "👑", "nombre": "Rey de la Temporada",    "nivel": "CAMPEÓN",   "nivel_emoji": "🏆", "hex": "#F39C12",
+        "desc_corta":  "Primero en el ranking general al cierre de la temporada",
+        "desc_larga":  "El logro más grande del torneo. Solo uno puede tenerlo por temporada. No hay nada por encima de este badge.",
+        "criterio":    "Liderar el ranking general acumulado al cierre de la temporada.",
+        "progreso_max": 1,
+    },
 }
 
 NIVEL_CONFIG = {
@@ -61,90 +151,13 @@ NIVEL_CONFIG = {
     "CAMPEÓN":   {"color": "#F39C12", "bg": "rgba(243,156,18,0.08)",  "border": "rgba(243,156,18,0.3)",   "label": "🏆 CAMPEÓN",   "order": 5},
 }
 
-BADGES_DEF = {
-    "francotirador":  {
-        "emoji": "🎯", "nombre": "Francotirador",    "hex": "#E74C3C",
-        "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Acertar la posición exacta del ganador (P1) en 5 o más carreras de la temporada."
-    },
-    "racha_caliente": {
-        "emoji": "🔥", "nombre": "Racha Caliente",   "hex": "#E67E22",
-        "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Terminar en el top-3 del ranking grupal en 4 carreras consecutivas."
-    },
-    "hincha_franco":  {
-        "emoji": "🇦🇷", "nombre": "Hincha de Franco", "hex": "#3498DB",
-        "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Acertar la posición exacta de Franco Colapinto en 4 o más carreras."
-    },
-    "bomba_puntos":   {
-        "emoji": "💣", "nombre": "Bomba de Puntos",  "hex": "#C0392B",
-        "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Ser el máximo anotador individual del grupo en 3 o más carreras distintas."
-    },
-    "adivino":        {
-        "emoji": "🔮", "nombre": "Adivino",          "hex": "#9B59B6",
-        "nivel": "BRONCE",    "nivel_emoji": "🥉",
-        "criterio": "Lograr 6 o más predicciones de posición exacta en una misma carrera."
-    },
-    "muralla":        {
-        "emoji": "🛡️", "nombre": "Muralla",          "hex": "#95A5A6",
-        "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "No terminar nunca último en el ranking individual de ninguna carrera disputada."
-    },
-    "remontada_epica":{
-        "emoji": "📈", "nombre": "Remontada Épica",  "hex": "#27AE60",
-        "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "Pasar de los últimos 3 del ranking general a top-2 y sostenerlo 4 fechas seguidas."
-    },
-    "estratega":      {
-        "emoji": "🧠", "nombre": "Estratega",        "hex": "#16A085",
-        "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "Acertar P1, P2, P3, P4 y P5 exactos en orden en una misma carrera."
-    },
-    "consistente":    {
-        "emoji": "⚙️", "nombre": "Consistente",      "hex": "#7F8C8D",
-        "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "Terminar en el top-50% del grupo en al menos 17 de las 22 carreras."
-    },
-    "apostador_nato": {
-        "emoji": "🎰", "nombre": "Apostador Nato",   "hex": "#8E44AD",
-        "nivel": "PLATA",     "nivel_emoji": "🥈",
-        "criterio": "Acertar una posición exacta entre P7 y P10 en 6 o más carreras distintas."
-    },
-    "rey_temporada":  {
-        "emoji": "👑", "nombre": "Rey de la Temporada","hex": "#F39C12",
-        "nivel": "ORO",       "nivel_emoji": "🥇",
-        "criterio": "Liderar el ranking general acumulado al cierre de la temporada."
-    },
-    "marea_alta":     {
-        "emoji": "🌊", "nombre": "Marea Alta",       "hex": "#2471A3",
-        "nivel": "ORO",       "nivel_emoji": "🥇",
-        "criterio": "Ser el top-1 del grupo en el puntaje individual de 7 o más carreras."
-    },
-    "arquitecto":     {
-        "emoji": "🏗️", "nombre": "Arquitecto",       "hex": "#D35400",
-        "nivel": "ORO",       "nivel_emoji": "🥇",
-        "criterio": "Tener el mayor puntaje acumulado del grupo en predicciones de P6 a P10."
-    },
-    "oraculo":        {
-        "emoji": "🌌", "nombre": "Oráculo",          "hex": "#4A90E2",
-        "nivel": "LEGENDARIO","nivel_emoji": "💎",
-        "criterio": "Acertar el podio completo (P1, P2 y P3 en orden exacto) en 4 o más carreras."
-    },
-    "perfeccionista": {
-        "emoji": "💎", "nombre": "Perfeccionista",   "hex": "#00BCD4",
-        "nivel": "LEGENDARIO","nivel_emoji": "💎",
-        "criterio": "Lograr 7 o más predicciones de posición exacta en una misma carrera."
-    },
-}
+
 
 def hex_to_rgba(hex_color: str, alpha: float) -> str:
     h = hex_color.lstrip('#')
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
     return f"rgba({r},{g},{b},{alpha})"
 
-hex_to_rgba_logros = hex_to_rgba
 
 # =========================
 # CALENDARIO
@@ -400,6 +413,9 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
     } if not df_all.empty else {}
     max_arch = max(arch_pts.values(), default=0)
 
+    def exactos_en_fila(det: str) -> int:
+        return sum(1 for d in str(det).split('<br>') if 'Exacto en P' in d)
+
     badges_resultado: Dict[str, List[Dict]] = {}
 
     for _, acum_row in ranking_acumulado.iterrows():
@@ -412,14 +428,11 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         my_rp   = per_race_pos.get(email, {})
         my_cp   = cumul_pos.get(email, {})
 
-        def exactos_en_fila(det: str) -> int:
-            return sum(1 for d in str(det).split('<br>') if 'Exacto en P' in d)
-
         # 🎯 FRANCOTIRADOR
         p1_ok = sum(1 for _, r in part_df.iterrows() if 'Exacto en P1' in str(r['Detalles']))
         if p1_ok >= 5:
-            badges.append({**BADGES_DEF["francotirador"],
-                "desc": (f"{BADGES_DEF['francotirador']['nivel_emoji']} BRONCE · "
+            badges.append({**BADGES["francotirador"],
+                "desc": (f"{BADGES['francotirador']['nivel_emoji']} BRONCE · "
                          f"Acertaste el ganador exacto en {p1_ok} carreras. "
                          f"Criterio: 5+ aciertos de P1 en la temporada.")})
 
@@ -432,24 +445,24 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             else:
                 consec = 0
         if max_consec >= 3:
-            badges.append({**BADGES_DEF["racha_caliente"],
-                "desc": (f"{BADGES_DEF['racha_caliente']['nivel_emoji']} BRONCE · "
+            badges.append({**BADGES["racha_caliente"],
+                "desc": (f"{BADGES['racha_caliente']['nivel_emoji']} BRONCE · "
                          f"Quedaste en el top-3 del grupo {max_consec} carreras seguidas. "
                          f"Criterio: 3+ fechas consecutivas en el podio grupal.")})
 
         # 🇦🇷 HINCHA DE FRANCO
         cola_ok = sum(1 for _, r in part_df.iterrows() if 'Colapinto: EXACTO' in str(r['Detalles']))
         if cola_ok >= 4:
-            badges.append({**BADGES_DEF["hincha_franco"],
-                "desc": (f"{BADGES_DEF['hincha_franco']['nivel_emoji']} BRONCE · "
+            badges.append({**BADGES["hincha_franco"],
+                "desc": (f"{BADGES['hincha_franco']['nivel_emoji']} BRONCE · "
                          f"Acertaste la posición exacta de Franco Colapinto en {cola_ok} carreras. "
                          f"Criterio: 4+ aciertos exactos.")})
 
         # 💣 BOMBA DE PUNTOS
         bomba_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
         if bomba_n >= 4:
-            badges.append({**BADGES_DEF["bomba_puntos"],
-                "desc": (f"{BADGES_DEF['bomba_puntos']['nivel_emoji']} BRONCE · "
+            badges.append({**BADGES["bomba_puntos"],
+                "desc": (f"{BADGES['bomba_puntos']['nivel_emoji']} BRONCE · "
                          f"Fuiste el máximo anotador del grupo en {bomba_n} carreras distintas. "
                          f"Criterio: 4+ victorias de fecha.")})
 
@@ -460,8 +473,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             if ex > adivino_max:
                 adivino_max = ex; adivino_carrera = r['Carrera']
         if adivino_max >= 5:
-            badges.append({**BADGES_DEF["adivino"],
-                "desc": (f"{BADGES_DEF['adivino']['nivel_emoji']} BRONCE · "
+            badges.append({**BADGES["adivino"],
+                "desc": (f"{BADGES['adivino']['nivel_emoji']} BRONCE · "
                          f"Lograste {adivino_max} predicciones exactas en {adivino_carrera}. "
                          f"Criterio: 5+ aciertos exactos en una carrera (sobre 10).")})
 
@@ -471,8 +484,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             for c in carreras
         ) and n_disp > 0
         if muralla:
-            badges.append({**BADGES_DEF["muralla"],
-                "desc": (f"{BADGES_DEF['muralla']['nivel_emoji']} PLATA · "
+            badges.append({**BADGES["muralla"],
+                "desc": (f"{BADGES['muralla']['nivel_emoji']} PLATA · "
                          f"Nunca terminaste en el último lugar del ranking en ninguna "
                          f"de las {n_disp} carreras disputadas.")})
 
@@ -487,8 +500,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                 if all(p is not None and p <= 3 for p in siguientes):
                     remontada_epica = True; break
         if remontada_epica:
-            badges.append({**BADGES_DEF["remontada_epica"],
-                "desc": (f"{BADGES_DEF['remontada_epica']['nivel_emoji']} PLATA · "
+            badges.append({**BADGES["remontada_epica"],
+                "desc": (f"{BADGES['remontada_epica']['nivel_emoji']} PLATA · "
                          f"Pasaste de estar en los últimos 3 del ranking general a top-3 y "
                          f"lo sostuviste 4 carreras seguidas.")})
 
@@ -498,8 +511,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             if all(f'Exacto en P{p}' in str(r['Detalles']) for p in range(1, 6)):
                 estratega_carrera = r['Carrera']; break
         if estratega_carrera:
-            badges.append({**BADGES_DEF["estratega"],
-                "desc": (f"{BADGES_DEF['estratega']['nivel_emoji']} PLATA · "
+            badges.append({**BADGES["estratega"],
+                "desc": (f"{BADGES['estratega']['nivel_emoji']} PLATA · "
                          f"Acertaste P1, P2, P3, P4 y P5 exactos en orden en {estratega_carrera}. "
                          f"Cinco posiciones exactas de una. Brutal.")})
 
@@ -507,8 +520,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         umbral_50 = n_part / 2
         top50_n = sum(1 for c in carreras if (my_rp.get(c) or 999) <= umbral_50)
         if top50_n >= 17:
-            badges.append({**BADGES_DEF["consistente"],
-                "desc": (f"{BADGES_DEF['consistente']['nivel_emoji']} PLATA · "
+            badges.append({**BADGES["consistente"],
+                "desc": (f"{BADGES['consistente']['nivel_emoji']} PLATA · "
                          f"Terminaste en el top-50% del grupo en {top50_n} de las {n_disp} "
                          f"carreras disputadas. Criterio: 17+ fechas en la mitad superior.")})
 
@@ -519,8 +532,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             if any(f'Exacto en P{p}' in det for p in range(7, 11)):
                 apuesta_carreras.add(r['Carrera'])
         if len(apuesta_carreras) >= 6:
-            badges.append({**BADGES_DEF["apostador_nato"],
-                "desc": (f"{BADGES_DEF['apostador_nato']['nivel_emoji']} PLATA · "
+            badges.append({**BADGES["apostador_nato"],
+                "desc": (f"{BADGES['apostador_nato']['nivel_emoji']} PLATA · "
                          f"Acertaste una posición exacta entre P7 y P10 en "
                          f"{len(apuesta_carreras)} carreras distintas. "
                          f"Criterio: 6+ carreras. La zona del caos total.")})
@@ -528,15 +541,15 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         # 🌊 MAREA ALTA
         marea_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
         if marea_n >= 7:
-            badges.append({**BADGES_DEF["marea_alta"],
-                "desc": (f"{BADGES_DEF['marea_alta']['nivel_emoji']} ORO · "
+            badges.append({**BADGES["marea_alta"],
+                "desc": (f"{BADGES['marea_alta']['nivel_emoji']} ORO · "
                          f"Fuiste el top-1 del grupo en {marea_n} carreras individuales. "
                          f"Criterio: 7+ victorias de fecha.")})
 
-        # 🏗️ ARQUITECTO
-        if arch_pts.get(email, 0) >= max_arch > 0:
-            badges.append({**BADGES_DEF["arquitecto"],
-                "desc": (f"{BADGES_DEF['arquitecto']['nivel_emoji']} ORO · "
+        # 🏗️ ARQUITECTO (se comparte en empate)
+        if max_arch > 0 and arch_pts.get(email, 0) == max_arch:
+            badges.append({**BADGES["arquitecto"],
+                "desc": (f"{BADGES['arquitecto']['nivel_emoji']} ORO · "
                          f"Mayor puntaje del grupo en predicciones de P6 a P10: "
                          f"{arch_pts.get(email,0)} pts.")})
 
@@ -546,8 +559,8 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             if all(f'Exacto en P{p}' in str(r['Detalles']) for p in range(1, 4))
         )
         if oraculo_n >= 5:
-            badges.append({**BADGES_DEF["oraculo"],
-                "desc": (f"{BADGES_DEF['oraculo']['nivel_emoji']} LEGENDARIO · "
+            badges.append({**BADGES["oraculo"],
+                "desc": (f"{BADGES['oraculo']['nivel_emoji']} LEGENDARIO · "
                          f"Acertaste el podio completo (P1, P2 y P3 exactos en orden) en "
                          f"{oraculo_n} carreras. Criterio: 5+ carreras.")})
 
@@ -558,15 +571,15 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
             if ex > perf_max:
                 perf_max = ex; perf_carrera = r['Carrera']
         if perf_max >= 7:
-            badges.append({**BADGES_DEF["perfeccionista"],
-                "desc": (f"{BADGES_DEF['perfeccionista']['nivel_emoji']} LEGENDARIO · "
+            badges.append({**BADGES["perfeccionista"],
+                "desc": (f"{BADGES['perfeccionista']['nivel_emoji']} LEGENDARIO · "
                          f"Lograste {perf_max} predicciones exactas en {perf_carrera}. "
                          f"Criterio: 7+ aciertos exactos en una carrera.")})
 
         # 👑 REY DE LA TEMPORADA
         if pos_gral == 1:
-            badges.append({**BADGES_DEF["rey_temporada"],
-                "desc": (f"{BADGES_DEF['rey_temporada']['nivel_emoji']} CAMPEÓN · "
+            badges.append({**BADGES["rey_temporada"],
+                "desc": (f"{BADGES['rey_temporada']['nivel_emoji']} CAMPEÓN · "
                          f"Líder del ranking general acumulado. "
                          f"El logro más grande del torneo. Solo uno puede tenerlo.")})
 
@@ -579,11 +592,11 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
 # PANEL DE LOGROS
 # =========================
 def generar_logros_panel_html(badges_por_participante: dict) -> str:
-    ganadores_por_badge: dict = {k: [] for k in BADGES_META}
+    ganadores_por_badge: dict = {k: [] for k in BADGES}
     for email, badges in badges_por_participante.items():
         nombre = email.split('@')[0]
         for b in badges:
-            for key, meta in BADGES_META.items():
+            for key, meta in BADGES.items():
                 if meta["nombre"] == b["nombre"]:
                     ganadores_por_badge[key].append(nombre)
                     break
@@ -593,12 +606,11 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
         key=lambda x: -x[1]
     )
 
-    total_badges_posibles = len(BADGES_META)
+    total_badges_posibles = len(BADGES)
 
     lideres_rows = ""
-    COLORES_PART = ['#E10600','#00C8FF','#FFD700','#C77DFF','#39FF14','#FF6B35','#00E5CC','#FF69B4']
     for i, (nombre, n) in enumerate(ranking_badges):
-        color = COLORES_PART[i % len(COLORES_PART)]
+        color = COLORES_PARTICIPANTES[i % len(COLORES_PARTICIPANTES)]
         pct = round(n / total_badges_posibles * 100)
         bar_width = max(4, pct)
         lideres_rows += f"""
@@ -619,7 +631,7 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
     niveles_html = ""
     for nivel_key in ["BRONCE","PLATA","ORO","LEGENDARIO","CAMPEÓN"]:
         nc = NIVEL_CONFIG[nivel_key]
-        badges_del_nivel = {k: v for k, v in BADGES_META.items() if v["nivel"] == nivel_key}
+        badges_del_nivel = {k: v for k, v in BADGES.items() if v["nivel"] == nivel_key}
 
         cards_html = ""
         for badge_key, meta in badges_del_nivel.items():
@@ -627,9 +639,9 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
             desbloqueado = len(ganadores) > 0
             hex_color = meta["hex"]
 
-            bg_card   = hex_to_rgba_logros(hex_color, 0.07 if desbloqueado else 0.03)
-            border_c  = hex_to_rgba_logros(hex_color, 0.35 if desbloqueado else 0.12)
-            emoji_bg  = hex_to_rgba_logros(hex_color, 0.15 if desbloqueado else 0.06)
+            bg_card   = hex_to_rgba(hex_color, 0.07 if desbloqueado else 0.03)
+            border_c  = hex_to_rgba(hex_color, 0.35 if desbloqueado else 0.12)
+            emoji_bg  = hex_to_rgba(hex_color, 0.15 if desbloqueado else 0.06)
             text_col  = hex_color if desbloqueado else "#444444"
             name_col  = "#FFFFFF" if desbloqueado else "#555555"
             desc_col  = "#AAAAAA" if desbloqueado else "#444444"
@@ -2355,6 +2367,99 @@ function exportarCSV() {{
 </html>"""
 
 # =========================
+# VALIDACIÓN DE RESULTADOS
+# =========================
+CAMPOS_REQUERIDOS = ["resultado_carrera", "vuelta_rapida", "colapinto"]
+
+def validar_resultados(resultados_por_carrera: Dict) -> bool:
+    """
+    Valida que el archivo resultados.json tenga la estructura correcta.
+    Por cada carrera verifica que existan y tengan contenido los tres campos
+    requeridos: resultado_carrera, vuelta_rapida y colapinto.
+
+    Retorna True si todo está bien, False si hay errores bloqueantes.
+    Imprime advertencias para problemas menores (campos vacíos en carreras
+    que todavía no se disputaron) y errores para problemas que impedirían
+    un cálculo correcto.
+    """
+    if not isinstance(resultados_por_carrera, dict):
+        print(f"ERROR: {ARCHIVO_RESULTADOS} debe ser un objeto JSON, no {type(resultados_por_carrera).__name__}.")
+        return False
+
+    if not resultados_por_carrera:
+        print(f"ERROR: {ARCHIVO_RESULTADOS} está vacío, no hay carreras para procesar.")
+        return False
+
+    errores = []
+
+    for carrera, datos in resultados_por_carrera.items():
+        if not isinstance(datos, dict):
+            errores.append(f"  · [{carrera}] el valor debe ser un objeto JSON, no {type(datos).__name__}.")
+            continue
+
+        # Campos faltantes (la clave no existe)
+        faltantes = [c for c in CAMPOS_REQUERIDOS if c not in datos]
+        if faltantes:
+            errores.append(
+                f"  · [{carrera}] faltan los campos: {', '.join(faltantes)}.\n"
+                f"    Estructura esperada: {{\"resultado_carrera\": [...], \"vuelta_rapida\": \"Piloto\", \"colapinto\": 14}}"
+            )
+            continue
+
+        # resultado_carrera: debe ser una lista con al menos 10 pilotos
+        rc = datos["resultado_carrera"]
+        if not isinstance(rc, list):
+            errores.append(f"  · [{carrera}] 'resultado_carrera' debe ser una lista, no {type(rc).__name__}.")
+        elif len(rc) == 0:
+            # Lista vacía = carrera aún no disputada, solo advertencia
+            print(f"Advertencia: [{carrera}] 'resultado_carrera' está vacío (¿carrera pendiente?).")
+        elif len(rc) < 10:
+            errores.append(
+                f"  · [{carrera}] 'resultado_carrera' tiene {len(rc)} pilotos, se esperan al menos 10."
+            )
+        else:
+            # Verificar que los pilotos estén en la lista oficial
+            desconocidos = [p for p in rc if p not in PILOTOS]
+            if desconocidos:
+                errores.append(
+                    f"  · [{carrera}] pilotos no reconocidos en 'resultado_carrera': {desconocidos}.\n"
+                    f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código."
+                )
+
+        # vuelta_rapida: string no vacío
+        vr = datos["vuelta_rapida"]
+        if not isinstance(vr, str):
+            errores.append(f"  · [{carrera}] 'vuelta_rapida' debe ser un string, no {type(vr).__name__}.")
+        elif vr.strip() == "":
+            print(f"Advertencia: [{carrera}] 'vuelta_rapida' está vacío — no se otorgarán puntos por vuelta rápida.")
+        elif vr not in PILOTOS:
+            errores.append(
+                f"  · [{carrera}] piloto de vuelta rápida no reconocido: \"{vr}\".\n"
+                f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código."
+            )
+
+        # colapinto: número entero entre 1 y 20 (o 0 si no clasificó/abandonó)
+        col = datos["colapinto"]
+        if not isinstance(col, (int, float)):
+            errores.append(
+                f"  · [{carrera}] 'colapinto' debe ser un número (posición), no {type(col).__name__}.\n"
+                f"    Ejemplo: 14 si terminó 14°, 0 si no clasificó o abandonó."
+            )
+        elif not (0 <= int(col) <= 20):
+            errores.append(f"  · [{carrera}] 'colapinto' tiene valor inválido: {col}. Debe estar entre 0 y 20.")
+
+    if errores:
+        print(f"\n❌ Se encontraron {len(errores)} error(es) en {ARCHIVO_RESULTADOS}:\n")
+        for e in errores:
+            print(e)
+        print(f"\nCorregí los errores anteriores y volvé a correr el script.\n")
+        return False
+
+    print(f"✅ {ARCHIVO_RESULTADOS} validado correctamente ({len(resultados_por_carrera)} carrera(s) en el archivo).")
+    return True
+
+
+# =========================
 # MAIN
 # =========================
 def main():
@@ -2362,8 +2467,19 @@ def main():
         print(f"Carpeta '{CARPETA_RESPUESTAS}' no existe. Créala y agregá los CSV.")
         return
 
-    with open(ARCHIVO_RESULTADOS, 'r') as f:
-        resultados_por_carrera = json.load(f)
+    if not os.path.exists(ARCHIVO_RESULTADOS):
+        print(f"ERROR: No se encontró '{ARCHIVO_RESULTADOS}'. Creá el archivo con los resultados de cada carrera.")
+        return
+
+    with open(ARCHIVO_RESULTADOS, 'r', encoding='utf-8') as f:
+        try:
+            resultados_por_carrera = json.load(f)
+        except json.JSONDecodeError as e:
+            print(f"ERROR: '{ARCHIVO_RESULTADOS}' no es un JSON válido.\n  Detalle: {e}")
+            return
+
+    if not validar_resultados(resultados_por_carrera):
+        return
 
     rankings_por_carrera = []
     all_rankings = pd.DataFrame()
@@ -2391,14 +2507,15 @@ def main():
 
     for archivo in archivos_ordenados:
         nombre_carrera = archivo.replace("respuestas_", "").replace(".csv", "").capitalize()
-        if nombre_carrera in resultados_por_carrera and resultados_por_carrera[nombre_carrera].get("resultado_carrera"):
+        datos = resultados_por_carrera.get(nombre_carrera, {})
+        if datos.get("resultado_carrera"):
             archivo_path = os.path.join(CARPETA_RESPUESTAS, archivo)
-            ranking, df = procesar_carrera(nombre_carrera, archivo_path, resultados_por_carrera[nombre_carrera])
+            ranking, df = procesar_carrera(nombre_carrera, archivo_path, datos)
             rankings_por_carrera.append(ranking)
             all_rankings = pd.concat([all_rankings, ranking.drop(columns=["Detalles"])])
             all_dfs.append(df)
         else:
-            print(f"Advertencia: No hay resultados reales completos para {nombre_carrera}")
+            print(f"Advertencia: [{nombre_carrera}] sin resultados todavía, se omite.")
 
     if not all_rankings.empty:
         ranking_acumulado = (
