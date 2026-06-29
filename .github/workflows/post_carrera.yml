@@ -67,9 +67,9 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Instalar dependencias
+        -name: Instalar dependencias
         run: |
-          pip install google-auth google-auth-httplib2 google-api-python-client
+          pip install -r requirements.txt
 
       - name: Traer votos desde Google Sheets
         env:
