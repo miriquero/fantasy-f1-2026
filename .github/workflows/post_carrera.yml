@@ -60,6 +60,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add resultados.json respuestas/ ranking_f1.html index.html
+          git add resultados.json respuestas/ ranking_f1.html
           git diff --cached --quiet || git commit -m "Auto: ranking actualizado post carrera"
           git push
