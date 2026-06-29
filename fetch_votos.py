@@ -1,57 +1,83 @@
 """
-fetch_resultados.py
--------------------
-Consulta la API de Jolpica (sucesor de Ergast) y actualiza resultados.json
-con los resultados de las carreras que ya se disputaron.
-
-Solo actualiza carreras que no tienen resultado todavia.
-Las carreras ya cargadas no se tocan.
+fetch_votos.py
+--------------
+Lee las respuestas del Google Form desde Google Sheets y genera
+un CSV por carrera en la carpeta `respuestas/`, respetando el
+corte de votos (solo votos anteriores al inicio de la carrera).
+Si una persona voto mas de una vez para la misma carrera, se queda
+con el voto mas reciente.
 
 Uso:
-    python fetch_resultados.py
+    python fetch_votos.py
 
-No requiere autenticacion ni API keys.
+Requiere:
+    pip install google-auth google-auth-httplib2 google-api-python-client
 """
 
+import os
+import csv
 import json
-import time
-import urllib.request
+import re
+import unicodedata
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 
-ARCHIVO_RESULTADOS = Path("resultados.json")
-BASE_URL = "https://api.jolpi.ca/ergast/f1/2026"
+# -- Configuracion ------------------------------------------------------------
 
-# Mapeo nombre de carrera en tu sistema -> circuitId o raceName en Jolpica
-# Jolpica usa el nombre oficial del Gran Premio
-NOMBRE_A_ROUND = {
-    "Australia":    1,
-    "China":        2,
-    "Japon":        3,
-    "Miami":        6,   # Bahrein(4) y Arabia Saudita(5) cancelados
-    "Canada":       7,
-    "Monaco":       8,
-    "Barcelona":    9,
-    "Austria":      10,
-    "Gran Bretana": 11,
-    "Belgica":      12,
-    "Hungria":      13,
-    "Paises Bajos": 14,
-    "Italia":       15,
-    "Madrid":       16,
-    "Azerbaiyn":    17,
-    "Singapur":     18,
-    "Austin":       19,
-    "Mexico":       20,
-    "Brasil":       21,
-    "Las Vegas":    22,
-    "Qatar":        23,
-    "Abu Dhabi":    24,
+SHEET_ID   = "1YSPJn9qpgPOECpW7OwX9_dCdeiB3XxrDpucujvVcA-8"
+SHEET_NAME = "Respuestas de formulario 1"
+CARPETA    = Path("respuestas")
+SCOPES     = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+JSON_LOCAL = "fantasy-f1-500915-613a0c111715.json"
+
+ARG = timezone(timedelta(hours=-3))
+
+INICIO_CARRERA = {
+    "Australia":    "2026-03-08T01:00:00",
+    "China":        "2026-03-15T04:00:00",
+    "Japon":        "2026-03-29T02:00:00",
+    "Miami":        "2026-05-03T17:00:00",
+    "Canada":       "2026-05-24T17:00:00",
+    "Monaco":       "2026-06-07T10:00:00",
+    "Barcelona":    "2026-06-14T10:00:00",
+    "Austria":      "2026-06-28T10:00:00",
+    "Gran Bretana": "2026-07-05T11:00:00",
+    "Belgica":      "2026-07-19T10:00:00",
+    "Hungria":      "2026-07-26T10:00:00",
+    "Paises Bajos": "2026-08-23T10:00:00",
+    "Italia":       "2026-09-06T10:00:00",
+    "Madrid":       "2026-09-13T10:00:00",
+    "Azerbaiyn":    "2026-09-26T08:00:00",
+    "Singapur":     "2026-10-11T09:00:00",
+    "Austin":       "2026-10-25T17:00:00",
+    "Mexico":       "2026-11-01T17:00:00",
+    "Brasil":       "2026-11-08T14:00:00",
+    "Las Vegas":    "2026-11-21T01:00:00",
+    "Qatar":        "2026-11-29T13:00:00",
+    "Abu Dhabi":    "2026-12-06T10:00:00",
 }
 
-# Numero de piloto de Colapinto en 2026
-COLAPINTO_NUMBER = "43"
+# -- Autenticacion ------------------------------------------------------------
 
-import unicodedata
+def get_service():
+    creds_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS")
+    if creds_json:
+        creds_dict = json.loads(creds_json)
+    elif os.path.exists(JSON_LOCAL):
+        with open(JSON_LOCAL, encoding="utf-8") as f:
+            creds_dict = json.load(f)
+    else:
+        raise FileNotFoundError(
+            f"No se encontro '{JSON_LOCAL}' ni la variable GOOGLE_SHEETS_CREDENTIALS."
+        )
+    creds = service_account.Credentials.from_service_account_info(
+        creds_dict, scopes=SCOPES
+    )
+    return build("sheets", "v4", credentials=creds)
+
+# -- Utilidades ---------------------------------------------------------------
 
 def quitar_tildes(texto):
     return ''.join(
@@ -59,114 +85,111 @@ def quitar_tildes(texto):
         if unicodedata.category(c) != 'Mn'
     )
 
-def fetch_json(url):
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "FantasyF1/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except Exception as e:
-        print(f"  ERROR al consultar {url}: {e}")
+def parsear_fecha(texto):
+    for fmt in ("%d/%m/%Y %H:%M:%S", "%m/%d/%Y %H:%M:%S", "%Y-%m-%d %H:%M:%S"):
+        try:
+            return datetime.strptime(texto.strip(), fmt).replace(tzinfo=ARG)
+        except ValueError:
+            continue
+    return None
+
+def corte_carrera(nombre):
+    clave = quitar_tildes(nombre.strip())
+    iso = INICIO_CARRERA.get(clave) or INICIO_CARRERA.get(nombre.strip())
+    if not iso:
         return None
+    return datetime.fromisoformat(iso).replace(tzinfo=ARG)
 
-def get_resultado_carrera(round_num):
-    """Devuelve (lista_pilotos_ordenada, vuelta_rapida_nombre) o None si no hay datos."""
-    url = f"{BASE_URL}/{round_num}/results.json?limit=25"
-    data = fetch_json(url)
-    if not data:
-        return None
+def nombre_archivo(carrera):
+    limpio = quitar_tildes(carrera).strip().lower()
+    limpio = re.sub(r"[^\w\s-]", "", limpio)
+    return limpio.replace(" ", "_")
 
-    try:
-        races = data["MRData"]["RaceTable"]["Races"]
-        if not races:
-            return None  # Carrera no disputada todavia
+# -- Logica principal ---------------------------------------------------------
 
-        results = races[0]["Results"]
+def deduplicar(votos, col_email):
+    """Queda con el voto mas reciente por persona."""
+    if not col_email:
+        return votos
+    vistos = {}
+    for voto in votos:
+        email = voto.get(col_email, "").strip().lower()
+        marca = parsear_fecha(voto.get("Marca temporal", ""))
+        if email not in vistos:
+            vistos[email] = (voto, marca)
+        else:
+            _, marca_anterior = vistos[email]
+            if marca and marca_anterior and marca > marca_anterior:
+                vistos[email] = (voto, marca)
+    return [v for v, _ in vistos.values()]
 
-        # Ordenar por posicion final
-        results_sorted = sorted(results, key=lambda r: int(r["position"]))
+def fetch_y_guardar():
+    service = get_service()
+    sheet   = service.spreadsheets()
 
-        pilotos = []
-        vuelta_rapida = None
-        pos_colapinto = None
+    result = sheet.values().get(
+        spreadsheetId=SHEET_ID,
+        range=SHEET_NAME,
+    ).execute()
 
-        for r in results_sorted:
-            nombre = f"{r['Driver']['givenName']} {r['Driver']['familyName']}"
-            pilotos.append(nombre)
+    rows = result.get("values", [])
+    if not rows:
+        print("El Sheet esta vacio.")
+        return
 
-            # Vuelta rapida
-            if r.get("FastestLap", {}).get("rank") == "1":
-                vuelta_rapida = nombre
+    headers = [h.strip() for h in rows[0]]
+    filas   = rows[1:]
+    print(f"Sheet leido: {len(filas)} respuestas, {len(headers)} columnas.")
 
-            # Posicion de Colapinto
-            if r["Driver"]["permanentNumber"] == COLAPINTO_NUMBER or \
-               r["Driver"]["familyName"].lower() == "colapinto":
-                pos_colapinto = str(r["position"])
+    # Detectar columna de email
+    col_email = next((h for h in headers if "correo" in h.lower()), None)
 
-        return pilotos, vuelta_rapida or "", pos_colapinto or "0"
+    por_carrera = {}
+    omitidas = 0
 
-    except (KeyError, IndexError, TypeError) as e:
-        print(f"  ERROR parseando resultado round {round_num}: {e}")
-        return None
+    for fila in filas:
+        row = dict(zip(headers, fila + [""] * (len(headers) - len(fila))))
 
-def main():
-    # Cargar resultados existentes
-    if ARCHIVO_RESULTADOS.exists():
-        with open(ARCHIVO_RESULTADOS, encoding="utf-8") as f:
-            resultados = json.load(f)
-        print(f"Archivo existente: {len(resultados)} carreras cargadas.")
-    else:
-        resultados = {}
-        print("No existe resultados.json, se creara uno nuevo.")
-
-    actualizadas = 0
-    sin_datos = 0
-
-    for carrera, round_num in NOMBRE_A_ROUND.items():
-        # Buscar si ya tiene resultado (con o sin tildes)
-        clave_existente = None
-        for k in resultados:
-            if quitar_tildes(k).lower() == quitar_tildes(carrera).lower():
-                clave_existente = k
-                break
-
-        if clave_existente:
-            datos = resultados[clave_existente]
-            if datos.get("resultado_carrera"):
-                print(f"  OK (ya cargada): {clave_existente}")
-                continue
-
-        # No tiene resultado todavia, consultar API
-        print(f"  Consultando round {round_num}: {carrera}...")
-        resultado = get_resultado_carrera(round_num)
-
-        if resultado is None:
-            print(f"  -> Sin datos todavia (carrera pendiente o API no actualizada).")
-            sin_datos += 1
-            time.sleep(0.3)
+        carrera = row.get("Carrera", "").strip()
+        if not carrera:
+            omitidas += 1
             continue
 
-        pilotos, vuelta_rapida, pos_colapinto = resultado
+        marca = parsear_fecha(row.get("Marca temporal", ""))
+        corte = corte_carrera(carrera)
 
-        # Usar la clave existente si ya estaba en el JSON (para no cambiar el nombre)
-        clave = clave_existente or carrera
-        resultados[clave] = {
-            "resultado_carrera": pilotos,
-            "vuelta_rapida": vuelta_rapida,
-            "colapinto": pos_colapinto,
-        }
+        if marca and corte and marca >= corte:
+            email = row.get(col_email, "") if col_email else ""
+            print(f"  IGNORADO (tardio): {email} -> {carrera} ({row.get('Marca temporal')})")
+            omitidas += 1
+            continue
 
-        print(f"  -> {clave}: P1={pilotos[0] if pilotos else '?'}, VR={vuelta_rapida}, Colapinto=P{pos_colapinto}")
-        actualizadas += 1
-        time.sleep(0.3)  # Respetar rate limit de la API
+        por_carrera.setdefault(carrera, []).append(row)
 
-    # Guardar
-    with open(ARCHIVO_RESULTADOS, "w", encoding="utf-8") as f:
-        json.dump(resultados, f, ensure_ascii=False, indent=2)
+    CARPETA.mkdir(exist_ok=True)
+    duplicados_total = 0
 
-    print(f"\nListo.")
-    print(f"  {actualizadas} carrera(s) actualizada(s) desde la API.")
-    print(f"  {sin_datos} carrera(s) pendiente(s) sin datos todavia.")
-    print(f"  Archivo guardado: {ARCHIVO_RESULTADOS}")
+    for carrera, votos in sorted(por_carrera.items()):
+        antes = len(votos)
+        votos = deduplicar(votos, col_email)
+        duplicados = antes - len(votos)
+        if duplicados:
+            print(f"  DUPLICADOS descartados en {carrera}: {duplicados} voto(s) extra")
+            duplicados_total += duplicados
+
+        ruta = CARPETA / f"respuestas_{nombre_archivo(carrera)}.csv"
+        with open(ruta, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=headers, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(votos)
+        print(f"  OK {carrera:20s} -> {ruta} ({len(votos)} votos)")
+
+    total = sum(len(v) for v in por_carrera.values()) - duplicados_total
+    print(f"\nListo. {total} votos en {len(por_carrera)} carreras.")
+    if omitidas:
+        print(f"   {omitidas} fila(s) ignoradas (tardias o sin carrera).")
+    if duplicados_total:
+        print(f"   {duplicados_total} voto(s) duplicado(s) descartado(s) (se quedo con el mas reciente).")
 
 if __name__ == "__main__":
-    main()
+    fetch_y_guardar()
