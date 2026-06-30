@@ -36,6 +36,7 @@ jobs:
     env:
       CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
       CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
     steps:
       - name: Checkout repo
@@ -74,4 +75,4 @@ jobs:
 
       - name: Notificar error por WhatsApp
         if: failure()
-        run: python notificar.py error "Revisa el log en GitHub Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: python notificar.py error "Revisa el log en GitHub Actions"
