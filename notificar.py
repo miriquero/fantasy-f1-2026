@@ -47,11 +47,19 @@ def main():
     extra = sys.argv[2] if len(sys.argv) > 2 else ""
 
     if tipo == "exito":
+        mensajes_random = [
+            "🏁 BANDERA A CUADROS! El ranking acaba de actualizarse, vayan corriendo a ver donde quedaron 👀",
+            "🏎️💨 Box box box! Las posiciones ya estan confirmadas, entren antes que les saquen ventaja",
+            "📻 \"Copiado, ranking actualizado\" - Asi hablaria tu ingeniero de pista si pudiera. Andá a mirar!",
+            "🏆 Se bajo la bandera, se subieron los puntos. El nuevo ranking ya esta arriba!",
+            "🚦 Luces apagadas, datos cargados! El ranking de la familia ya tiene movimiento nuevo",
+            "🥇 Alguien festeja, alguien llora, asi es la F1. Mira como quedo todo en el ranking!",
+        ]
+        import random
+        intro = random.choice(mensajes_random)
         mensaje = (
-            "Fantasy F1 actualizado!\n\n"
-            "El ranking de la ultima carrera ya esta listo.\n\n"
-            f"{extra}\n\n"
-            "Reenvia este mensaje al grupo de la familia"
+            f"{intro}\n\n"
+            f"{extra}"
         )
     elif tipo == "error":
         mensaje = (
