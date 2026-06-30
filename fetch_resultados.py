@@ -4,8 +4,10 @@ fetch_resultados.py
 Consulta la API de Jolpica (sucesor de Ergast) y actualiza resultados.json
 con los resultados de las carreras que ya se disputaron.
 
-Solo actualiza carreras que no tienen resultado todavia.
-Las carreras ya cargadas no se tocan.
+Carreras sin resultado: se consultan siempre.
+Carreras ya cargadas: se re-chequean durante los 4 dias posteriores a la
+carga inicial, por si la FIA aplica una penalidad que cambia el orden.
+Pasados esos 4 dias, se consideran definitivas y no se vuelven a tocar.
 
 Uso:
     python fetch_resultados.py
@@ -15,14 +17,16 @@ No requiere autenticacion ni API keys.
 
 import json
 import time
+import unicodedata
 import urllib.request
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 ARCHIVO_RESULTADOS = Path("resultados.json")
 BASE_URL = "https://api.jolpi.ca/ergast/f1/2026"
 
-# Mapeo nombre de carrera en tu sistema -> circuitId o raceName en Jolpica
-# Jolpica usa el nombre oficial del Gran Premio
+DIAS_VENTANA_PENALIDAD = 3  # Cuantos dias re-chequea por si hay sanciones de la FIA
+
 NOMBRE_A_ROUND = {
     "Australia":    1,
     "China":        2,
@@ -48,10 +52,7 @@ NOMBRE_A_ROUND = {
     "Abu Dhabi":    24,
 }
 
-# Numero de piloto de Colapinto en 2026
 COLAPINTO_NUMBER = "43"
-
-import unicodedata
 
 def quitar_tildes(texto):
     return ''.join(
@@ -69,7 +70,7 @@ def fetch_json(url):
         return None
 
 def get_resultado_carrera(round_num):
-    """Devuelve (lista_pilotos_ordenada, vuelta_rapida_nombre) o None si no hay datos."""
+    """Devuelve (lista_pilotos_ordenada, vuelta_rapida_nombre, pos_colapinto) o None."""
     url = f"{BASE_URL}/{round_num}/results.json?limit=25"
     data = fetch_json(url)
     if not data:
@@ -78,11 +79,9 @@ def get_resultado_carrera(round_num):
     try:
         races = data["MRData"]["RaceTable"]["Races"]
         if not races:
-            return None  # Carrera no disputada todavia
+            return None
 
         results = races[0]["Results"]
-
-        # Ordenar por posicion final
         results_sorted = sorted(results, key=lambda r: int(r["position"]))
 
         pilotos = []
@@ -93,11 +92,9 @@ def get_resultado_carrera(round_num):
             nombre = f"{r['Driver']['givenName']} {r['Driver']['familyName']}"
             pilotos.append(nombre)
 
-            # Vuelta rapida
             if r.get("FastestLap", {}).get("rank") == "1":
                 vuelta_rapida = nombre
 
-            # Posicion de Colapinto
             if r["Driver"]["permanentNumber"] == COLAPINTO_NUMBER or \
                r["Driver"]["familyName"].lower() == "colapinto":
                 pos_colapinto = str(r["position"])
@@ -108,8 +105,17 @@ def get_resultado_carrera(round_num):
         print(f"  ERROR parseando resultado round {round_num}: {e}")
         return None
 
+def dentro_de_ventana(fecha_iso, dias):
+    """True si fecha_iso esta dentro de los ultimos N dias."""
+    try:
+        fecha = datetime.fromisoformat(fecha_iso)
+        if fecha.tzinfo is None:
+            fecha = fecha.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - fecha) <= timedelta(days=dias)
+    except (ValueError, TypeError):
+        return False
+
 def main():
-    # Cargar resultados existentes
     if ARCHIVO_RESULTADOS.exists():
         with open(ARCHIVO_RESULTADOS, encoding="utf-8") as f:
             resultados = json.load(f)
@@ -119,54 +125,80 @@ def main():
         print("No existe resultados.json, se creara uno nuevo.")
 
     actualizadas = 0
+    correcciones = 0
     sin_datos = 0
+    ahora_iso = datetime.now(timezone.utc).isoformat()
 
     for carrera, round_num in NOMBRE_A_ROUND.items():
-        # Buscar si ya tiene resultado (con o sin tildes)
         clave_existente = None
         for k in resultados:
             if quitar_tildes(k).lower() == quitar_tildes(carrera).lower():
                 clave_existente = k
                 break
 
-        if clave_existente:
-            datos = resultados[clave_existente]
-            if datos.get("resultado_carrera"):
-                print(f"  OK (ya cargada): {clave_existente}")
-                continue
+        ya_cargada = clave_existente and resultados[clave_existente].get("resultado_carrera")
 
-        # No tiene resultado todavia, consultar API
-        print(f"  Consultando round {round_num}: {carrera}...")
+        if ya_cargada:
+            fecha_carga = resultados[clave_existente].get("_actualizado")
+            if not fecha_carga or not dentro_de_ventana(fecha_carga, DIAS_VENTANA_PENALIDAD):
+                # Fuera de la ventana de re-chequeo: se considera definitiva
+                print(f"  OK (definitiva): {clave_existente}")
+                continue
+            # Dentro de la ventana: re-chequear por si hubo penalidad
+            print(f"  Re-chequeando (dentro de ventana de {DIAS_VENTANA_PENALIDAD} dias): {clave_existente}...")
+        else:
+            print(f"  Consultando round {round_num}: {carrera}...")
+
         resultado = get_resultado_carrera(round_num)
 
         if resultado is None:
-            print(f"  -> Sin datos todavia (carrera pendiente o API no actualizada).")
-            sin_datos += 1
+            if not ya_cargada:
+                print(f"  -> Sin datos todavia (carrera pendiente o API no actualizada).")
+                sin_datos += 1
             time.sleep(0.3)
             continue
 
         pilotos, vuelta_rapida, pos_colapinto = resultado
-
-        # Usar la clave existente si ya estaba en el JSON (para no cambiar el nombre)
         clave = clave_existente or carrera
+
+        if ya_cargada:
+            orden_anterior = resultados[clave].get("resultado_carrera", [])
+            if orden_anterior == pilotos:
+                # Sin cambios, solo refrescar timestamp si ya estaba presente
+                print(f"  -> Sin cambios.")
+                time.sleep(0.3)
+                continue
+            else:
+                print(f"  -> PENALIDAD DETECTADA! El orden cambio respecto a la carga anterior.")
+                print(f"     Antes: {orden_anterior[0] if orden_anterior else '?'} primero")
+                print(f"     Ahora: {pilotos[0] if pilotos else '?'} primero")
+                correcciones += 1
+
         resultados[clave] = {
             "resultado_carrera": pilotos,
             "vuelta_rapida": vuelta_rapida,
             "colapinto": pos_colapinto,
+            "_actualizado": ahora_iso,
         }
 
         print(f"  -> {clave}: P1={pilotos[0] if pilotos else '?'}, VR={vuelta_rapida}, Colapinto=P{pos_colapinto}")
         actualizadas += 1
-        time.sleep(0.3)  # Respetar rate limit de la API
+        time.sleep(0.3)
 
-    # Guardar
     with open(ARCHIVO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=2)
 
     print(f"\nListo.")
-    print(f"  {actualizadas} carrera(s) actualizada(s) desde la API.")
+    print(f"  {actualizadas} carrera(s) actualizada(s) o cargada(s) por primera vez.")
+    if correcciones:
+        print(f"  {correcciones} carrera(s) CORREGIDA(S) por penalidad de la FIA.")
     print(f"  {sin_datos} carrera(s) pendiente(s) sin datos todavia.")
     print(f"  Archivo guardado: {ARCHIVO_RESULTADOS}")
+
+    # Indicador para el workflow: hubo penalidad?
+    if correcciones:
+        with open("_penalidad_detectada.flag", "w") as f:
+            f.write(str(correcciones))
 
 if __name__ == "__main__":
     main()

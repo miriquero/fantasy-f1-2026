@@ -61,6 +61,12 @@ def main():
             f"{intro}\n\n"
             f"{extra}"
         )
+    elif tipo == "penalidad":
+        mensaje = (
+            "🚩 Atencion! La FIA aplico una penalidad y el orden de una carrera CAMBIO\n\n"
+            "El ranking se recalculo con el resultado oficial corregido.\n\n"
+            f"{extra}"
+        )
     elif tipo == "error":
         mensaje = (
             "Fantasy F1 - Error en la actualizacion\n\n"
