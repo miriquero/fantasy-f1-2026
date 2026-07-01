@@ -1260,6 +1260,70 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
     return perfiles_html
 
 # =========================
+# SELECTOR DE PERFILES
+# =========================
+def generar_perfil_selector_html(ranking_acumulado: pd.DataFrame) -> str:
+    """Genera botones de selección para filtrar perfiles por participante."""
+    if ranking_acumulado.empty:
+        return ""
+    btns = '<button class="perfil-sel-btn all-btn active" onclick="filtrarPerfil(this, \'all\')">Todos</button>'
+    for idx, (_, row) in enumerate(ranking_acumulado.iterrows()):
+        nombre = row["Dirección de correo electrónico"].split("@")[0]
+        btns += f'<button class="perfil-sel-btn" onclick="filtrarPerfil(this, {idx})">{nombre}</button>'
+    return btns
+
+# =========================
+# HALL OF FAME
+# =========================
+HALL_OF_FAME = [
+    {
+        "temporada": "2025",
+        "nombre": "RIQUEROLE",
+        "stats": [
+            {"num": "👑", "label": "Campeón"},
+            {"num": "2025", "label": "Temporada"},
+        ]
+    },
+]
+
+def generar_hof_panel_html() -> str:
+    """Genera el panel Hall of Fame con los campeones históricos."""
+    bloques = ""
+    for entry in HALL_OF_FAME:
+        stats_html = "".join([
+            f'''<div class="hof-stat">
+                <div class="hof-stat-num">{s["num"]}</div>
+                <div class="hof-stat-label">{s["label"]}</div>
+            </div>'''
+            for s in entry.get("stats", [])
+        ])
+        bloques += f'''
+        <div class="hof-year-block">
+            <div class="hof-year-title">Temporada {entry["temporada"]}</div>
+            <div class="hof-card">
+                <div class="hof-crown">👑</div>
+                <div class="hof-info">
+                    <div class="hof-nombre">{entry["nombre"]}</div>
+                    <div class="hof-temporada">Campeón de la Temporada {entry["temporada"]}</div>
+                    <div class="hof-stats-row">{stats_html}</div>
+                </div>
+                <div class="hof-trophy">🏆</div>
+            </div>
+        </div>
+        '''
+
+    return f'''
+<div id="panel-hof" class="tab-panel">
+    <h2 class="section-heading">His<span>toria</span></h2>
+    <p class="section-label" style="margin-bottom:24px;">Campeones históricos del Fantasy F1 familiar</p>
+    <div class="hof-wrap">
+        {bloques}
+    </div>
+</div>
+'''
+
+
+# =========================
 # ESTADÍSTICAS ADICIONALES
 # =========================
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
@@ -1450,7 +1514,9 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  grafico_barras: str,
                  stats_adicionales: str,
                  perfiles_html: str,
-                 badges_por_participante: Dict[str, List[Dict]]) -> str:
+                 badges_por_participante: Dict[str, List[Dict]],
+                 perfil_selector_html: str = "",
+                 hof_panel_html: str = "") -> str:
 
     proxima_carrera, proxima_iso = obtener_proxima_carrera()
 
@@ -1534,6 +1600,9 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
 
     graf_barras_html = (f'<img src="data:image/png;base64,{grafico_barras}" alt="Puntos acumulados" class="chart-img">') if grafico_barras else '<p class="empty-msg">Sin datos.</p>'
     fecha_actual     = datetime.now().strftime("%d/%m/%Y · %H:%M")
+
+    # ---- Nuevos paneles ----
+    # perfil_selector_html y hof_panel_html ya llegan como params
 
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -1733,6 +1802,94 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
 }}
 .chart-img {{ width: 100%; height: auto; display: block; border-radius: 8px; }}
+
+/* ═══ PERFIL SELECTOR ═══ */
+.perfil-selector-wrap {{
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 20px; padding: 14px 16px;
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 12px;
+}}
+.perfil-sel-btn {{
+    font-family: var(--font-display); font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    background: var(--bg-3); border: 1px solid var(--border);
+    color: var(--muted); padding: 7px 14px; border-radius: 8px;
+    cursor: pointer; transition: all 0.15s;
+}}
+.perfil-sel-btn:hover {{ border-color: var(--border-bright); color: var(--text); }}
+.perfil-sel-btn.active {{
+    background: var(--red); border-color: var(--red);
+    color: #fff;
+}}
+.perfil-sel-btn.all-btn {{
+    background: var(--bg-4); border-color: var(--border-bright); color: var(--text);
+}}
+.perfil-sel-btn.all-btn.active {{ background: var(--red); border-color: var(--red); color: #fff; }}
+
+/* ═══ HALL OF FAME ═══ */
+.hof-wrap {{ padding: 0; }}
+.hof-intro {{
+    font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; line-height: 1.6;
+}}
+.hof-year-block {{ margin-bottom: 32px; }}
+.hof-year-title {{
+    font-family: var(--font-display); font-size: 0.65rem; font-weight: 800;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 12px;
+}}
+.hof-year-title::after {{
+    content: ''; flex: 1; height: 1px; background: var(--border);
+}}
+.hof-card {{
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 28px;
+    display: flex; align-items: center; gap: 24px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s;
+}}
+.hof-card:hover {{ border-color: var(--border-bright); }}
+.hof-card::before {{
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 10% 50%, rgba(255,215,0,0.04) 0%, transparent 60%);
+    pointer-events: none;
+}}
+.hof-crown {{
+    font-size: 3rem; flex-shrink: 0; line-height: 1;
+}}
+.hof-info {{ flex: 1; }}
+.hof-nombre {{
+    font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: #FFD700;
+    margin-bottom: 4px;
+}}
+.hof-temporada {{
+    font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 12px;
+}}
+.hof-stats-row {{
+    display: flex; gap: 20px; flex-wrap: wrap;
+}}
+.hof-stat {{
+    display: flex; flex-direction: column; gap: 2px;
+}}
+.hof-stat-num {{
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text);
+}}
+.hof-stat-label {{
+    font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+}}
+.hof-trophy {{
+    font-size: 5rem; flex-shrink: 0; opacity: 0.12;
+    position: absolute; right: 20px; bottom: -10px; line-height: 1;
+}}
+@media (max-width: 480px) {{
+    .hof-crown {{ font-size: 2rem; }}
+    .hof-nombre {{ font-size: 1.2rem; }}
+    .hof-trophy {{ display: none; }}
+}}
 
 /* ═══ EXPORT ═══ */
 .export-bar {{ display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }}
@@ -2049,6 +2206,7 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
     <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
     <button class="tab-btn" onclick="openTab(event,'panel-stats')">Stats</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-hof')">Historia</button>
     <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
 </div>
 </nav>
@@ -2079,8 +2237,9 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 
 <div id="panel-perfiles" class="tab-panel">
     <h2 class="section-heading">Per<span>files</span></h2>
-    <p class="section-label" style="margin-bottom:18px;">Estadísticas individuales</p>
-    <div class="perfiles-grid">{perfiles_html}</div>
+    <p class="section-label" style="margin-bottom:6px;">Estadísticas individuales · seleccioná un participante</p>
+    <div class="perfil-selector-wrap" id="perfil-selector-wrap">{perfil_selector_html}</div>
+    <div class="perfiles-grid" id="perfiles-grid">{perfiles_html}</div>
 </div>
 
 {logros_panel_html}
@@ -2090,6 +2249,8 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     <p class="section-label" style="margin-bottom:18px;">Resumen general de la temporada</p>
     {stats_adicionales}
 </div>
+
+{hof_panel_html}
 
 <div id="panel-calendario" class="tab-panel">
     <h2 class="section-heading">Calen<span>dario</span></h2>
@@ -2175,6 +2336,22 @@ function irPerfil(idx) {{
         var card = document.getElementById('perfil-' + idx);
         if (card) card.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
     }}, 180);
+}}
+
+// ===== FILTRAR PERFILES =====
+function filtrarPerfil(btn, idx) {{
+    // Actualizar botones activos
+    document.querySelectorAll('.perfil-sel-btn').forEach(function(b) {{ b.classList.remove('active'); }});
+    btn.classList.add('active');
+
+    var cards = document.querySelectorAll('.perfil-card');
+    if (idx === 'all') {{
+        cards.forEach(function(c) {{ c.style.display = ''; }});
+    }} else {{
+        cards.forEach(function(c, i) {{
+            c.style.display = (i === idx) ? '' : 'none';
+        }});
+    }}
 }}
 
 // ===== BADGE TOOLTIP =====
@@ -2440,12 +2617,16 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
 
         # colapinto: número entero entre 1 y 20 (o 0 si no clasificó/abandonó)
         col = datos["colapinto"]
-        if not isinstance(col, (int, float)):
+        # Aceptar tanto int como string numérico (ej: 14 o "14")
+        try:
+            col_int = int(col)
+        except (ValueError, TypeError):
             errores.append(
                 f"  · [{carrera}] 'colapinto' debe ser un número (posición), no {type(col).__name__}.\n"
                 f"    Ejemplo: 14 si terminó 14°, 0 si no clasificó o abandonó."
             )
-        elif not (0 <= int(col) <= 20):
+            col_int = None
+        if col_int is not None and not (0 <= col_int <= 20):
             errores.append(f"  · [{carrera}] 'colapinto' tiene valor inválido: {col}. Debe estar entre 0 y 20.")
 
     if errores:
@@ -2530,15 +2711,19 @@ def main():
 
     badges_por_participante = calcular_badges(all_rankings, all_dfs, ranking_acumulado)
 
-    grafico_barras    = generar_grafico_barras_acumulado(ranking_acumulado)
-    stats_adicionales = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
-    perfiles_html     = generar_perfiles_html(all_rankings, all_dfs, ranking_acumulado, badges_por_participante)
+    grafico_barras         = generar_grafico_barras_acumulado(ranking_acumulado)
+    stats_adicionales      = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
+    perfiles_html          = generar_perfiles_html(all_rankings, all_dfs, ranking_acumulado, badges_por_participante)
+    perfil_selector_html   = generar_perfil_selector_html(ranking_acumulado)
+    hof_panel_html         = generar_hof_panel_html()
 
     html_content = generar_html(
         rankings_por_carrera, ranking_acumulado,
         grafico_barras,
         stats_adicionales, perfiles_html,
-        badges_por_participante
+        badges_por_participante,
+        perfil_selector_html=perfil_selector_html,
+        hof_panel_html=hof_panel_html,
     )
 
     with open("ranking_f1.html", "w", encoding="utf-8") as f:
