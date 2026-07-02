@@ -956,6 +956,166 @@ LOGROS_JS = """
 })();
 """
 
+ANIM_JS = """
+// Animaciones y micro-interacciones del dashboard
+(function() {
+    function moveIndicator(btn) {
+        var nav = document.querySelector('.tab-nav-inner');
+        var indicator = document.getElementById('tab-indicator');
+        if (!nav || !indicator || !btn) return;
+        var navRect = nav.getBoundingClientRect();
+        var btnRect = btn.getBoundingClientRect();
+        indicator.style.left = (btnRect.left - navRect.left + nav.scrollLeft) + 'px';
+        indicator.style.width = btnRect.width + 'px';
+    }
+
+    function animateCount(el) {
+        if (el.dataset.counted) return;
+        el.dataset.counted = '1';
+        var raw = (el.textContent || '0').trim();
+        var target = parseFloat(raw.replace(',', '.'));
+        if (isNaN(target)) return;
+        var isDecimal = raw.indexOf('.') !== -1 || raw.indexOf(',') !== -1;
+        var start = null;
+        var duration = 800;
+        function step(ts) {
+            if (!start) start = ts;
+            var progress = Math.min((ts - start) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = target * eased;
+            el.textContent = isDecimal ? current.toFixed(1) : Math.round(current);
+            if (progress < 1) { requestAnimationFrame(step); }
+            else { el.textContent = isDecimal ? target.toFixed(1) : target; }
+        }
+        requestAnimationFrame(step);
+    }
+
+    function revealPanel(panel) {
+        if (!panel) return;
+        var items = panel.querySelectorAll('.reveal:not(.visible), .row-reveal:not(.visible)');
+        items.forEach(function(el, i) {
+            setTimeout(function() { el.classList.add('visible'); }, i * 35);
+        });
+        var counters = panel.querySelectorAll('[data-countup]:not([data-counted])');
+        counters.forEach(function(el, i) {
+            setTimeout(function() { animateCount(el); }, 150 + i * 60);
+        });
+    }
+
+    function bouncePodium() {
+        document.querySelectorAll('.podium-card').forEach(function(el) {
+            el.classList.remove('podium-enter');
+            void el.offsetWidth;
+            el.classList.add('podium-enter');
+        });
+    }
+
+    function popBadges() {
+        var cards = document.querySelectorAll('#panel-logros .logro-card:not(.badge-pop)');
+        cards.forEach(function(el, i) {
+            setTimeout(function() { el.classList.add('badge-pop'); }, i * 35);
+        });
+    }
+
+    var originalOpenTab = window.openTab;
+    window.openTab = function(evt, panelId) {
+        originalOpenTab(evt, panelId);
+        moveIndicator(evt.currentTarget);
+        var panel = document.getElementById(panelId);
+        revealPanel(panel);
+        if (panelId === 'panel-acumulado') bouncePodium();
+        if (panelId === 'panel-logros') popBadges();
+    };
+
+    function init() {
+        var activeBtn = document.querySelector('.tab-btn.active');
+        moveIndicator(activeBtn);
+        revealPanel(document.querySelector('.tab-panel.active'));
+        bouncePodium();
+        window.addEventListener('resize', function() {
+            moveIndicator(document.querySelector('.tab-btn.active'));
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+"""
+
+ANIM_CSS = """
+/* ═══════════════════ ANIMACIONES Y MICRO-INTERACCIONES ═══════════════════ */
+
+/* Reveal escalonado al hacer scroll o cambiar de tab */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Fade liviano para filas de tabla (sin transform, seguro en <tr>) */
+.row-reveal { opacity: 0; transition: opacity 0.4s ease; }
+.row-reveal.visible { opacity: 1; }
+
+/* Indicador deslizante bajo el tab activo */
+.tab-nav-inner { position: relative; }
+.tab-indicator {
+    position: absolute; bottom: 0; height: 3px; background: var(--red);
+    border-radius: 2px 2px 0 0;
+    transition: left 0.3s cubic-bezier(0.22,1,0.36,1), width 0.3s cubic-bezier(0.22,1,0.36,1);
+    pointer-events: none;
+}
+
+/* Elevación consistente al pasar el mouse sobre cards */
+.podium-card, .stat-card, .hof-card, .perfil-card, .cal-card {
+    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease;
+}
+.podium-card:hover, .stat-card:hover, .hof-card:hover, .perfil-card:hover, .cal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+}
+
+/* Feedback táctil en botones y elementos clickeables */
+.export-btn, .tab-btn, .onboarding-toggle, .podium-card, .badge-chip {
+    transition: transform 0.12s ease, background 0.15s, border-color 0.15s, color 0.15s;
+}
+.export-btn:active, .tab-btn:active, .onboarding-toggle:active, .podium-card:active { transform: scale(0.96); }
+
+/* Entrada escalonada del podio (plata, oro, bronce) */
+@keyframes podiumIn {
+    from { opacity: 0; transform: translateY(28px) scale(0.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.podium-card.podium-enter { animation: podiumIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+.podium-2.podium-enter { animation-delay: 0s; }
+.podium-1.podium-enter { animation-delay: 0.1s; }
+.podium-3.podium-enter { animation-delay: 0.2s; }
+
+/* Pop de logros al entrar a la pestaña */
+@keyframes badgePop {
+    0%   { opacity: 0; transform: scale(0.6); }
+    60%  { transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.logro-card.badge-pop { animation: badgePop 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Fade-in general al cargar la página */
+@keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+body { animation: pageIn 0.4s ease; }
+
+/* Respeta la preferencia de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+/* ═══════════════════════════════════════════════════════ */
+"""
+
 CAL_CSS = """
 /* ═══════════════════ CALENDARIO VISUAL ═══════════════════ */
 .cal-grid {
@@ -1207,7 +1367,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
         else:               medal_str = f'<span class="medal plain">{pos_gral}</span>'
 
         perfiles_html += f"""
-        <div class="perfil-card" id="perfil-{idx}">
+        <div class="perfil-card reveal" id="perfil-{idx}">
             <div class="perfil-header" style="border-left:4px solid {color};">
                 <div class="perfil-avatar" style="background:{hex_to_rgba(color,0.13)};color:{color};border:1px solid {hex_to_rgba(color,0.27)};">{nombre[:2].upper()}</div>
                 <div class="perfil-info">
@@ -1300,7 +1460,7 @@ def generar_hof_panel_html() -> str:
         bloques += f'''
         <div class="hof-year-block">
             <div class="hof-year-title">Temporada {entry["temporada"]}</div>
-            <div class="hof-card">
+            <div class="hof-card reveal">
                 <div class="hof-crown">👑</div>
                 <div class="hof-info">
                     <div class="hof-nombre">{entry["nombre"]}</div>
@@ -1313,12 +1473,10 @@ def generar_hof_panel_html() -> str:
         '''
 
     return f'''
-<div id="panel-hof" class="tab-panel">
-    <h2 class="section-heading">His<span>toria</span></h2>
-    <p class="section-label" style="margin-bottom:24px;">Campeones históricos del Fantasy F1 familiar</p>
-    <div class="hof-wrap">
-        {bloques}
-    </div>
+<h3 class="subsection-heading" id="mas-historia">Historia</h3>
+<p class="section-label" style="margin-bottom:24px;">Campeones históricos del Fantasy F1 familiar</p>
+<div class="hof-wrap">
+    {bloques}
 </div>
 '''
 
@@ -1351,10 +1509,10 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
 
     return f"""
     <div class="stats-grid">
-        <div class="stat-card accent"><div class="stat-num">{total_participantes}</div><div class="stat-desc">Participantes</div></div>
-        <div class="stat-card"><div class="stat-num">{total_predicciones}</div><div class="stat-desc">Predicciones totales</div></div>
-        <div class="stat-card"><div class="stat-num">{puntos_totales}</div><div class="stat-desc">Puntos distribuidos</div></div>
-        <div class="stat-card"><div class="stat-num">{promedio_puntos:.1f}</div><div class="stat-desc">Promedio por predicción</div></div>
+        <div class="stat-card accent reveal"><div class="stat-num" data-countup>{total_participantes}</div><div class="stat-desc">Participantes</div></div>
+        <div class="stat-card reveal"><div class="stat-num" data-countup>{total_predicciones}</div><div class="stat-desc">Predicciones totales</div></div>
+        <div class="stat-card reveal"><div class="stat-num" data-countup>{puntos_totales}</div><div class="stat-desc">Puntos distribuidos</div></div>
+        <div class="stat-card reveal"><div class="stat-num" data-countup>{promedio_puntos:.1f}</div><div class="stat-desc">Promedio por predicción</div></div>
     </div>
     <div class="leader-banner">
         <span class="leader-label">LÍDER ACTUAL</span>
@@ -1474,7 +1632,7 @@ def generar_calendario_visual(proxima_iso: str) -> str:
             )
 
         card = (
-            f'<div class="cal-card {status}">'
+            f'<div class="cal-card {status} reveal">'
             f'<span class="rnd-badge">{td(jornada_limpio)}</span>'
             f'<span class="cal-flag">{flag}</span>'
             f'<div class="cal-name">{td(nombre_limpio)}</div>'
@@ -1520,33 +1678,81 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
 
     proxima_carrera, proxima_iso = obtener_proxima_carrera()
 
+    # ---- Onboarding colapsable ----
+    onboarding_html = """
+    <div class="onboarding" id="onboarding">
+        <button class="onboarding-toggle" onclick="toggleOnboarding()">
+            <span>¿Cómo funciona el torneo?</span>
+            <span class="onboarding-icon">+</span>
+        </button>
+        <div class="onboarding-body">
+            Cada participante predice el orden de los primeros 10 puestos antes de cada carrera.
+            Se suman puntos por acertar la posición exacta y puntos extra por acertar el ganador.
+            Los <b>logros</b> se desbloquean automáticamente según tu desempeño acumulado — mirá la
+            pestaña Logros para ver los 15 disponibles.
+        </div>
+    </div>"""
+
     # ---- Ranking acumulado ----
     if not ranking_acumulado.empty:
-        rows_html = ""
-        for _, row in ranking_acumulado.iterrows():
-            pos = row['Posición']; email = row['Dirección de correo electrónico']
-            nombre = email.split('@')[0]; pts = row['Puntos']
-            cambio = row.get('Cambio', '—')
-            if pos == 1:   medal = '<span class="medal gold">1</span>';   rc = "row-first"
-            elif pos == 2: medal = '<span class="medal silver">2</span>'; rc = ""
-            elif pos == 3: medal = '<span class="medal bronze">3</span>'; rc = ""
-            else:          medal = f'<span class="medal plain">{pos}</span>'; rc = ""
-            rows_html += f"""
-            <tr class="{rc}" onclick="irPerfil({int(pos)-1})" style="cursor:pointer;" title="Ver perfil de {nombre}">
-                <td>{medal}</td>
-                <td><span class="driver-name">{nombre}</span><span class="driver-email">{email}</span></td>
-                <td><span class="pts-big">{pts}</span></td>
-                <td>{cambio}</td>
-            </tr>"""
+        top3 = ranking_acumulado[ranking_acumulado['Posición'] <= 3]
+        resto = ranking_acumulado[ranking_acumulado['Posición'] > 3]
+
+        # --- Podio destacado (top 3) ---
+        podium_html = ""
+        if not top3.empty:
+            medal_emoji = {1: "🥇", 2: "🥈", 3: "🥉"}
+            cards = {}
+            for _, row in top3.iterrows():
+                pos = int(row['Posición']); email = row['Dirección de correo electrónico']
+                nombre = email.split('@')[0]; pts = row['Puntos']
+                iniciales = nombre[:2].upper()
+                cards[pos] = f"""
+                <div class="podium-card podium-{pos}" data-pos="{pos}" onclick="irPerfil({pos-1})" style="cursor:pointer;" title="Ver perfil de {nombre}">
+                    <div class="podium-shine"></div>
+                    <div class="podium-medal">{medal_emoji.get(pos,'')}</div>
+                    <div class="podium-avatar">{iniciales}</div>
+                    <div class="podium-nombre">{nombre}</div>
+                    <div class="podium-pts" data-countup>{pts}</div>
+                    <div class="podium-pts-label">puntos</div>
+                    <div class="podium-base"></div>
+                </div>"""
+            podium_html = f"""
+            <div class="podium">
+                {cards.get(2,'')}
+                {cards.get(1,'')}
+                {cards.get(3,'')}
+            </div>"""
+
+        # --- Tabla del resto (4° en adelante) ---
+        tabla_resto_html = ""
+        if not resto.empty:
+            rows_html = ""
+            for _, row in resto.iterrows():
+                pos = row['Posición']; email = row['Dirección de correo electrónico']
+                nombre = email.split('@')[0]; pts = row['Puntos']
+                cambio = row.get('Cambio', '—')
+                rows_html += f"""
+                <tr class="row-reveal" onclick="irPerfil({int(pos)-1})" style="cursor:pointer;" title="Ver perfil de {nombre}">
+                    <td><span class="medal plain">{pos}</span></td>
+                    <td><span class="driver-name">{nombre}</span><span class="driver-email">{email}</span></td>
+                    <td><span class="pts-big">{pts}</span></td>
+                    <td>{cambio}</td>
+                </tr>"""
+            tabla_resto_html = f"""
+            <div class="table-wrapper">
+            <table class="data-table leaderboard">
+                <thead><tr><th>#</th><th>Participante</th><th>Puntos</th><th>Cambio</th></tr></thead>
+                <tbody>{rows_html}</tbody>
+            </table></div>"""
+
         ranking_acumulado_html = f"""
-        <p class="section-label" style="margin-bottom:8px;color:var(--muted);">Tocá una fila para ver el perfil</p>
-        <div class="table-wrapper">
-        <table class="data-table leaderboard">
-            <thead><tr><th>#</th><th>Participante</th><th>Puntos</th><th>Cambio</th></tr></thead>
-            <tbody>{rows_html}</tbody>
-        </table></div>"""
+        {onboarding_html}
+        <p class="section-label" style="margin-bottom:8px;color:var(--muted);">Tocá una fila o el podio para ver el perfil</p>
+        {podium_html}
+        {tabla_resto_html}"""
     else:
-        ranking_acumulado_html = '<p class="empty-msg">No hay datos disponibles.</p>'
+        ranking_acumulado_html = onboarding_html + '<p class="empty-msg">No hay datos disponibles.</p>'
 
     # ---- Rankings por carrera ----
     rankings_por_carrera_html = ""
@@ -1738,6 +1944,107 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
     letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted);
     margin-bottom: 12px; margin-top: 4px;
+}}
+
+/* ═══ ONBOARDING ═══ */
+.onboarding {{ background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px;
+               margin-bottom: 18px; overflow: hidden; }}
+.onboarding-toggle {{
+    width: 100%; background: var(--bg-3); border: none; color: var(--text);
+    padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase; min-height: 50px;
+}}
+.onboarding-toggle:hover {{ background: var(--bg-4); }}
+.onboarding-icon {{ font-size: 1.3rem; color: var(--muted); transition: transform 0.2s; }}
+.onboarding.open .onboarding-icon {{ transform: rotate(45deg); }}
+.onboarding-body {{ display: none; padding: 16px 18px; font-size: 0.9rem; color: #ccc; line-height: 1.7; }}
+.onboarding.open .onboarding-body {{ display: block; }}
+.onboarding-body b {{ color: var(--text); }}
+
+/* ═══ PODIO ═══ */
+.podium {{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; align-items: end; margin-bottom: 16px; }}
+@media (max-width: 420px) {{ .podium {{ gap: 6px; }} }}
+.podium-card {{
+    background: var(--bg-2); border: 1px solid var(--border-bright); border-radius: 14px 14px 0 0;
+    padding: 16px 10px; text-align: center; position: relative; overflow: hidden; isolation: isolate;
+}}
+/* Numeral fantasma de fondo */
+.podium-card::before {{
+    content: attr(data-pos);
+    position: absolute; right: -8px; bottom: -22px;
+    font-family: var(--font-display); font-weight: 800; font-size: 6.5rem; line-height: 1;
+    color: rgba(255,255,255,0.035); z-index: 0; pointer-events: none;
+}}
+/* Textura diagonal tipo speed-lines */
+.podium-card::after {{
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(115deg, rgba(255,255,255,0.028) 0px, rgba(255,255,255,0.028) 1px, transparent 1px, transparent 13px);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 75%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 75%);
+}}
+/* Brillo animado que recorre la card */
+.podium-shine {{
+    position: absolute; top: -60%; left: -10%; width: 35%; height: 240%; z-index: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+    transform: translateX(-40%) rotate(18deg);
+    animation: podiumShine 4.5s ease-in-out infinite;
+}}
+@keyframes podiumShine {{
+    0%, 55%, 100% {{ transform: translateX(-40%) rotate(18deg); }}
+    30% {{ transform: translateX(340%) rotate(18deg); }}
+}}
+/* El contenido va por encima de las capas decorativas */
+.podium-card > *:not(.podium-shine) {{ position: relative; z-index: 1; }}
+
+.podium-1 {{
+    order: 2; padding-top: 24px; padding-bottom: 22px; border-color: rgba(255,215,0,0.4);
+    background: radial-gradient(ellipse 130% 90% at 50% -15%, rgba(255,215,0,0.20), transparent 62%), var(--bg-2);
+    box-shadow: 0 0 44px -14px rgba(255,215,0,0.35);
+}}
+.podium-2 {{
+    order: 1; border-color: rgba(192,192,192,0.35);
+    background: radial-gradient(ellipse 130% 90% at 50% -15%, rgba(192,192,192,0.14), transparent 62%), var(--bg-2);
+    box-shadow: 0 0 34px -14px rgba(192,192,192,0.25);
+}}
+.podium-3 {{
+    order: 3; border-color: rgba(205,127,50,0.35);
+    background: radial-gradient(ellipse 130% 90% at 50% -15%, rgba(205,127,50,0.16), transparent 62%), var(--bg-2);
+    box-shadow: 0 0 34px -14px rgba(205,127,50,0.25);
+}}
+.podium-1::before {{ color: rgba(255,215,0,0.06); font-size: 8rem; }}
+.podium-2::before {{ color: rgba(192,192,192,0.05); }}
+.podium-3::before {{ color: rgba(205,127,50,0.05); }}
+.podium-1 .podium-shine {{ animation-delay: 0s; }}
+.podium-2 .podium-shine {{ animation-delay: 1.1s; }}
+.podium-3 .podium-shine {{ animation-delay: 2.2s; }}
+.podium-medal {{ font-size: 1.8rem; margin-bottom: 6px; }}
+.podium-1 .podium-medal {{ font-size: 2.3rem; }}
+.podium-avatar {{ width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
+                   justify-content: center; font-family: var(--font-display); font-weight: 800;
+                   font-size: 1.1rem; margin: 0 auto 8px; }}
+.podium-1 .podium-avatar {{ width: 64px; height: 64px; font-size: 1.3rem; }}
+.podium-1 .podium-avatar {{ background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }}
+.podium-2 .podium-avatar {{ background: rgba(192,192,192,0.15); color: var(--silver); border: 1px solid rgba(192,192,192,0.3); }}
+.podium-3 .podium-avatar {{ background: rgba(205,127,50,0.15); color: var(--bronze); border: 1px solid rgba(205,127,50,0.3); }}
+.podium-nombre {{ font-family: var(--font-display); font-weight: 800; font-size: 1rem; text-transform: uppercase;
+                   letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+.podium-1 .podium-nombre {{ font-size: 1.2rem; }}
+.podium-pts {{ font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin-top: 6px; }}
+.podium-1 .podium-pts {{ font-size: 2rem; color: var(--gold); }}
+.podium-2 .podium-pts {{ color: var(--silver); }}
+.podium-3 .podium-pts {{ color: var(--bronze); }}
+.podium-pts-label {{ font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }}
+.podium-base {{ height: 8px; border-radius: 0 0 14px 14px; margin-top: 12px; }}
+.podium-1 .podium-base {{ background: var(--gold); height: 14px; }}
+.podium-2 .podium-base {{ background: var(--silver); height: 10px; }}
+.podium-3 .podium-base {{ background: var(--bronze); height: 6px; }}
+
+/* ═══ SUBSECCIONES DEL PANEL "MÁS" ═══ */
+.mas-subsection {{ margin-bottom: 8px; }}
+.subsection-heading {{
+    font-family: var(--font-display); font-size: 1.15rem; font-weight: 800;
+    letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 12px;
 }}
 
 /* ═══ TABLA ═══ */
@@ -2156,6 +2463,7 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 
 {CAL_CSS}
 {LOGROS_CSS}
+{ANIM_CSS}
 </style>
 </head>
 <body>
@@ -2201,13 +2509,12 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
 
 <nav class="tab-nav">
 <div class="tab-nav-inner">
+    <span class="tab-indicator" id="tab-indicator"></span>
     <button class="tab-btn active" onclick="openTab(event,'panel-acumulado')">Acumulado</button>
     <button class="tab-btn" onclick="openTab(event,'panel-carreras')">Carreras</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
     <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-stats')">Stats</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-hof')">Historia</button>
-    <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-mas')">Más ▾</button>
 </div>
 </nav>
 
@@ -2235,6 +2542,8 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     {rankings_por_carrera_html}
 </div>
 
+{logros_panel_html}
+
 <div id="panel-perfiles" class="tab-panel">
     <h2 class="section-heading">Per<span>files</span></h2>
     <p class="section-label" style="margin-bottom:6px;">Estadísticas individuales · seleccioná un participante</p>
@@ -2242,20 +2551,28 @@ body {{ font-family: var(--font-body); background: var(--bg); color: var(--text)
     <div class="perfiles-grid" id="perfiles-grid">{perfiles_html}</div>
 </div>
 
-{logros_panel_html}
+<div id="panel-mas" class="tab-panel">
+    <h2 class="section-heading">Más <span>Información</span></h2>
+    <p class="section-label" style="margin-bottom:18px;">Estadísticas, historia y calendario de la temporada</p>
 
-<div id="panel-stats" class="tab-panel">
-    <h2 class="section-heading">Esta<span>dísticas</span></h2>
-    <p class="section-label" style="margin-bottom:18px;">Resumen general de la temporada</p>
-    {stats_adicionales}
-</div>
+    <div class="mas-subsection">
+        <h3 class="subsection-heading">Estadísticas</h3>
+        {stats_adicionales}
+    </div>
 
-{hof_panel_html}
+    <div class="divider"></div>
 
-<div id="panel-calendario" class="tab-panel">
-    <h2 class="section-heading">Calen<span>dario</span></h2>
-    <p class="section-label" style="margin-bottom:18px;">F1 2026 · Horarios ARG (GMT−3)</p>
-    {calendario_html}
+    <div class="mas-subsection">
+        {hof_panel_html}
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="mas-subsection">
+        <h3 class="subsection-heading">Calendario</h3>
+        <p class="section-label" style="margin-bottom:18px;">F1 2026 · Horarios ARG (GMT−3)</p>
+        {calendario_html}
+    </div>
 </div>
 
 </main>
@@ -2317,6 +2634,12 @@ function openTab(evt, panelId) {{
     evt.currentTarget.classList.add('active');
     // Scroll tab button into view en mobile
     try {{ evt.currentTarget.scrollIntoView({{ behavior: 'smooth', block: 'nearest', inline: 'center' }}); }} catch(e) {{}}
+}}
+
+// ===== ONBOARDING =====
+function toggleOnboarding() {{
+    var el = document.getElementById('onboarding');
+    if (el) el.classList.toggle('open');
 }}
 
 // ===== ACCORDION =====
@@ -2539,6 +2862,7 @@ function exportarCSV() {{
 }}
 
 {LOGROS_JS}
+{ANIM_JS}
 </script>
 </body>
 </html>"""
