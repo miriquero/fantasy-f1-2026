@@ -10,6 +10,7 @@ from io import BytesIO
 from datetime import datetime, timezone, timedelta
 import numpy as np
 import re
+import unicodedata
 
 # =========================
 # CONFIGURACIÓN GENERAL
@@ -31,6 +32,61 @@ COL_PUESTOS = [
     "Quinto puesto", "Sexto puesto", "Séptimo puesto", "Octavo puesto",
     "Noveno puesto", "Décimo puesto"
 ]
+
+# =========================
+# NORMALIZACIÓN DE NOMBRES DE PILOTOS
+# =========================
+# La API de resultados (hopcalca/hopcalca F1 o similar) suele devolver los
+# nombres completos "oficiales", con tildes y variantes distintas a las que
+# usamos en la lista PILOTOS de este script (por ejemplo, "Ollie" en vez de
+# "Oliver", o sin tildes). Este bloque traduce cualquier variante conocida
+# al nombre canónico usado en PILOTOS, tanto para "resultado_carrera" como
+# para "vuelta_rapida".
+
+def _quitar_acentos(s: str) -> str:
+    return ''.join(c for c in unicodedata.normalize('NFKD', s) if not unicodedata.combining(c))
+
+# Variantes conocidas que devuelve la API -> nombre canónico en PILOTOS
+ALIASES_PILOTOS = {
+    "oliver bearman": "Ollie Bearman",
+    "alexander albon": "Alex Albon",
+    "andrea kimi antonelli": "Kimi Antonelli",
+    "sergio perez": "Sergio Perez",
+    "sergio pérez": "Sergio Perez",
+    "checo perez": "Sergio Perez",
+    "nico hulkenberg": "Nico Hulkenberg",
+    "nico hülkenberg": "Nico Hulkenberg",
+    "gabriel bortoleto": "Gabriel Bortoletto",
+    "carlos sainz jr": "Carlos Sainz",
+    "carlos sainz jr.": "Carlos Sainz",
+}
+
+_PILOTOS_NORM = {_quitar_acentos(p).lower(): p for p in PILOTOS}
+
+def normalizar_piloto(nombre: str) -> str:
+    """Traduce cualquier variante conocida (con o sin tilde, nombre largo, etc.)
+    al nombre canónico usado en PILOTOS. Si no reconoce el nombre, lo deja
+    igual (y la validación posterior lo señalará como desconocido)."""
+    if not nombre:
+        return nombre
+    limpio = _quitar_acentos(str(nombre).strip()).lower()
+    if limpio in _PILOTOS_NORM:
+        return _PILOTOS_NORM[limpio]
+    if limpio in ALIASES_PILOTOS:
+        return ALIASES_PILOTOS[limpio]
+    return str(nombre).strip()
+
+def normalizar_resultados_api(resultados_por_carrera: Dict) -> Dict:
+    """Recorre resultados.json y normaliza los nombres de pilotos en
+    'resultado_carrera' y 'vuelta_rapida' antes de validar/procesar."""
+    for carrera, datos in resultados_por_carrera.items():
+        if not isinstance(datos, dict):
+            continue
+        if isinstance(datos.get("resultado_carrera"), list):
+            datos["resultado_carrera"] = [normalizar_piloto(p) for p in datos["resultado_carrera"]]
+        if isinstance(datos.get("vuelta_rapida"), str):
+            datos["vuelta_rapida"] = normalizar_piloto(datos["vuelta_rapida"])
+    return resultados_por_carrera
 
 # =========================
 # BADGES META (sistema de logros completo)
@@ -2924,7 +2980,8 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
             if desconocidos:
                 errores.append(
                     f"  · [{carrera}] pilotos no reconocidos en 'resultado_carrera': {desconocidos}.\n"
-                    f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código."
+                    f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código, o agregá un alias\n"
+                    f"    en ALIASES_PILOTOS si es una variante nueva que devuelve la API."
                 )
 
         # vuelta_rapida: string no vacío
@@ -2936,7 +2993,8 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
         elif vr not in PILOTOS:
             errores.append(
                 f"  · [{carrera}] piloto de vuelta rápida no reconocido: \"{vr}\".\n"
-                f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código."
+                f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código, o agregá un alias\n"
+                f"    en ALIASES_PILOTOS si es una variante nueva que devuelve la API."
             )
 
         # colapinto: número entero entre 1 y 20 (o 0 si no clasificó/abandonó)
@@ -2982,6 +3040,10 @@ def main():
         except json.JSONDecodeError as e:
             print(f"ERROR: '{ARCHIVO_RESULTADOS}' no es un JSON válido.\n  Detalle: {e}")
             return
+
+    # 🔧 Normalizar nombres de pilotos que vienen de la API con otra grafía
+    # (con/sin tildes, "Oliver" vs "Ollie", "Alexander" vs "Alex", etc.)
+    resultados_por_carrera = normalizar_resultados_api(resultados_por_carrera)
 
     if not validar_resultados(resultados_por_carrera):
         return
