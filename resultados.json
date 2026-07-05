@@ -191,5 +191,34 @@
     "vuelta_rapida": "Andrea Kimi Antonelli",
     "colapinto": "9",
     "_actualizado": "2026-07-05T20:32:29.494053+00:00"
+  },
+  "Gran Bretana": {
+    "resultado_carrera": [
+      "Charles Leclerc",
+      "George Russell",
+      "Lewis Hamilton",
+      "Lando Norris",
+      "Isack Hadjar",
+      "Liam Lawson",
+      "Arvid Lindblad",
+      "Gabriel Bortoleto",
+      "Franco Colapinto",
+      "Pierre Gasly",
+      "Oscar Piastri",
+      "Oliver Bearman",
+      "Esteban Ocon",
+      "Sergio Pérez",
+      "Andrea Kimi Antonelli",
+      "Valtteri Bottas",
+      "Carlos Sainz",
+      "Fernando Alonso",
+      "Lance Stroll",
+      "Max Verstappen",
+      "Alexander Albon",
+      "Nico Hülkenberg"
+    ],
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "9",
+    "_actualizado": "2026-07-05T20:41:17.865877+00:00"
   }
 }
