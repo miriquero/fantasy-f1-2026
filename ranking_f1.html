@@ -56,7 +56,16 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     max-width: 38vw; overflow: hidden; text-overflow: ellipsis;
 }
 @media (min-width: 380px) { .countdown-race { display: block; } }
-.countdown-timer { display: flex; gap: 4px; flex-shrink: 0; }
+.countdown-timer { display: flex; gap: 4px; flex-shrink: 0; position: relative; }
+.countdown-timer::before {
+    content: ''; position: absolute; inset: -10px -14px; z-index: -1; border-radius: 12px;
+    background: radial-gradient(ellipse at 50% 50%, rgba(225,6,0,0.20), transparent 72%);
+    animation: countdownPulse 2.6s ease-in-out infinite;
+}
+@keyframes countdownPulse {
+    0%, 100% { opacity: 0.45; transform: scale(0.94); }
+    50%      { opacity: 1;    transform: scale(1.06); }
+}
 .countdown-unit { text-align: center; }
 .countdown-num {
     font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
@@ -261,7 +270,18 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr:hover td { background: rgba(255,255,255,0.025); }
-.data-table .row-first td { background: rgba(225,6,0,0.05); }
+.data-table .row-first td { position: relative; background: rgba(225,6,0,0.06); overflow: hidden; }
+.data-table .row-first td::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.09) 50%, transparent 65%);
+    background-size: 220% 100%; background-position: -140% 0;
+    animation: rowShine 3.4s ease-in-out infinite;
+}
+@keyframes rowShine {
+    0%, 45%  { background-position: -140% 0; }
+    55%      { background-position: 140% 0; }
+    100%     { background-position: 140% 0; }
+}
 .medal {
     display: inline-flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 50%;
@@ -337,18 +357,30 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     content: ''; flex: 1; height: 1px; background: var(--border);
 }
 .hof-card {
-    background: var(--bg-2); border: 1px solid var(--border);
+    background: radial-gradient(ellipse 120% 100% at 12% -10%, rgba(255,215,0,0.14), transparent 65%), var(--bg-2);
+    border: 1px solid rgba(255,215,0,0.22);
     border-radius: 16px; padding: 24px 28px;
     display: flex; align-items: center; gap: 24px;
-    position: relative; overflow: hidden;
-    transition: border-color 0.2s;
+    position: relative; overflow: hidden; isolation: isolate;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 40px -18px rgba(255,215,0,0.35);
 }
-.hof-card:hover { border-color: var(--border-bright); }
+.hof-card:hover { border-color: rgba(255,215,0,0.4); box-shadow: 0 0 50px -14px rgba(255,215,0,0.45); }
 .hof-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 10% 50%, rgba(255,215,0,0.04) 0%, transparent 60%);
-    pointer-events: none;
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 10% 50%, rgba(255,215,0,0.05) 0%, transparent 60%);
 }
+.hof-card::after {
+    content: ''; position: absolute; top: -60%; left: -15%; width: 22%; height: 220%; z-index: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+    transform: translateX(-40%) rotate(15deg);
+    animation: hofShine 6s ease-in-out infinite;
+}
+@keyframes hofShine {
+    0%, 65%, 100% { transform: translateX(-40%) rotate(15deg); }
+    35%           { transform: translateX(560%) rotate(15deg); }
+}
+.hof-card > * { position: relative; z-index: 1; }
 .hof-crown {
     font-size: 3rem; flex-shrink: 0; line-height: 1;
 }
@@ -393,12 +425,23 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     letter-spacing: 1px; text-transform: uppercase; background: var(--bg-3);
     border: 1px solid var(--border-bright); color: var(--text);
     padding: 9px 16px; border-radius: 8px; cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.2s;
     min-height: 42px; display: inline-flex; align-items: center;
+    position: relative; overflow: hidden; isolation: isolate;
 }
+.export-btn::before {
+    content: ''; position: absolute; top: -60%; left: -25%; width: 30%; height: 220%; z-index: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+    transform: translateX(-60%) rotate(18deg); transition: transform 0.6s ease;
+}
+.export-btn:hover::before { transform: translateX(420%) rotate(18deg); }
+.export-btn > * { position: relative; z-index: 1; }
 .export-btn:hover { background: var(--bg-4); border-color: var(--red); color: var(--red); }
-.export-btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
-.export-btn.primary:hover { background: #c50500; }
+.export-btn.primary {
+    background: var(--red); border-color: var(--red); color: #fff;
+    box-shadow: 0 0 26px -8px rgba(225,6,0,0.55);
+}
+.export-btn.primary:hover { background: #c50500; box-shadow: 0 0 32px -6px rgba(225,6,0,0.7); }
 .export-btn-sm { font-size: 0.72rem; padding: 7px 13px; letter-spacing: 0.8px; }
 .export-btn:disabled { opacity: 0.6; cursor: wait; }
 
@@ -457,8 +500,19 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .stat-card {
     background: var(--bg-2); border: 1px solid var(--border);
     border-radius: 12px; padding: 16px 14px; text-align: center;
+    position: relative; overflow: hidden; isolation: isolate;
 }
-.stat-card.accent { border-color: var(--red); background: rgba(225,6,0,0.06); }
+.stat-card::before {
+    content: attr(data-icon); position: absolute; right: -6px; bottom: -14px;
+    font-size: 3.4rem; line-height: 1; opacity: 0.07; z-index: 0; pointer-events: none;
+    filter: grayscale(1);
+}
+.stat-card > * { position: relative; z-index: 1; }
+.stat-card.accent {
+    border-color: var(--red);
+    background: radial-gradient(ellipse 120% 100% at 20% -10%, rgba(225,6,0,0.16), transparent 65%), rgba(225,6,0,0.06);
+}
+.stat-card.accent::before { opacity: 0.12; filter: none; }
 .stat-num  {
     font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
     color: var(--text); line-height: 1; margin-bottom: 5px;
@@ -878,12 +932,23 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     position: relative; border-radius: 12px;
     padding: 16px 16px 14px; display: flex; align-items: flex-start; gap: 12px;
     transition: transform 0.18s, box-shadow 0.18s;
-    overflow: hidden;
+    overflow: hidden; isolation: isolate;
 }
 .logro-card::before {
-    content: ''; position: absolute; inset: 0; opacity: 0;
-    background: radial-gradient(ellipse at 0% 50%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    content: ''; position: absolute; inset: 0; opacity: 0.6; pointer-events: none;
+    background: radial-gradient(ellipse 130% 90% at 15% -25%, var(--logro-glow, rgba(255,255,255,0.04)), transparent 62%);
     transition: opacity 0.2s;
+}
+.logro-bloqueado::before { opacity: 0; }
+.logro-desbloqueado::after {
+    content: ''; position: absolute; top: -60%; left: -15%; width: 26%; height: 220%; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+    transform: translateX(-40%) rotate(15deg);
+    animation: logroShine 5.5s ease-in-out infinite;
+}
+@keyframes logroShine {
+    0%, 62%, 100% { transform: translateX(-40%) rotate(15deg); }
+    35%           { transform: translateX(480%) rotate(15deg); }
 }
 .logro-desbloqueado:hover {
     transform: translateY(-3px);
@@ -1060,6 +1125,7 @@ body { animation: pageIn 0.4s ease; }
     <p class="section-label" style="margin-bottom:14px;">Puntos acumulados · Todas las carreras</p>
     <div class="export-bar">
         <button class="export-btn primary" onclick="exportarImagen()">⬇ Imagen</button>
+        <button class="export-btn" onclick="exportarPodio()">🏆 Compartir Podio</button>
         <button class="export-btn" onclick="exportarCSV()">⬇ CSV</button>
         <button class="export-btn" onclick="window.print()">🖨 Imprimir</button>
     </div>
@@ -1182,7 +1248,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>62</span></td></tr><tr><td>2</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>60</span></td></tr><tr><td>3</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>56</span></td></tr><tr><td>4</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>47</span></td></tr><tr><td>5</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>47</span></td></tr><tr><td>6</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>47</span></td></tr><tr><td>7</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>28</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>62</span></td></tr><tr><td>2</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>60</span></td></tr><tr><td>3</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>56</span></td></tr><tr><td>4</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>47</span></td></tr><tr><td>5</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>47</span></td></tr><tr><td>6</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>47</span></td></tr><tr><td>7</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>28</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1264,7 +1330,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>60</span></td></tr><tr><td>2</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>53</span></td></tr><tr><td>3</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>50</span></td></tr><tr><td>4</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>42</span></td></tr><tr><td>5</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>37</span></td></tr><tr><td>6</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>33</span></td></tr><tr><td>7</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>32</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>60</span></td></tr><tr><td>2</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>53</span></td></tr><tr><td>3</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>50</span></td></tr><tr><td>4</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>42</span></td></tr><tr><td>5</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>37</span></td></tr><tr><td>6</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>33</span></td></tr><tr><td>7</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>32</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1346,7 +1412,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>61</span></td></tr><tr><td>2</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>53</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>51</span></td></tr><tr><td>4</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>5</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>37</span></td></tr><tr><td>6</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>33</span></td></tr><tr><td>7</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>33</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>61</span></td></tr><tr><td>2</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>53</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>51</span></td></tr><tr><td>4</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>5</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>37</span></td></tr><tr><td>6</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>33</span></td></tr><tr><td>7</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>33</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1428,7 +1494,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>66</span></td></tr><tr><td>2</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>48</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>39</span></td></tr><tr><td>4</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>5</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>6</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>37</span></td></tr><tr><td>7</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>34</span></td></tr><tr><td>8</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>25</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>66</span></td></tr><tr><td>2</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>48</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>39</span></td></tr><tr><td>4</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>5</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>6</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>37</span></td></tr><tr><td>7</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>34</span></td></tr><tr><td>8</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>25</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1519,7 +1585,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>34</span></td></tr><tr><td>2</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>29</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>26</span></td></tr><tr><td>4</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>26</span></td></tr><tr><td>5</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>25</span></td></tr><tr><td>6</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>21</span></td></tr><tr><td>7</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>21</span></td></tr><tr><td>8</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>16</span></td></tr><tr><td>9</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>15</span></td></tr><tr><td>10</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>12</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>34</span></td></tr><tr><td>2</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>29</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>26</span></td></tr><tr><td>4</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>26</span></td></tr><tr><td>5</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>25</span></td></tr><tr><td>6</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>21</span></td></tr><tr><td>7</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>21</span></td></tr><tr><td>8</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>16</span></td></tr><tr><td>9</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>15</span></td></tr><tr><td>10</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>12</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1628,7 +1694,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>2</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>29</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>28</span></td></tr><tr><td>4</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>24</span></td></tr><tr><td>5</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>23</span></td></tr><tr><td>6</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>23</span></td></tr><tr><td>7</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>22</span></td></tr><tr><td>8</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>19</span></td></tr><tr><td>9</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>17</span></td></tr><tr><td>10</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>10</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>2</td><td>sergiopede92<span class='driver-email'>sergiopede92@gmail.com</span></td><td><span class='pts-chip'>29</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>28</span></td></tr><tr><td>4</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>24</span></td></tr><tr><td>5</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>23</span></td></tr><tr><td>6</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>23</span></td></tr><tr><td>7</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>22</span></td></tr><tr><td>8</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>19</span></td></tr><tr><td>9</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>17</span></td></tr><tr><td>10</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>10</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1737,7 +1803,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>42</span></td></tr><tr><td>2</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>39</span></td></tr><tr><td>3</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>4</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>36</span></td></tr><tr><td>5</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>33</span></td></tr><tr><td>6</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>29</span></td></tr><tr><td>7</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>28</span></td></tr><tr><td>8</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>28</span></td></tr><tr><td>9</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>19</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>riquerorori1993<span class='driver-email'>riquerorori1993@gmail.com</span></td><td><span class='pts-chip'>42</span></td></tr><tr><td>2</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>39</span></td></tr><tr><td>3</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>38</span></td></tr><tr><td>4</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>36</span></td></tr><tr><td>5</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>33</span></td></tr><tr><td>6</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>29</span></td></tr><tr><td>7</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>28</span></td></tr><tr><td>8</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>28</span></td></tr><tr><td>9</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>19</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -1837,7 +1903,7 @@ body { animation: pageIn 0.4s ease; }
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Participante</th><th>Pts</th></tr></thead>
-                        <tbody><tr><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>64</span></td></tr><tr><td>2</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>54</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>51</span></td></tr><tr><td>4</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>45</span></td></tr><tr><td>5</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>45</span></td></tr><tr><td>6</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>32</span></td></tr><tr><td>7</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>31</span></td></tr><tr><td>8</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>26</span></td></tr></tbody>
+                        <tbody><tr class="row-first"><td>1</td><td>miriquero<span class='driver-email'>miriquero@gmail.com</span></td><td><span class='pts-chip'>64</span></td></tr><tr><td>2</td><td>riquerole<span class='driver-email'>riquerole@gmail.com</span></td><td><span class='pts-chip'>54</span></td></tr><tr><td>3</td><td>alinaiaraceleste<span class='driver-email'>alinaiaraceleste@gmail.com</span></td><td><span class='pts-chip'>51</span></td></tr><tr><td>4</td><td>eugeniabanini<span class='driver-email'>eugeniabanini@yahoo.com.ar</span></td><td><span class='pts-chip'>45</span></td></tr><tr><td>5</td><td>lautarotourres<span class='driver-email'>lautarotourres@gmail.com</span></td><td><span class='pts-chip'>45</span></td></tr><tr><td>6</td><td>friquero<span class='driver-email'>friquero@gmail.com</span></td><td><span class='pts-chip'>32</span></td></tr><tr><td>7</td><td>riqueropetiniha<span class='driver-email'>riqueropetiniha@gmail.com</span></td><td><span class='pts-chip'>31</span></td></tr><tr><td>8</td><td>damiantourres<span class='driver-email'>damiantourres@gmail.com</span></td><td><span class='pts-chip'>26</span></td></tr></tbody>
                     </table>
                 </div>
                 <div class="section-label" style="margin-top:24px;">DESGLOSE POR PARTICIPANTE</div>
@@ -2116,7 +2182,7 @@ body { animation: pageIn 0.4s ease; }
             <div class="logros-cards-grid">
                 
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(231,76,60,0.07);border:1px solid rgba(231,76,60,0.35);">
+                 style="background:rgba(231,76,60,0.07);border:1px solid rgba(231,76,60,0.35);--logro-glow:rgba(231,76,60,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.35);">
                     <span class="logro-emoji">🎯</span>
@@ -2129,7 +2195,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(230,126,34,0.07);border:1px solid rgba(230,126,34,0.35);">
+                 style="background:rgba(230,126,34,0.07);border:1px solid rgba(230,126,34,0.35);--logro-glow:rgba(230,126,34,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(230,126,34,0.15);border:1px solid rgba(230,126,34,0.35);">
                     <span class="logro-emoji">🔥</span>
@@ -2142,7 +2208,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(52,152,219,0.03);border:1px solid rgba(52,152,219,0.12);">
+                 style="background:rgba(52,152,219,0.03);border:1px solid rgba(52,152,219,0.12);--logro-glow:rgba(52,152,219,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(52,152,219,0.06);border:1px solid rgba(52,152,219,0.12);">
                     <span class="logro-emoji">🇦🇷</span>
@@ -2155,7 +2221,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.35);">
+                 style="background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.35);--logro-glow:rgba(192,57,43,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.35);">
                     <span class="logro-emoji">💣</span>
@@ -2168,7 +2234,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(155,89,182,0.07);border:1px solid rgba(155,89,182,0.35);">
+                 style="background:rgba(155,89,182,0.07);border:1px solid rgba(155,89,182,0.35);--logro-glow:rgba(155,89,182,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(155,89,182,0.15);border:1px solid rgba(155,89,182,0.35);">
                     <span class="logro-emoji">🔮</span>
@@ -2192,7 +2258,7 @@ body { animation: pageIn 0.4s ease; }
             <div class="logros-cards-grid">
                 
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(149,165,166,0.07);border:1px solid rgba(149,165,166,0.35);">
+                 style="background:rgba(149,165,166,0.07);border:1px solid rgba(149,165,166,0.35);--logro-glow:rgba(149,165,166,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(149,165,166,0.15);border:1px solid rgba(149,165,166,0.35);">
                     <span class="logro-emoji">🛡️</span>
@@ -2205,7 +2271,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(39,174,96,0.03);border:1px solid rgba(39,174,96,0.12);">
+                 style="background:rgba(39,174,96,0.03);border:1px solid rgba(39,174,96,0.12);--logro-glow:rgba(39,174,96,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.12);">
                     <span class="logro-emoji">📈</span>
@@ -2218,7 +2284,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(22,160,133,0.03);border:1px solid rgba(22,160,133,0.12);">
+                 style="background:rgba(22,160,133,0.03);border:1px solid rgba(22,160,133,0.12);--logro-glow:rgba(22,160,133,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(22,160,133,0.06);border:1px solid rgba(22,160,133,0.12);">
                     <span class="logro-emoji">🧠</span>
@@ -2231,7 +2297,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(127,140,141,0.03);border:1px solid rgba(127,140,141,0.12);">
+                 style="background:rgba(127,140,141,0.03);border:1px solid rgba(127,140,141,0.12);--logro-glow:rgba(127,140,141,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(127,140,141,0.06);border:1px solid rgba(127,140,141,0.12);">
                     <span class="logro-emoji">⚙️</span>
@@ -2244,7 +2310,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(142,68,173,0.03);border:1px solid rgba(142,68,173,0.12);">
+                 style="background:rgba(142,68,173,0.03);border:1px solid rgba(142,68,173,0.12);--logro-glow:rgba(142,68,173,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(142,68,173,0.06);border:1px solid rgba(142,68,173,0.12);">
                     <span class="logro-emoji">🎰</span>
@@ -2268,7 +2334,7 @@ body { animation: pageIn 0.4s ease; }
             <div class="logros-cards-grid">
                 
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(36,113,163,0.03);border:1px solid rgba(36,113,163,0.12);">
+                 style="background:rgba(36,113,163,0.03);border:1px solid rgba(36,113,163,0.12);--logro-glow:rgba(36,113,163,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(36,113,163,0.06);border:1px solid rgba(36,113,163,0.12);">
                     <span class="logro-emoji">🌊</span>
@@ -2281,7 +2347,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(211,84,0,0.07);border:1px solid rgba(211,84,0,0.35);">
+                 style="background:rgba(211,84,0,0.07);border:1px solid rgba(211,84,0,0.35);--logro-glow:rgba(211,84,0,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(211,84,0,0.15);border:1px solid rgba(211,84,0,0.35);">
                     <span class="logro-emoji">🏗️</span>
@@ -2305,7 +2371,7 @@ body { animation: pageIn 0.4s ease; }
             <div class="logros-cards-grid">
                 
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(74,144,226,0.03);border:1px solid rgba(74,144,226,0.12);">
+                 style="background:rgba(74,144,226,0.03);border:1px solid rgba(74,144,226,0.12);--logro-glow:rgba(74,144,226,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(74,144,226,0.06);border:1px solid rgba(74,144,226,0.12);">
                     <span class="logro-emoji">🌌</span>
@@ -2318,7 +2384,7 @@ body { animation: pageIn 0.4s ease; }
                 </div>
             </div>
             <div class="logro-card logro-bloqueado"
-                 style="background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.12);">
+                 style="background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.12);--logro-glow:rgba(0,188,212,0);">
                 <span class="badge-lock">🔒</span>
                 <div class="logro-emoji-wrap" style="background:rgba(0,188,212,0.06);border:1px solid rgba(0,188,212,0.12);">
                     <span class="logro-emoji">💎</span>
@@ -2342,7 +2408,7 @@ body { animation: pageIn 0.4s ease; }
             <div class="logros-cards-grid">
                 
             <div class="logro-card logro-desbloqueado"
-                 style="background:rgba(243,156,18,0.07);border:1px solid rgba(243,156,18,0.35);">
+                 style="background:rgba(243,156,18,0.07);border:1px solid rgba(243,156,18,0.35);--logro-glow:rgba(243,156,18,0.22);">
                 
                 <div class="logro-emoji-wrap" style="background:rgba(243,156,18,0.15);border:1px solid rgba(243,156,18,0.35);">
                     <span class="logro-emoji">👑</span>
@@ -2865,10 +2931,10 @@ body { animation: pageIn 0.4s ease; }
         <h3 class="subsection-heading">Estadísticas</h3>
         
     <div class="stats-grid">
-        <div class="stat-card accent reveal"><div class="stat-num" data-countup>10</div><div class="stat-desc">Participantes</div></div>
-        <div class="stat-card reveal"><div class="stat-num" data-countup>66</div><div class="stat-desc">Predicciones totales</div></div>
-        <div class="stat-card reveal"><div class="stat-num" data-countup>2383</div><div class="stat-desc">Puntos distribuidos</div></div>
-        <div class="stat-card reveal"><div class="stat-num" data-countup>36.1</div><div class="stat-desc">Promedio por predicción</div></div>
+        <div class="stat-card accent reveal" data-icon="👥"><div class="stat-num" data-countup>10</div><div class="stat-desc">Participantes</div></div>
+        <div class="stat-card reveal" data-icon="🎯"><div class="stat-num" data-countup>66</div><div class="stat-desc">Predicciones totales</div></div>
+        <div class="stat-card reveal" data-icon="🏆"><div class="stat-num" data-countup>2383</div><div class="stat-desc">Puntos distribuidos</div></div>
+        <div class="stat-card reveal" data-icon="📊"><div class="stat-num" data-countup>36.1</div><div class="stat-desc">Promedio por predicción</div></div>
     </div>
     <div class="leader-banner">
         <span class="leader-label">LÍDER ACTUAL</span>
@@ -2943,7 +3009,7 @@ body { animation: pageIn 0.4s ease; }
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    Generado automáticamente · 02/07/2026 · 16:08
+    Generado automáticamente · 03/07/2026 · 08:44
 </footer>
 
 <!-- Overlay para cerrar tooltip de badge al tocar fuera -->
@@ -3203,6 +3269,32 @@ function exportarImagen() {
             link.download = 'ranking_f1_2026.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+        });
+    });
+}
+
+// ===== EXPORTAR PODIO CON MARCA DE AGUA =====
+function exportarPodio() {
+    var podio = document.querySelector('#panel-acumulado .podium');
+    if (!podio) { alert('No hay podio para exportar todavía.'); return; }
+    cargarHtml2Canvas(function() {
+        var watermark = document.createElement('div');
+        watermark.textContent = 'F1 PREDICTIONS · TORNEO 2026';
+        watermark.style.cssText = 'grid-column:1/-1;text-align:center;font-family:"Barlow Condensed",sans-serif;' +
+            'font-size:11px;font-weight:700;letter-spacing:2px;color:#8A8A8A;padding-top:10px;text-transform:uppercase;';
+        podio.appendChild(watermark);
+        html2canvas(podio, {
+            backgroundColor: '#080808', scale: 2, useCORS: true, allowTaint: true, logging: false
+        }).then(function(canvas) {
+            watermark.remove();
+            var link = document.createElement('a');
+            link.download = 'podio_f1_2026.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(function(err) {
+            watermark.remove();
+            console.error('Error al exportar podio:', err);
+            alert('Error al generar la imagen. Intentá de nuevo.');
         });
     });
 }
