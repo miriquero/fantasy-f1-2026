@@ -31,7 +31,7 @@ NOMBRE_A_ROUND = {
     "Australia":    1,
     "China":        2,
     "Japon":        3,
-    "Miami":        6,   # Bahrein(4) y Arabia Saudita(5) cancelados
+    "Miami":        6,
     "Canada":       7,
     "Monaco":       8,
     "Barcelona":    9,
