@@ -2,39 +2,42 @@
   "Australia": {
     "resultado_carrera": [
       "George Russell",
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "Charles Leclerc",
       "Lewis Hamilton",
       "Lando Norris",
       "Max Verstappen",
-      "Ollie Bearman",
+      "Oliver Bearman",
       "Arvid Lindblad",
-      "Gabriel Bortoletto",
+      "Gabriel Bortoleto",
       "Pierre Gasly",
       "Esteban Ocon"
     ],
     "vuelta_rapida": "Max Verstappen",
-    "colapinto": "14"
+    "colapinto": "14",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "China": {
     "resultado_carrera": [
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "George Russell",
       "Lewis Hamilton",
       "Charles Leclerc",
-      "Ollie Bearman",
+      "Oliver Bearman",
       "Pierre Gasly",
       "Liam Lawson",
       "Isack Hadjar",
       "Carlos Sainz",
-      "Franco Colapinto"
+      "Franco Colapinto",
+      "Nico Hülkenberg"
     ],
-    "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "10"
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "10",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Japon": {
     "resultado_carrera": [
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "Oscar Piastri",
       "Charles Leclerc",
       "George Russell",
@@ -44,14 +47,15 @@
       "Max Verstappen",
       "Liam Lawson",
       "Esteban Ocon",
-      "Nico Hulkenberg"
+      "Nico Hülkenberg"
     ],
-    "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "16"
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "16",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Miami": {
     "resultado_carrera": [
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "Lando Norris",
       "Oscar Piastri",
       "George Russell",
@@ -60,15 +64,16 @@
       "Franco Colapinto",
       "Charles Leclerc",
       "Carlos Sainz",
-      "Alex Albon",
-      "Ollie Bearman"
+      "Alexander Albon",
+      "Oliver Bearman"
     ],
     "vuelta_rapida": "Lando Norris",
-    "colapinto": "7"
+    "colapinto": "7",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Canada": {
     "resultado_carrera": [
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "Lewis Hamilton",
       "Max Verstappen",
       "Charles Leclerc",
@@ -77,28 +82,30 @@
       "Liam Lawson",
       "Pierre Gasly",
       "Carlos Sainz",
-      "Ollie Bearman",
+      "Oliver Bearman",
       "Oscar Piastri"
     ],
-    "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "6"
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "6",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Monaco": {
     "resultado_carrera": [
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "Lewis Hamilton",
       "Pierre Gasly",
       "Isack Hadjar",
       "Oscar Piastri",
       "Liam Lawson",
       "Arvid Lindblad",
-      "Alex Albon",
+      "Alexander Albon",
       "Esteban Ocon",
       "Fernando Alonso",
-      "Gabriel Bortoletto"
+      "Gabriel Bortoleto"
     ],
-    "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "14"
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "14",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Barcelona": {
     "resultado_carrera": [
@@ -112,16 +119,17 @@
       "Liam Lawson",
       "Arvid Lindblad",
       "Franco Colapinto",
-      "Gabriel Bortoletto"
+      "Gabriel Bortoleto"
     ],
     "vuelta_rapida": "Lewis Hamilton",
-    "colapinto": "10"
+    "colapinto": "10",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Austria": {
     "resultado_carrera": [
       "George Russell",
       "Max Verstappen",
-      "Kimi Antonelli",
+      "Andrea Kimi Antonelli",
       "Oscar Piastri",
       "Lewis Hamilton",
       "Isack Hadjar",
@@ -129,10 +137,11 @@
       "Charles Leclerc",
       "Liam Lawson",
       "Arvid Lindblad",
-      "Gabriel Bortoletto"
+      "Gabriel Bortoleto"
     ],
-    "vuelta_rapida": "Kimi Antonelli",
-    "colapinto": "15"
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "15",
+    "_actualizado": "2026-07-06T12:28:29.329010+00:00"
   },
   "Gran_bretana": {
     "resultado_carrera": [
@@ -145,80 +154,10 @@
       "Arvid Lindblad",
       "Gabriel Bortoleto",
       "Franco Colapinto",
-      "Pierre Gasly",
-      "Oscar Piastri",
-      "Carlos Sainz",
-      "Oliver Bearman",
-      "Esteban Ocon",
-      "Sergio Pérez",
-      "Andrea Kimi Antonelli",
-      "Valtteri Bottas",
-      "Fernando Alonso",
-      "Lance Stroll",
-      "Max Verstappen",
-      "Alexander Albon",
-      "Nico Hülkenberg"
+      "Pierre Gasly"
     ],
     "vuelta_rapida": "Andrea Kimi Antonelli",
     "colapinto": "9",
     "_actualizado": "2026-07-05T19:30:54.934510+00:00"
-  },
-  "Gran_Bretana": {
-    "resultado_carrera": [
-      "Charles Leclerc",
-      "George Russell",
-      "Lewis Hamilton",
-      "Lando Norris",
-      "Isack Hadjar",
-      "Liam Lawson",
-      "Arvid Lindblad",
-      "Gabriel Bortoleto",
-      "Franco Colapinto",
-      "Pierre Gasly",
-      "Oscar Piastri",
-      "Oliver Bearman",
-      "Esteban Ocon",
-      "Sergio Pérez",
-      "Andrea Kimi Antonelli",
-      "Valtteri Bottas",
-      "Carlos Sainz",
-      "Fernando Alonso",
-      "Lance Stroll",
-      "Max Verstappen",
-      "Alexander Albon",
-      "Nico Hülkenberg"
-    ],
-    "vuelta_rapida": "Andrea Kimi Antonelli",
-    "colapinto": "9",
-    "_actualizado": "2026-07-05T20:32:29.494053+00:00"
-  },
-  "Gran Bretana": {
-    "resultado_carrera": [
-      "Charles Leclerc",
-      "George Russell",
-      "Lewis Hamilton",
-      "Lando Norris",
-      "Isack Hadjar",
-      "Liam Lawson",
-      "Arvid Lindblad",
-      "Gabriel Bortoleto",
-      "Franco Colapinto",
-      "Pierre Gasly",
-      "Oscar Piastri",
-      "Oliver Bearman",
-      "Esteban Ocon",
-      "Sergio Pérez",
-      "Andrea Kimi Antonelli",
-      "Valtteri Bottas",
-      "Carlos Sainz",
-      "Fernando Alonso",
-      "Lance Stroll",
-      "Max Verstappen",
-      "Alexander Albon",
-      "Nico Hülkenberg"
-    ],
-    "vuelta_rapida": "Andrea Kimi Antonelli",
-    "colapinto": "9",
-    "_actualizado": "2026-07-05T20:41:17.865877+00:00"
   }
 }

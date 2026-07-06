@@ -46,19 +46,38 @@ COL_PUESTOS = [
 def _quitar_acentos(s: str) -> str:
     return ''.join(c for c in unicodedata.normalize('NFKD', s) if not unicodedata.combining(c))
 
-# Variantes conocidas que devuelve la API -> nombre canónico en PILOTOS
+
+# Variantes conocidas que devuelve Jolpica -> nombre canónico en PILOTOS
 ALIASES_PILOTOS = {
+    # Bearman
     "oliver bearman": "Ollie Bearman",
+    "oliver bearman": "Ollie Bearman",
+
+    # Albon
     "alexander albon": "Alex Albon",
+
+    # Antonelli
     "andrea kimi antonelli": "Kimi Antonelli",
-    "sergio perez": "Sergio Perez",
+
+    # Perez
     "sergio pérez": "Sergio Perez",
-    "checo perez": "Sergio Perez",
-    "nico hulkenberg": "Nico Hulkenberg",
+
+    # Hulkenberg
     "nico hülkenberg": "Nico Hulkenberg",
+
+    # Bortoletto
     "gabriel bortoleto": "Gabriel Bortoletto",
-    "carlos sainz jr": "Carlos Sainz",
-    "carlos sainz jr.": "Carlos Sainz",
+
+    # Sainz
+    "carlos sainz": "Carlos Sainz",
+
+    # Agregados específicamente de tu JSON
+    "oliver bearman": "Ollie Bearman",
+    "andrea kimi antonelli": "Kimi Antonelli",
+    "sergio pérez": "Sergio Perez",
+    "alexander albon": "Alex Albon",
+    "gabriel bortoleto": "Gabriel Bortoletto",
+    "nico hülkenberg": "Nico Hulkenberg",
 }
 
 _PILOTOS_NORM = {_quitar_acentos(p).lower(): p for p in PILOTOS}
@@ -77,16 +96,62 @@ def normalizar_piloto(nombre: str) -> str:
     return str(nombre).strip()
 
 def normalizar_resultados_api(resultados_por_carrera: Dict) -> Dict:
-    """Recorre resultados.json y normaliza los nombres de pilotos en
-    'resultado_carrera' y 'vuelta_rapida' antes de validar/procesar."""
+    """Normaliza pilotos Y claves de carrera"""
+    nuevos = {}
     for carrera, datos in resultados_por_carrera.items():
-        if not isinstance(datos, dict):
-            continue
-        if isinstance(datos.get("resultado_carrera"), list):
-            datos["resultado_carrera"] = [normalizar_piloto(p) for p in datos["resultado_carrera"]]
-        if isinstance(datos.get("vuelta_rapida"), str):
-            datos["vuelta_rapida"] = normalizar_piloto(datos["vuelta_rapida"])
-    return resultados_por_carrera
+        clave_norm = normalizar_nombre_carrera(carrera)
+        if isinstance(datos, dict):
+            if isinstance(datos.get("resultado_carrera"), list):
+                datos["resultado_carrera"] = [normalizar_piloto(p) for p in datos["resultado_carrera"]]
+            if isinstance(datos.get("vuelta_rapida"), str):
+                datos["vuelta_rapida"] = normalizar_piloto(datos["vuelta_rapida"])
+        nuevos[clave_norm] = datos
+    return nuevos
+
+def normalizar_nombre_carrera(nombre: str) -> str:
+    """Normaliza TODOS los nombres de carrera del calendario"""
+    if not nombre:
+        return ""
+    
+    n = _quitar_acentos(str(nombre).strip().lower())
+    n = re.sub(r'[^a-z0-9\s]', ' ', n)
+    n = re.sub(r'\s+', ' ', n).strip()
+
+    reemplazos = {
+        # Pares comunes (CSV → Nombre oficial)
+        "gran bretana": "Gran Bretaña",
+        "gran_bretana": "Gran Bretaña",
+        "great britain": "Gran Bretaña",
+        "silverstone": "Gran Bretaña",
+
+        "japon": "Japon",
+        "miami": "Miami",
+        "canada": "Canada",
+        "monaco": "Monaco",
+        "barcelona": "Barcelona",
+        "austria": "Austria",
+        "hungria": "Hungría",
+        "paises bajos": "Países Bajos",
+        "paises_bajos": "Países Bajos",
+        "italia": "Italia",
+        "madrid": "Madrid",
+        "azerbaiyn": "Azerbaiyn",
+        "singapur": "Singapur",
+        "austin": "Austin",
+        "mexico": "Mexico",
+        "brasil": "Brasil",
+        "las vegas": "Las Vegas",
+        "qatar": "Qatar",
+        "abu dhabi": "Abu Dhabi",
+        "abudhabi": "Abu Dhabi",
+    }
+
+    for viejo, nuevo in reemplazos.items():
+        if viejo in n or n in viejo:
+            return nuevo
+
+    # Si no encuentra coincidencia exacta, capitaliza normalmente
+    return ' '.join(word.capitalize() for word in n.split())
 
 # =========================
 # BADGES META (sistema de logros completo)
@@ -286,41 +351,55 @@ def puntos_posicion(predicha: int, real: int) -> int:
     else:
         return 1
 
-def calcular_puntos_y_detalles(row: pd.Series, posiciones_reales: Dict[str, int],
-                                vuelta_rapida_real: str, colapinto_real: int) -> Tuple[int, str]:
+def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real: str, colapinto_real: int):
     puntos = 0
     detalles = []
-    for i, col in enumerate(COL_PUESTOS):
+
+    for i, col in enumerate(COL_PUESTOS, 1):
         piloto = str(row.get(col, "")).strip()
         if not piloto:
             continue
-        posicion_predicha = i + 1
-        if piloto in posiciones_reales:
-            posicion_real = posiciones_reales[piloto]
-            pts = puntos_posicion(posicion_predicha, posicion_real)
-            puntos += pts
-            if pts == 10:
-                detalles.append(f"{piloto}: Exacto en P{posicion_predicha} (+10)")
-            elif pts == 5:
-                detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
-            elif pts == 1:
-                detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
+
+        posicion_predicha = i
+        posicion_real = posiciones_reales.get(piloto)
+
+        if posicion_real is None or posicion_real > 10:
+            # Piloto NO terminó en el top 10 real → 0 puntos
+            detalles.append(f"{piloto}: Fuera del top 10 real (0 pts)")
+            continue
+
+        # === Aquí está la corrección clave ===
+        if posicion_predicha == posicion_real:
+            puntos += 10
+            detalles.append(f"{piloto}: Exacto en P{posicion_predicha} (+10)")
+        elif abs(posicion_predicha - posicion_real) == 1:
+            puntos += 5
+            detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
+        else:
+            # Solo +1 si terminó en top 10 real y no fue exacto ni diff 1
+            puntos += 1
+            detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
+
+    # Vuelta Rápida
     vr = str(row.get("Vuelta Rápida", "")).strip()
-    if vr == vuelta_rapida_real:
+    if vr and vr == vuelta_rapida_real:
         puntos += 10
         detalles.append(f"Vuelta rápida: {vr} (+10)")
+
+    # Colapinto
     try:
         pred_colapinto_str = str(row.get("Franco Colapinto", "")).strip()
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
         if pred_colapinto == colapinto_real:
             puntos += 10
-            detalles.append(f"Colapinto: EXACTO (+10 puntos)")
-        elif abs(pred_colapinto - colapinto_real) == 1:
+            detalles.append(f"Colapinto: EXACTO (+10)")
+        elif abs(pred_colapinto - colapinto_real) == 1 and colapinto_real != 0:
             puntos += 5
-            detalles.append(f"Colapinto: diferencia de 1 (+5 puntos)")
-    except (ValueError, TypeError):
+            detalles.append(f"Colapinto: diferencia de 1 (+5)")
+    except:
         pass
-    detalle_str = "<br>".join(detalles) if detalles else "Sin puntos detallados"
+
+    detalle_str = "<br>".join(detalles) if detalles else "Sin puntos"
     return puntos, detalle_str
 
 def convertir_posicion_a_numero(pos_str: str) -> int:
@@ -3053,7 +3132,9 @@ def main():
     all_dfs = []
 
     orden_calendario = [
-        re.sub(r'<[^>]+>', '', entry["Carrera"]).strip().capitalize()
+        normalizar_nombre_carrera(
+            re.sub(r'<[^>]+>', '', entry["Carrera"]).strip()
+        )
         for entry in CALENDARIO
         if "<s>" not in entry["Carrera"]
     ]
@@ -3061,20 +3142,24 @@ def main():
     csv_por_carrera = {}
     for archivo in os.listdir(CARPETA_RESPUESTAS):
         if archivo.endswith(".csv"):
-            nombre = archivo.replace("respuestas_", "").replace(".csv", "").capitalize()
-            csv_por_carrera[nombre] = archivo
+            nombre_raw = archivo.replace("respuestas_", "").replace(".csv", "")
+            nombre_norm = normalizar_nombre_carrera(nombre_raw)
+            csv_por_carrera[nombre_norm] = archivo
 
     archivos_ordenados = []
     for nombre in orden_calendario:
         if nombre in csv_por_carrera:
             archivos_ordenados.append(csv_por_carrera[nombre])
-    for nombre, archivo in csv_por_carrera.items():
+
+    for nombre, archivo in list(csv_por_carrera.items()):
         if archivo not in archivos_ordenados:
             archivos_ordenados.append(archivo)
 
     for archivo in archivos_ordenados:
-        nombre_carrera = archivo.replace("respuestas_", "").replace(".csv", "").capitalize()
+        nombre_raw = archivo.replace("respuestas_", "").replace(".csv", "")
+        nombre_carrera = normalizar_nombre_carrera(nombre_raw)
         datos = resultados_por_carrera.get(nombre_carrera, {})
+
         if datos.get("resultado_carrera"):
             archivo_path = os.path.join(CARPETA_RESPUESTAS, archivo)
             ranking, df = procesar_carrera(nombre_carrera, archivo_path, datos)
