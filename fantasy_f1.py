@@ -363,22 +363,30 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
         posicion_predicha = i
         posicion_real = posiciones_reales.get(piloto)
 
-        if posicion_real is None or posicion_real > 10:
-            # Piloto NO terminó en el top 10 real → 0 puntos
-            detalles.append(f"{piloto}: Fuera del top 10 real (0 pts)")
+        if posicion_real is None:
+            # Piloto no terminó la carrera (no está en los resultados) → 0 puntos
+            detalles.append(f"{piloto}: No terminó la carrera (0 pts)")
             continue
 
-        # === Aquí está la corrección clave ===
+        # === Corrección: la diferencia de 1 debe evaluarse ANTES de descartar
+        # por "fuera del top 10 real". Un predicho P10 con real P11 sigue
+        # siendo diferencia de 1 y debe sumar 5 puntos, aunque el resultado
+        # real quede justo un puesto afuera del top 10. ===
+        diferencia = abs(posicion_predicha - posicion_real)
+
         if posicion_predicha == posicion_real:
             puntos += 10
             detalles.append(f"{piloto}: Exacto en P{posicion_predicha} (+10)")
-        elif abs(posicion_predicha - posicion_real) == 1:
+        elif diferencia == 1:
             puntos += 5
             detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
-        else:
-            # Solo +1 si terminó en top 10 real y no fue exacto ni diff 1
+        elif posicion_real <= 10:
+            # Terminó en el top 10 real y no fue exacto ni diff 1
             puntos += 1
             detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
+        else:
+            # Real fuera del top 10 y sin diferencia de 1 → 0 puntos
+            detalles.append(f"{piloto}: Fuera del top 10 real (pred P{posicion_predicha}, real P{posicion_real}) (0 pts)")
 
     # Vuelta Rápida
     vr = str(row.get("Vuelta Rápida", "")).strip()
