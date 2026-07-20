@@ -420,7 +420,9 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
         "Décimo Séptimo": 17, "Décimo Octavo": 18, "Décimo Noveno": 19, "Vigésimo": 20,
     }
     pos_str_lower = pos_str.lower().replace("puesto", "").strip()
-    for key in mapa:
+    # Probar primero las frases más largas para que "Décimo Segundo" no
+    # matchee por error con "Segundo" o "Décimo" sueltos.
+    for key in sorted(mapa, key=len, reverse=True):
         if key.lower() in pos_str_lower:
             return mapa[key]
     return int(pos_str)
