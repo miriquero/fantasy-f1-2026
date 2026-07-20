@@ -1951,7 +1951,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
     calendario_html = generar_calendario_visual(proxima_iso)
 
     graf_barras_html = (f'<img src="data:image/png;base64,{grafico_barras}" alt="Puntos acumulados" class="chart-img">') if grafico_barras else '<p class="empty-msg">Sin datos.</p>'
-    fecha_actual     = datetime.now().strftime("%d/%m/%Y · %H:%M")
+    fecha_actual     = datetime.now(timezone(timedelta(hours=-3))).strftime("%d/%m/%Y · %H:%M")
 
     # ---- Nuevos paneles ----
     # perfil_selector_html y hof_panel_html ya llegan como params
