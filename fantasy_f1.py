@@ -415,6 +415,7 @@ def convertir_posicion_a_numero(pos_str: str) -> int:
         "Primero": 1, "Segundo": 2, "Tercer": 3, "Cuarto": 4, "Quinto": 5,
         "Sexto": 6, "Séptimo": 7, "Septimo": 7, "Octavo": 8, "Noveno": 9,
         "Décimo": 10, "Decimo": 10, "Undécimo": 11, "Duodécimo": 12,
+        "Décimo Primer": 11, "Décimo Primero": 11,
         "Décimo Segundo": 12, "Décimo Tercer": 13, "Décimo Tercero": 13,
         "Décimo Cuarto": 14, "Décimo Quinto": 15, "Décimo Sexto": 16,
         "Décimo Séptimo": 17, "Décimo Octavo": 18, "Décimo Noveno": 19, "Vigésimo": 20,
@@ -1961,7 +1962,23 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>F1 Predictions · 2026</title>
-<link rel="icon" href="https://www.formula1.com/etc/designs/f1/img/favicon.ico" type="image/x-icon">
+<meta name="description" content="Torneo familiar de predicciones de F1 2026. Ranking, calendario y logros.">
+
+<link rel="icon" href="img/favicon.ico" sizes="any">
+<link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="img/favicon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="F1 Predictions · 2026">
+<meta property="og:description" content="Torneo familiar de predicciones de F1 2026. Ranking, calendario y logros.">
+<meta property="og:image" content="https://miriquero.github.io/fantasy-f1-2026/img/og-image.png">
+<meta property="og:url" content="https://miriquero.github.io/fantasy-f1-2026/ranking_f1.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="F1 Predictions · 2026">
+<meta name="twitter:description" content="Torneo familiar de predicciones de F1 2026. Ranking, calendario y logros.">
+<meta name="twitter:image" content="https://miriquero.github.io/fantasy-f1-2026/img/og-image.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
