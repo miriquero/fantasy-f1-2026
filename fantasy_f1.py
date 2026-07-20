@@ -365,7 +365,7 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
 
         if posicion_real is None:
             # Piloto no terminó la carrera (no está en los resultados) → 0 puntos
-            detalles.append(f"{piloto}: No terminó la carrera (0 pts)")
+            detalles.append(f"{piloto}: No terminó la carrera en el top 10 (0 pts)")
             continue
 
         # === Corrección: la diferencia de 1 debe evaluarse ANTES de descartar
