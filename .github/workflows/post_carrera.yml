@@ -1,9 +1,9 @@
-name: Fantasy F1 - Actualización Diaria
+name: Fantasy F1 - Actualización Domingos y Lunes
 
 on:
   schedule:
-    - cron: '0 13 * * *'     # 13:00 UTC = 10:00 ARG
-    - cron: '0 22 * * *'     # 22:00 UTC = 19:00 ARG
+    - cron: '0 13 * * 0,1'     # 13:00 UTC = 10:00 ARG (domingo y lunes)
+    - cron: '0 22 * * 0,1'     # 22:00 UTC = 19:00 ARG (domingo y lunes)
   workflow_dispatch:         # Para ejecutar manualmente desde GitHub
 
 jobs:
