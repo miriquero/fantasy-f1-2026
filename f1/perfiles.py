@@ -5,8 +5,8 @@ import pandas as pd
 from typing import Dict, List
 
 from .calendario import carreras_en_orden
-from .charts import generar_sparkline_perfil
-from .config import COLORES_PARTICIPANTES, hex_to_rgba
+from .graficos import sparkline
+from .paleta import color_participante, hex_a_rgba
 from .scoring import calcular_historial_posiciones
 
 
@@ -27,7 +27,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
         nombre   = participante
         pos_gral = int(acum_row['Posición'])
         pts_tot  = int(acum_row['Puntos'])
-        color    = COLORES_PARTICIPANTES[idx % len(COLORES_PARTICIPANTES)]
+        color    = color_participante(participante)
 
         data_part = all_rankings[all_rankings["Participante"] == participante]
         pts_por_carrera = [data_part[data_part['Carrera'] == c]['Puntos'].values[0]
@@ -57,8 +57,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
             for _, r in part_df.iterrows():
                 exactos_total += sum(1 for d in str(r['Detalles']).split('<br>') if 'Exacto en P' in d)
 
-        spark_b64  = generar_sparkline_perfil(participante, all_rankings)
-        spark_html = (f'<img src="data:image/png;base64,{spark_b64}" alt="Puntos por carrera" class="spark-img">') if spark_b64 else ""
+        spark_html = sparkline(participante, all_rankings)
 
         hist_rows = ""
         for c in carreras_lista:
@@ -80,8 +79,8 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
             for nivel in nivel_order:
                 grupo = [b for b in badges if b.get("nivel") == nivel]
                 for b in grupo:
-                    bg       = hex_to_rgba(b["hex"], 0.18)
-                    border   = hex_to_rgba(b["hex"], 0.40)
+                    bg       = hex_a_rgba(b["hex"], 0.18)
+                    border   = hex_a_rgba(b["hex"], 0.40)
                     desc_safe = b["desc"].replace('"', '&quot;')
                     chips += (
                         f'<button class="badge-chip" '
@@ -124,7 +123,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
         perfiles_html += f"""
         <div class="perfil-card reveal" id="perfil-{idx}">
             <div class="perfil-header" style="border-left:4px solid {color};">
-                <div class="perfil-avatar" style="background:{hex_to_rgba(color,0.13)};color:{color};border:1px solid {hex_to_rgba(color,0.27)};">{nombre[:2].upper()}</div>
+                <div class="perfil-avatar" style="background:{hex_a_rgba(color,0.13)};color:{color};border:1px solid {hex_a_rgba(color,0.27)};">{nombre[:2].upper()}</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">{nombre}</div>
                 </div>

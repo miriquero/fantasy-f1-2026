@@ -310,7 +310,36 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
     letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
 }
-.chart-img { width: 100%; height: auto; display: block; border-radius: 8px; }
+.chart-hint { font-size: 0.72rem; color: var(--muted-2); margin: -6px 0 10px; }
+
+/* ---- Graficos SVG ------------------------------------------------------
+   Reemplazan a los PNG de matplotlib. El color de cada serie llega por la
+   variable --c que pone Python, asi el CSS no necesita saber quien es quien. */
+.g-barras, .g-evolucion, .g-spark { display: block; width: 100%; height: auto; overflow: visible; }
+.g-nombre { font-size: 11px; font-family: var(--font-body); fill: var(--muted); }
+.g-valor-num { font-size: 12px; font-family: var(--font-display); font-weight: 700; fill: var(--text); }
+.g-eje { font-size: 9px; font-family: var(--font-body); fill: var(--muted-2); }
+.g-fondo { fill: rgba(255,255,255,0.04); }
+.g-valor { fill: var(--c); }
+.g-barra:hover .g-nombre { fill: var(--text); }
+.g-barra:hover .g-valor { filter: brightness(1.18); }
+
+.g-grilla { stroke: rgba(255,255,255,0.05); stroke-width: 1; }
+.g-serie .g-linea { fill: none; stroke: var(--muted-2); stroke-width: 1.6;
+    stroke-linejoin: round; stroke-linecap: round; transition: stroke .18s ease, stroke-width .18s ease; }
+.g-serie circle { fill: var(--bg-2); stroke: var(--muted-2); stroke-width: 1.4;
+    transition: stroke .18s ease, r .18s ease; }
+/* Linea invisible y gruesa: agranda el area tactil sin engordar el dibujo. */
+.g-linea-hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
+.g-serie:hover .g-linea, .g-serie:focus-visible .g-linea { stroke: var(--c); stroke-width: 2.6; }
+.g-serie:hover circle, .g-serie:focus-visible circle { stroke: var(--c); r: 4; }
+.g-evolucion:hover .g-serie:not(:hover) .g-linea { stroke: rgba(255,255,255,0.09); }
+.g-serie:focus { outline: none; }
+
+.s-area { fill: var(--c); opacity: 0.14; }
+.s-linea { fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.s-punto { fill: var(--bg-2); stroke: var(--c); stroke-width: 1.6; }
+.s-ultimo { font-size: 11px; font-family: var(--font-display); font-weight: 700; fill: var(--c); }
 
 /* ═══ PERFIL SELECTOR ═══ */
 .perfil-selector-wrap {
@@ -557,7 +586,6 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     letter-spacing: 0.8px; margin-top: 3px; line-height: 1.3;
 }
 .perfil-spark-wrap { padding: 14px 14px 8px; border-bottom: 1px solid var(--border); }
-.spark-img { width: 100%; height: auto; display: block; border-radius: 6px; }
 .perfil-hist-toggle { padding: 4px 0; }
 .perfil-export-bar { padding: 10px 14px 12px; display: flex; justify-content: flex-end; }
 
@@ -729,6 +757,11 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     <div class="chart-block">
         <div class="chart-title">Distribución de puntos</div>
         {{ graf_barras_html }}
+    </div>
+    <div class="chart-block">
+        <div class="chart-title">Cómo se llegó hasta acá</div>
+        <p class="chart-hint">Tocá una línea para seguir a una persona</p>
+        {{ graf_evol_html }}
     </div>
 </div>
 

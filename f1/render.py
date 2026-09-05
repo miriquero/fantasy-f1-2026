@@ -36,6 +36,7 @@ def _leer_asset(nombre: str) -> str:
 def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  ranking_acumulado: pd.DataFrame,
                  grafico_barras: str,
+                 grafico_evol: str,
                  stats_adicionales: str,
                  perfiles_html: str,
                  badges_por_participante: Dict[str, List[Dict]],
@@ -170,7 +171,9 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
     # ---- Calendario visual ----
     calendario_html = generar_calendario_visual(proxima_iso)
 
-    graf_barras_html = (f'<img src="data:image/png;base64,{grafico_barras}" alt="Puntos acumulados" class="chart-img">') if grafico_barras else '<p class="empty-msg">Sin datos.</p>'
+    # Los graficos ya vienen como SVG: se insertan tal cual, sin <img>.
+    graf_barras_html = grafico_barras or '<p class="empty-msg">Sin datos.</p>'
+    graf_evol_html = grafico_evol or ''
     fecha_actual     = datetime.now(timezone(timedelta(hours=-3))).strftime("%d/%m/%Y · %H:%M")
 
     # ---- Nuevos paneles ----
@@ -189,6 +192,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         logros_panel_html=logros_panel_html,
         calendario_html=calendario_html,
         graf_barras_html=graf_barras_html,
+        graf_evol_html=graf_evol_html,
         stats_adicionales=stats_adicionales,
         perfiles_html=perfiles_html,
         perfil_selector_html=perfil_selector_html,

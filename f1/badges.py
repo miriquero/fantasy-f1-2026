@@ -5,7 +5,7 @@ import pandas as pd
 from typing import Dict, List
 
 from .calendario import carreras_en_orden
-from .config import COLORES_PARTICIPANTES, hex_to_rgba
+from .paleta import color_participante, hex_a_rgba
 from .scoring import calcular_historial_posiciones
 
 
@@ -377,7 +377,7 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
 
     lideres_rows = ""
     for i, (nombre, n) in enumerate(ranking_badges):
-        color = COLORES_PARTICIPANTES[i % len(COLORES_PARTICIPANTES)]
+        color = color_participante(nombre)
         pct = round(n / total_badges_posibles * 100)
         bar_width = max(4, pct)
         lideres_rows += f"""
@@ -406,9 +406,9 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
             desbloqueado = len(ganadores) > 0
             hex_color = meta["hex"]
 
-            bg_card   = hex_to_rgba(hex_color, 0.07 if desbloqueado else 0.03)
-            border_c  = hex_to_rgba(hex_color, 0.35 if desbloqueado else 0.12)
-            emoji_bg  = hex_to_rgba(hex_color, 0.15 if desbloqueado else 0.06)
+            bg_card   = hex_a_rgba(hex_color, 0.07 if desbloqueado else 0.03)
+            border_c  = hex_a_rgba(hex_color, 0.35 if desbloqueado else 0.12)
+            emoji_bg  = hex_a_rgba(hex_color, 0.15 if desbloqueado else 0.06)
             text_col  = hex_color if desbloqueado else "#444444"
             name_col  = "#FFFFFF" if desbloqueado else "#555555"
             desc_col  = "#AAAAAA" if desbloqueado else "#444444"
