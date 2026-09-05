@@ -7,9 +7,27 @@ mails de los participantes.
 No depende de red ni de credenciales: usa los archivos ya versionados.
 """
 
+import os
 import re
+from pathlib import Path
+
+import pytest
 
 import f1.main
+
+RAIZ = Path(__file__).resolve().parent.parent
+
+
+@pytest.fixture(autouse=True)
+def _desde_la_raiz(monkeypatch):
+    """Corre el pipeline desde la raiz del repo.
+
+    main() lee `respuestas/` y `resultados.json` con rutas relativas, asi que
+    el test solo pasaba si se lo invocaba parado en la raiz. Dependiendo de
+    como se llame a pytest, eso cambia -- y esa clase de diferencia ya hizo
+    que los tests pasaran en local y fallaran en CI.
+    """
+    monkeypatch.chdir(RAIZ)
 
 
 def test_pipeline_completo_genera_html_valido(tmp_path, monkeypatch):
