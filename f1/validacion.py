@@ -59,10 +59,20 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
             # Verificar que los pilotos estén en la lista oficial
             desconocidos = [p for p in rc if p not in PILOTOS]
             if desconocidos:
-                errores.append(
-                    f"  · [{carrera}] pilotos no reconocidos en 'resultado_carrera': {desconocidos}.\n"
-                    f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código, o agregá un alias\n"
-                    f"    en ALIASES_PILOTOS si es una variante nueva que devuelve la API."
+                # Advertencia, NO error bloqueante. Antes esto cortaba el
+                # main() entero: bastaba con que corriera un suplente o un
+                # debutante para que dejara de actualizarse el ranking de toda
+                # la temporada, no solo el de esa carrera.
+                #
+                # Dejarlo pasar es lo correcto: el formulario solo ofrece
+                # pilotos de PILOTOS, asi que a un nombre desconocido no lo
+                # predijo nadie. Ocupa su posicion y el resto se puntua igual.
+                print(
+                    f"Advertencia: [{carrera}] pilotos no reconocidos: {desconocidos}."
+                )
+                print(
+                    "    Se puntúa igual. Si es un piloto nuevo, agregalo a PILOTOS"
+                    " en f1/config.py para que se lo pueda predecir."
                 )
 
         # vuelta_rapida: string no vacío
@@ -72,11 +82,11 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
         elif vr.strip() == "":
             print(f"Advertencia: [{carrera}] 'vuelta_rapida' está vacío — no se otorgarán puntos por vuelta rápida.")
         elif vr not in PILOTOS:
-            errores.append(
-                f"  · [{carrera}] piloto de vuelta rápida no reconocido: \"{vr}\".\n"
-                f"    Revisá mayúsculas/tildes contra la lista PILOTOS del código, o agregá un alias\n"
-                f"    en ALIASES_PILOTOS si es una variante nueva que devuelve la API."
-            )
+            # Igual que arriba: advertencia, no error. Que la vuelta rapida la
+            # haya hecho alguien que no esta en la lista solo significa que
+            # nadie pudo predecirla, asi que nadie suma esos 10 puntos.
+            print(f"Advertencia: [{carrera}] vuelta rápida de un piloto no "
+                  f"reconocido: \"{vr}\". Nadie suma puntos por vuelta rápida.")
 
         # colapinto: número entero entre 1 y 20 (o 0 si no clasificó/abandonó)
         col = datos["colapinto"]

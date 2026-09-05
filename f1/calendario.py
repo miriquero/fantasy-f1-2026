@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import List, Tuple
 
 from .config import CALENDARIO, FLAG_MAP
+from .normalizacion import normalizar_nombre_carrera
 
 
 def get_orden_carreras() -> List[str]:
@@ -14,7 +15,13 @@ def get_orden_carreras() -> List[str]:
         nombre_raw = entry["Carrera"]
         if "<s>" in nombre_raw:
             continue
-        nombre = re.sub(r'<[^>]+>', '', nombre_raw).strip().capitalize()
+        # Con .capitalize() daba 'Gran bretaña' y 'Las vegas', que no coinciden
+        # con los nombres normalizados que usa el resto del pipeline. Esas
+        # carreras no matcheaban el orden del calendario y se iban al final de
+        # la lista, asi que el historial de posiciones y las flechas ▲▼ las
+        # trataban como si hubieran corrido despues de lo que en realidad las
+        # siguio. Hay que usar el mismo normalizador que todos.
+        nombre = normalizar_nombre_carrera(re.sub(r'<[^>]+>', '', nombre_raw).strip())
         if nombre not in orden:
             orden.append(nombre)
     return orden

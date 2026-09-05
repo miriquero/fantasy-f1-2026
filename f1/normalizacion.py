@@ -59,6 +59,17 @@ def normalizar_piloto(nombre: str) -> str:
         return _PILOTOS_NORM[limpio]
     if limpio in ALIASES_PILOTOS:
         return ALIASES_PILOTOS[limpio]
+
+    # Ultimo recurso: emparejar por apellido. La API cambia la forma de
+    # escribir los nombres sin avisar ("Oliver" por "Ollie", "Andrea Kimi
+    # Antonelli" por "Kimi Antonelli"), y cada variante nueva obligaba a
+    # agregar un alias a mano. Ningun apellido se repite entre los pilotos,
+    # asi que esto es seguro; si alguna vez se repitiera, no se adivina.
+    candidatos = [p for p in PILOTOS
+                  if _quitar_acentos(p).lower().split()[-1] == limpio.split()[-1]]
+    if len(candidatos) == 1:
+        return candidatos[0]
+
     return str(nombre).strip()
 
 
@@ -103,7 +114,12 @@ def normalizar_nombre_carrera(nombre: str) -> str:
         "paises_bajos": "Países Bajos",
         "italia": "Italia",
         "madrid": "Madrid",
-        "azerbaiyn": "Azerbaiyn",
+        # Al calendario le faltaba la "a" ("AZERBAIYN"). Si el Google Form
+        # manda "Azerbaiyán" bien escrito, sin estas dos entradas normalizaba
+        # a "Azerbaiyan" y no matcheaba con la clave de resultados.json: la
+        # carrera se salteaba en silencio y no puntuaba nadie.
+        "azerbaiyan": "Azerbaiyan",
+        "azerbaiyn": "Azerbaiyan",
         "singapur": "Singapur",
         "austin": "Austin",
         "mexico": "Mexico",

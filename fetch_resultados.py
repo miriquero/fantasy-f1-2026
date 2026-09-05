@@ -8,27 +8,18 @@ Consulta la API Jolpica y guarda solo lo necesario:
 """
 
 import json
+import re
 import time
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from f1.config import CALENDARIO
 from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
 
 ARCHIVO_RESULTADOS = Path("resultados.json")
 BASE_URL = "https://api.jolpi.ca/ergast/f1/2026"
-
-DIAS_VENTANA_PENALIDAD = 3
-
-NOMBRE_A_ROUND = {
-    "Australia": 1, "China": 2, "Japon": 3, "Miami": 4, "Canada": 5,
-    "Monaco": 6, "Barcelona": 7, "Austria": 8, "Gran Bretana": 9,
-    "Belgica": 10, "Hungría": 11, "Paises Bajos": 12, "Italia": 13,
-    "Madrid": 14, "Azerbaiyn": 15, "Singapur": 16, "Austin": 17,
-    "Mexico": 18, "Brasil": 19, "Las Vegas": 20, "Qatar": 21,
-    "Abu Dhabi": 22,
-}
 
 COLAPINTO_NUMBER = "43"
 
@@ -88,6 +79,42 @@ def get_resultado_carrera(round_num):
         print(f"  ERROR parseando round {round_num}: {e}")
         return None
 
+def fetch_calendario_api():
+    """Calendario de la temporada segun la API: {fecha_utc: (round, nombre)}."""
+    data = fetch_json(f"{BASE_URL}.json?limit=40")
+    try:
+        carreras = data["MRData"]["RaceTable"]["Races"]
+    except (KeyError, TypeError):
+        return None
+    return {c["date"]: (int(c["round"]), c["raceName"]) for c in carreras}
+
+
+def rounds_del_torneo(calendario_api):
+    """Empareja cada carrera del torneo con su round real, por fecha.
+
+    Antes los numeros de round estaban escritos a mano aca, y se desfasaron:
+    la FIA sumo el "Bahrain Grand Prix in Malaysia" como round 16 y todo lo
+    posterior corrio un lugar. Con la tabla vieja, el 11 de octubre el script
+    hubiera pedido el round 16, recibido la carrera de Malasia y guardado esos
+    resultados bajo el nombre "Singapur", puntuando a todos contra la carrera
+    equivocada sin que saltara ningun error.
+
+    Emparejar por fecha se arregla solo la proxima vez que cambie el calendario.
+    """
+    mapa = {}
+    for entrada in CALENDARIO:
+        iso = entrada.get("FechaISO")
+        if not iso:
+            continue                       # carrera tachada del torneo
+        nombre = re.sub(r"<[^>]+>", "", entrada["Carrera"]).strip()
+        fecha = datetime.fromisoformat(iso).astimezone(timezone.utc).date().isoformat()
+        if fecha in calendario_api:
+            mapa[nombre] = calendario_api[fecha][0]
+        else:
+            print(f"  AVISO: '{nombre}' ({fecha}) no figura en el calendario de la API.")
+    return mapa
+
+
 def main():
     if ARCHIVO_RESULTADOS.exists():
         with open(ARCHIVO_RESULTADOS, encoding="utf-8") as f:
@@ -97,7 +124,13 @@ def main():
 
     ahora_iso = datetime.now(timezone.utc).isoformat()
 
-    for carrera, round_num in NOMBRE_A_ROUND.items():
+    calendario_api = fetch_calendario_api()
+    if not calendario_api:
+        print("No se pudo leer el calendario de la API. No se toca resultados.json.")
+        return
+    print(f"Calendario de la API: {len(calendario_api)} carreras.")
+
+    for carrera, round_num in rounds_del_torneo(calendario_api).items():
         print(f"Consultando {carrera} (round {round_num})...")
 
         resultado = get_resultado_carrera(round_num)
@@ -110,13 +143,26 @@ def main():
         # Se normaliza la clave de carrera (misma normalización que usa fantasy_f1.py
         # al leer este archivo) para que no se acumulen entradas casi-duplicadas como
         # "Gran_bretana" y "Gran Bretana" para la misma carrera.
-        resultados[normalizar_nombre_carrera(carrera)] = {
+        clave = normalizar_nombre_carrera(carrera)
+        nuevo = {
             "resultado_carrera": top11,   # Solo 11 posiciones
             "vuelta_rapida": vr,
             "colapinto": pos_col,
-            "_actualizado": ahora_iso,
         }
 
+        anterior = resultados.get(clave, {})
+        if all(anterior.get(k) == v for k, v in nuevo.items()):
+            # Nada cambió: no se toca "_actualizado". Antes se reescribia en
+            # cada corrida, asi que el diff de resultados.json mostraba las 22
+            # carreras tocadas aunque no hubiera pasado nada y no se podia ver
+            # cual habia cambiado de verdad. (El commit se hace igual: el HTML
+            # lleva la hora de generacion y cambia siempre.)
+            print(f"  → sin cambios | P1: {top11[0] if top11 else '?'}")
+            time.sleep(0.4)
+            continue
+
+        nuevo["_actualizado"] = ahora_iso
+        resultados[clave] = nuevo
         print(f"  → OK | P1: {top11[0] if top11 else '?'} | VR: {vr or 'N/A'} | Colapinto: P{pos_col}")
 
         time.sleep(0.4)
