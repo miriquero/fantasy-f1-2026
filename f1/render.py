@@ -41,7 +41,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  perfiles_html: str,
                  badges_por_participante: Dict[str, List[Dict]],
                  perfil_selector_html: str = "",
-                 hof_panel_html: str = "") -> str:
+                 hof_panel_html: str = "",
+                 analisis_html: str = "") -> str:
 
     proxima_carrera, proxima_iso = obtener_proxima_carrera()
 
@@ -197,5 +198,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         perfiles_html=perfiles_html,
         perfil_selector_html=perfil_selector_html,
         hof_panel_html=hof_panel_html,
+        analisis_html=analisis_html,
         fecha_actual=fecha_actual,
     )

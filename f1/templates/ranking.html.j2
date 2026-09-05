@@ -343,6 +343,53 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .chart-hint { font-size: var(--t-2xs); color: var(--muted-2); margin: -6px 0 10px; }
 
 
+
+/* ---- Proyeccion al titulo y cara a cara -------------------------------- */
+.analisis-intro { font-size: var(--t-xs); color: var(--muted); line-height: 1.65; margin: 0 0 var(--e-4); }
+.analisis-intro strong { color: var(--text); font-weight: 600; }
+.analisis-nota { font-size: var(--t-3xs); color: var(--muted-2); margin: var(--e-3) 0 0; line-height: 1.5; }
+
+.proy-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--e-2); }
+.proy-fila { display: grid; grid-template-columns: minmax(72px, 1fr) minmax(0, 2fr) auto;
+    align-items: center; gap: var(--e-3); }
+.proy-nombre { font-size: var(--t-2xs); color: var(--text); overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
+.proy-barra { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.05); overflow: hidden; }
+.proy-barra-fill { display: block; height: 100%; border-radius: 3px; background: var(--c);
+    transition: width var(--vel-3) var(--curva); }
+.proy-estado { font-size: var(--t-3xs); color: var(--muted); text-align: right;
+    white-space: nowrap; font-variant-numeric: tabular-nums; }
+.proy-lider .proy-estado { color: var(--gold); font-weight: 600; }
+/* Sin chances: se apaga la fila entera, no solo el texto. La barra corta
+   dice por que, mucho mas rapido que leer el numero. */
+.proy-fuera { opacity: 0.42; }
+.proy-fuera .proy-barra-fill { background: var(--muted-2); }
+
+.h2h-label { display: block; font-size: var(--t-3xs); text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted-2); margin: 0 0 var(--e-2); }
+.h2h-select { width: 100%; padding: 10px 12px; border-radius: 10px;
+    background: var(--bg-3); color: var(--text); border: 1px solid var(--border-bright);
+    font-family: var(--font-body); font-size: var(--t-xs); margin-bottom: var(--e-4);
+    -webkit-appearance: none; appearance: none; }
+.h2h-select:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.h2h-panel[hidden] { display: none; }
+.h2h-leyenda { display: flex; gap: var(--e-4); font-size: var(--t-3xs);
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-2);
+    margin-bottom: var(--e-2); }
+.h2h-lista { list-style: none; margin: 0; padding: 0; }
+.h2h-fila { display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--border); gap: var(--e-3); }
+.h2h-fila:last-child { border-bottom: none; }
+.h2h-rival { font-size: var(--t-2xs); color: var(--text); overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
+.h2h-marcador { display: flex; align-items: center; gap: 6px;
+    font-family: var(--font-display); font-size: var(--t-sm);
+    font-variant-numeric: tabular-nums; }
+.h2h-gano { color: var(--green); }
+.h2h-perdio { color: var(--danger); }
+.h2h-empato { color: var(--muted); }
+.h2h-sep { color: var(--muted-2); }
+
 /* ---- Cifras, movimiento y red de seguridad ----------------------------- */
 
 /* Cifras tabulares: los digitos pasan a tener todos el mismo ancho, asi las
@@ -878,6 +925,8 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
 
     <div class="divider"></div>
 
+    {{ analisis_html }}
+
     <div class="mas-subsection">
         {{ hof_panel_html }}
     </div>
@@ -1182,6 +1231,18 @@ function exportarCSV() {
 
 {{ LOGROS_JS }}
 {{ ANIM_JS }}
+
+// Cara a cara: muestra el panel de la persona elegida y esconde el resto.
+function mostrarDuelos(nombre) {
+    var paneles = document.querySelectorAll('.h2h-panel');
+    for (var i = 0; i < paneles.length; i++) {
+        paneles[i].hidden = (paneles[i].dataset.nombre !== nombre);
+    }
+}
+(function () {
+    var sel = document.getElementById('h2h-select');
+    if (sel) { mostrarDuelos(sel.value); }
+})();
 
 // Service worker: la pagina se sirve por red primero (el ranking cambia dos
 // veces por dia y no puede quedar viejo) y las tipografias por cache. Si algo
