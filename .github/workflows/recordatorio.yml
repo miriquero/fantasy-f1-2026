@@ -1,0 +1,63 @@
+name: Recordatorio de votación
+
+# Sobre 13 carreras se dejaron de emitir 29 votos de 130 posibles: el 22%.
+# El aviso de "ranking actualizado" llega cuando ya cerró la votación, o sea
+# cuando ya es tarde. Este workflow avisa ANTES.
+#
+# Corre todos los días y el script decide solo si tiene algo que decir: manda
+# el mensaje únicamente si falta menos de 30 h para la largada, todavía hay
+# gente sin votar, y no se avisó ya para esa carrera.
+
+on:
+  schedule:
+    - cron: '0 21 * * *'     # 21:00 UTC = 18:00 ARG, todos los días
+  workflow_dispatch:
+
+jobs:
+  recordar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+      CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+      GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+      PARTICIPANTES_JSON: ${{ secrets.PARTICIPANTES_JSON }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ver quién falta votar
+        run: python recordar_votos.py
+
+      - name: Avisar por WhatsApp
+        run: |
+          if [ -s avisos/recordatorio.txt ]; then
+            python notificar.py recordatorio "$(cat avisos/recordatorio.txt)"
+          else
+            echo "Nada para recordar hoy."
+          fi
+
+      - name: Recordar que ya se avisó
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet estado_avisos.json 2>/dev/null; then
+            echo "Sin cambios de estado."
+          else
+            git add estado_avisos.json
+            git commit -m "Auto: recordatorio de votación enviado"
+            git push
+          fi

@@ -7,3 +7,7 @@ __pycache__/
 # Mapa mail -> apodo. Las claves son los mails de la familia y este repo es
 # publico: va como Secret PARTICIPANTES_JSON en GitHub Actions.
 participantes.json
+
+# Avisos de una sola corrida: los deja un paso del workflow
+# y los levanta el siguiente. No sobreviven a la corrida.
+avisos/

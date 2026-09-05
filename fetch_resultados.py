@@ -14,6 +14,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from f1.avisos import anotar
 from f1.config import CALENDARIO
 from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
@@ -79,6 +80,16 @@ def get_resultado_carrera(round_num):
         print(f"  ERROR parseando round {round_num}: {e}")
         return None
 
+def describir_correccion(antes, ahora):
+    """Primera posicion en la que el resultado cambio, en texto."""
+    for i, (a, b) in enumerate(zip(antes, ahora), start=1):
+        if a != b:
+            return f"P{i}: {a} → {b}"
+    if len(antes) != len(ahora):
+        return "cambió la cantidad de clasificados"
+    return "cambió el orden"
+
+
 def fetch_calendario_api():
     """Calendario de la temporada segun la API: {fecha_utc: (round, nombre)}."""
     data = fetch_json(f"{BASE_URL}.json?limit=40")
@@ -124,6 +135,8 @@ def main():
 
     ahora_iso = datetime.now(timezone.utc).isoformat()
 
+    corregidas = []
+
     calendario_api = fetch_calendario_api()
     if not calendario_api:
         print("No se pudo leer el calendario de la API. No se toca resultados.json.")
@@ -151,6 +164,16 @@ def main():
         }
 
         anterior = resultados.get(clave, {})
+
+        # Una carrera que YA tenia resultado y ahora viene distinta significa
+        # que la FIA corrigio el orden: casi siempre una penalidad aplicada
+        # despues de la bandera a cuadros. Eso mueve los puntos de todos y
+        # hasta ahora pasaba en silencio.
+        previo = anterior.get("resultado_carrera")
+        if previo and previo != top11:
+            corregidas.append(f"{carrera} ({describir_correccion(previo, top11)})")
+            print(f"  → CORREGIDA por la FIA | {describir_correccion(previo, top11)}")
+
         if all(anterior.get(k) == v for k, v in nuevo.items()):
             # Nada cambió: no se toca "_actualizado". Antes se reescribia en
             # cada corrida, asi que el diff de resultados.json mostraba las 22
@@ -172,6 +195,9 @@ def main():
         # Salto de linea final: sin esto, git marca "\ No newline at end
         # of file" y ensucia el diff de cada corrida del bot.
         f.write("\n")
+
+    if corregidas:
+        anotar("penalidad", "Cambió el orden oficial de: " + ", ".join(corregidas))
 
     print("\n✅ Listo. Archivo resultados.json actualizado con Top 11.")
 

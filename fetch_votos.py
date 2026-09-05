@@ -24,6 +24,13 @@ from pathlib import Path
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+from f1.avisos import (
+    anotar,
+    guardar_estado,
+    leer_estado,
+    marcar_avisado,
+    ya_avisado,
+)
 from f1.config import CALENDARIO
 from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
@@ -93,6 +100,17 @@ def parsear_fecha(texto):
         except ValueError:
             continue
     return None
+
+def _atraso_legible(minutos):
+    """'14 minutos', '3 horas', '2 días' — lo que se entiende de un vistazo."""
+    if minutos < 60:
+        return f"{minutos} minuto{'s' if minutos != 1 else ''}"
+    if minutos < 60 * 24:
+        horas = minutos // 60
+        return f"{horas} hora{'s' if horas != 1 else ''}"
+    dias = minutos // (60 * 24)
+    return f"{dias} día{'s' if dias != 1 else ''}"
+
 
 def corte_carrera(nombre):
     """Momento de largada, o None si el nombre no esta en el calendario.
@@ -167,6 +185,7 @@ def fetch_y_guardar():
 
     por_carrera = {}
     omitidas = 0
+    tardios = []
 
     for fila in filas:
         row = dict(zip(headers, fila + [""] * (len(headers) - len(fila))))
@@ -182,6 +201,16 @@ def fetch_y_guardar():
         if marca and corte and marca >= corte:
             quien = nombre_participante(row.get(col_email, "")) if col_email else "?"
             print(f"  IGNORADO (tardio): {quien} -> {carrera} ({row.get('Marca temporal')})")
+            # Se guarda para avisarle a la persona. Hasta ahora esto moria en
+            # el log de Actions, que no lee nadie: alguien votaba tarde, creia
+            # que habia jugado y despues no entendia por que no sumo puntos.
+            atraso = marca - corte
+            minutos = int(atraso.total_seconds() // 60)
+            tardios.append({
+                "id": f"{quien}|{carrera}|{row.get('Marca temporal', '')}",
+                "texto": (f"{quien} votó para {carrera} "
+                          f"{_atraso_legible(minutos)} después de la largada"),
+            })
             omitidas += 1
             continue
 
@@ -205,6 +234,17 @@ def fetch_y_guardar():
             writer.writeheader()
             writer.writerows(filas)
         print(f"  OK {carrera:20s} -> {ruta} ({len(votos)} votos)")
+
+    # Solo se avisa de los tardios nuevos: el voto queda en el formulario para
+    # siempre, asi que sin memoria se avisaria de lo mismo dos veces por dia.
+    if tardios:
+        estado = leer_estado()
+        nuevos = [t for t in tardios if not ya_avisado(estado, "tardios", t["id"])]
+        if nuevos:
+            anotar("tardios", "\n".join(t["texto"] for t in nuevos))
+            for t in nuevos:
+                marcar_avisado(estado, "tardios", t["id"])
+            guardar_estado(estado)
 
     total = sum(len(v) for v in por_carrera.values()) - duplicados_total
     print(f"\nListo. {total} votos en {len(por_carrera)} carreras.")

@@ -63,6 +63,27 @@ def main():
             f"{intro}\n\n"
             f"{extra}"
         )
+    elif tipo == "recordatorio":
+        mensaje = (
+            "🏎️ Che, se cierra la votacion!
+
+"
+            f"{extra}
+
+"
+            "El que no vota, no suma."
+        )
+    elif tipo == "tardios":
+        mensaje = (
+            "⏰ Voto fuera de tiempo
+
+"
+            f"{extra}
+
+"
+            "Ese voto no cuenta para el ranking. La votacion cierra cuando "
+            "larga la carrera."
+        )
     elif tipo == "penalidad":
         mensaje = (
             "🚩 Atencion! La FIA aplico una penalidad y el orden de una carrera CAMBIO\n\n"
@@ -77,7 +98,7 @@ def main():
             "Revisa GitHub Actions para mas info."
         )
     else:
-        print(f"Tipo desconocido: {tipo}. Usar 'exito' o 'error'.")
+        print(f"Tipo desconocido: {tipo}. Usar exito, error, recordatorio, tardios o penalidad.")
         sys.exit(1)
 
     ok = enviar_whatsapp(mensaje)

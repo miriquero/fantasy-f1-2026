@@ -40,6 +40,25 @@ jobs:
       - name: Actualizar resultados desde Jolpica
         run: python fetch_resultados.py
 
+      # Los dos scripts anteriores dejan un archivo en avisos/ cuando pasa algo
+      # que la familia deberia saber. Si no pasa nada, no hay archivo y no se
+      # manda ningun mensaje.
+      - name: Avisar si la FIA corrigio un resultado
+        run: |
+          if [ -s avisos/penalidad.txt ]; then
+            python notificar.py penalidad "$(cat avisos/penalidad.txt)"
+          else
+            echo "Sin correcciones."
+          fi
+
+      - name: Avisar si alguien voto tarde
+        run: |
+          if [ -s avisos/tardios.txt ]; then
+            python notificar.py tardios "$(cat avisos/tardios.txt)"
+          else
+            echo "Sin votos tardios nuevos."
+          fi
+
       - name: Generar ranking HTML
         run: python fantasy_f1.py
 
@@ -48,10 +67,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          if git diff --quiet resultados.json respuestas/ ranking_f1.html; then
+          if git diff --quiet resultados.json respuestas/ ranking_f1.html estado_avisos.json; then
             echo "No hay cambios nuevos."
           else
-            git add resultados.json respuestas/ ranking_f1.html
+            git add resultados.json respuestas/ ranking_f1.html estado_avisos.json
             git commit -m "Auto: Actualización diaria del ranking - $(date +'%Y-%m-%d %H:%M')"
             git push
             echo "Cambios subidos correctamente."
