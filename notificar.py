@@ -17,6 +17,8 @@ import sys
 import urllib.request
 import urllib.parse
 
+from f1.consola import configurar_salida_utf8
+
 def enviar_whatsapp(mensaje):
     phone  = os.environ.get("CALLMEBOT_PHONE")
     apikey = os.environ.get("CALLMEBOT_APIKEY")
@@ -82,4 +84,5 @@ def main():
     sys.exit(0 if ok else 1)
 
 if __name__ == "__main__":
+    configurar_salida_utf8()
     main()

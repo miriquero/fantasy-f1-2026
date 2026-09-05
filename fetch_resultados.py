@@ -13,6 +13,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
 
 ARCHIVO_RESULTADOS = Path("resultados.json")
@@ -126,4 +127,5 @@ def main():
     print("\n✅ Listo. Archivo resultados.json actualizado con Top 11.")
 
 if __name__ == "__main__":
+    configurar_salida_utf8()
     main()

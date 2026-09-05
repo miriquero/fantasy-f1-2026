@@ -1,0 +1,196 @@
+
+/* ═══════════════════ LOGROS TAB ═══════════════════ */
+.logros-hero {
+    position: relative; overflow: hidden;
+    border-radius: 16px; margin-bottom: 32px;
+    min-height: 220px;
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: flex-end;
+}
+.logros-hero-bg {
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse 80% 80% at 110% 50%, rgba(225,6,0,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at -10% 100%, rgba(255,215,0,0.08) 0%, transparent 55%),
+        linear-gradient(135deg, #0D0D0D 0%, #111111 100%);
+    z-index: 0;
+}
+.logros-hero-bg::after {
+    content: '🏆';
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    font-size: clamp(60px, 14vw, 160px);
+    opacity: 0.06; filter: blur(1px);
+    pointer-events: none; user-select: none;
+}
+.logros-hero-content {
+    position: relative; z-index: 1;
+    padding: 24px 20px; width: 100%;
+}
+.logros-eyebrow {
+    font-family: var(--font-display); font-size: 0.68rem; font-weight: 800;
+    letter-spacing: 4px; text-transform: uppercase; color: var(--red);
+    margin-bottom: 10px;
+}
+.logros-title {
+    font-family: var(--font-display); font-size: clamp(2.2rem, 7vw, 5rem);
+    font-weight: 800; letter-spacing: -1px; text-transform: uppercase;
+    line-height: 0.9; color: #FFFFFF; margin-bottom: 12px;
+}
+.logros-title span { color: var(--red); }
+.logros-subtitle {
+    font-size: 0.82rem; color: #888888; margin-bottom: 20px; max-width: 500px;
+    letter-spacing: 0.3px; line-height: 1.4;
+}
+.logros-hero-stats {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.logros-hero-stat { text-align: left; }
+.logros-hero-num {
+    font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
+    color: #FFFFFF; line-height: 1; display: block;
+}
+.logros-hero-desc {
+    font-size: 0.65rem; color: #666666; text-transform: uppercase;
+    letter-spacing: 1.5px; display: block; margin-top: 3px;
+    font-family: var(--font-display);
+}
+.logros-hero-divider {
+    width: 1px; height: 36px;
+    background: rgba(255,255,255,0.1);
+}
+.logros-main-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+@media (max-width: 860px) {
+    .logros-main-grid { grid-template-columns: 1fr; }
+    .logros-sidebar-inner { position: static !important; }
+}
+.logros-sidebar-inner {
+    background: #111111; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 16px; position: sticky; top: 80px;
+}
+.logros-sidebar-title {
+    font-family: var(--font-display); font-size: 0.7rem; font-weight: 800;
+    letter-spacing: 2.5px; text-transform: uppercase; color: #888888;
+    margin-bottom: 6px; margin-top: 20px;
+}
+.logros-sidebar-title:first-child { margin-top: 0; }
+.logros-sidebar-sub {
+    font-size: 0.72rem; color: #444444; margin-bottom: 16px;
+}
+.logros-lideres-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+.logros-lider-row {
+    display: flex; align-items: center; gap: 8px;
+}
+.logros-lider-left {
+    display: flex; align-items: center; gap: 6px; min-width: 80px;
+}
+.logros-lider-pos {
+    font-family: var(--font-display); font-size: 0.75rem; font-weight: 800;
+    width: 22px; flex-shrink: 0;
+}
+.logros-lider-nombre {
+    font-family: var(--font-display); font-size: 0.82rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.logros-lider-bar-wrap {
+    flex: 1; height: 5px; background: rgba(255,255,255,0.06);
+    border-radius: 3px; overflow: hidden;
+}
+.logros-lider-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+.logros-lider-right { display: flex; align-items: baseline; gap: 1px; }
+.logros-lider-count {
+    font-family: var(--font-display); font-size: 0.95rem; font-weight: 800; color: #FFFFFF;
+}
+.logros-lider-total { font-size: 0.65rem; color: #444444; }
+.logros-leyenda { margin-top: 4px; display: flex; flex-direction: column; gap: 8px; }
+.logros-leyenda-row { display: flex; align-items: center; gap: 10px; }
+.logros-leyenda-dot {
+    width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+}
+.logros-leyenda-label {
+    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.logros-catalogo { display: flex; flex-direction: column; gap: 28px; }
+.logros-nivel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; margin-bottom: 14px;
+    background: rgba(255,255,255,0.03); border-radius: 8px;
+}
+.logros-nivel-label {
+    font-family: var(--font-display); font-size: 0.88rem; font-weight: 800;
+    letter-spacing: 2px; text-transform: uppercase;
+}
+.logros-nivel-sub {
+    font-size: 0.7rem; color: #555555; font-family: var(--font-display);
+    font-weight: 600; letter-spacing: 1px;
+}
+.logros-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+@media (max-width: 600px) {
+    .logros-cards-grid { grid-template-columns: 1fr; }
+}
+.logro-card {
+    position: relative; border-radius: 12px;
+    padding: 16px 16px 14px; display: flex; align-items: flex-start; gap: 12px;
+    transition: transform 0.18s, box-shadow 0.18s;
+    overflow: hidden;
+}
+.logro-card::before {
+    content: ''; position: absolute; inset: 0; opacity: 0;
+    background: radial-gradient(ellipse at 0% 50%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    transition: opacity 0.2s;
+}
+.logro-desbloqueado:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+.logro-desbloqueado:hover::before { opacity: 1; }
+.logro-bloqueado { filter: saturate(0.1); }
+.badge-lock {
+    position: absolute; top: 10px; right: 12px;
+    font-size: 0.8rem; opacity: 0.35;
+}
+.logro-emoji-wrap {
+    width: 48px; height: 48px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.logro-emoji { font-size: 1.5rem; line-height: 1; }
+.logro-content { flex: 1; min-width: 0; }
+.logro-nombre {
+    font-family: var(--font-display); font-size: 0.95rem; font-weight: 800;
+    letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 4px;
+    line-height: 1.1;
+}
+.logro-desc-corta {
+    font-family: var(--font-display); font-size: 0.76rem; font-weight: 600;
+    letter-spacing: 0.2px; margin-bottom: 5px; line-height: 1.4;
+}
+.logro-desc-larga {
+    font-size: 0.72rem; line-height: 1.55; margin-bottom: 10px;
+}
+.badge-ganadores { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.badge-ganador-chip {
+    font-family: var(--font-display); font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    background: rgba(255,255,255,0.08); color: #CCCCCC;
+    padding: 3px 9px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.badge-nadie {
+    font-size: 0.68rem; color: #333333; font-style: italic;
+    font-family: var(--font-display);
+}
+/* ═══════════════════════════════════════════════════════ */

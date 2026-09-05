@@ -24,6 +24,10 @@ from pathlib import Path
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+from f1.config import CALENDARIO
+from f1.consola import configurar_salida_utf8
+from f1.normalizacion import normalizar_nombre_carrera
+
 # -- Configuracion ------------------------------------------------------------
 
 SHEET_ID   = "1YSPJn9qpgPOECpW7OwX9_dCdeiB3XxrDpucujvVcA-8"
@@ -34,30 +38,26 @@ JSON_LOCAL = "fantasy-f1-500915-613a0c111715.json"
 
 ARG = timezone(timedelta(hours=-3))
 
-INICIO_CARRERA = {
-    "Australia":    "2026-03-08T01:00:00",
-    "China":        "2026-03-15T04:00:00",
-    "Japon":        "2026-03-29T02:00:00",
-    "Miami":        "2026-05-03T17:00:00",
-    "Canada":       "2026-05-24T17:00:00",
-    "Monaco":       "2026-06-07T10:00:00",
-    "Barcelona":    "2026-06-14T10:00:00",
-    "Austria":      "2026-06-28T10:00:00",
-    "Gran Bretana": "2026-07-05T11:00:00",
-    "Belgica":      "2026-07-19T10:00:00",
-    "Hungria":      "2026-07-26T10:00:00",
-    "Paises Bajos": "2026-08-23T10:00:00",
-    "Italia":       "2026-09-06T10:00:00",
-    "Madrid":       "2026-09-13T10:00:00",
-    "Azerbaiyn":    "2026-09-26T08:00:00",
-    "Singapur":     "2026-10-11T09:00:00",
-    "Austin":       "2026-10-25T17:00:00",
-    "Mexico":       "2026-11-01T17:00:00",
-    "Brasil":       "2026-11-08T14:00:00",
-    "Las Vegas":    "2026-11-21T01:00:00",
-    "Qatar":        "2026-11-29T13:00:00",
-    "Abu Dhabi":    "2026-12-06T10:00:00",
-}
+def _horarios_de_largada():
+    """Horario de largada de cada carrera, tomado de f1/config.py.
+
+    Antes esta tabla estaba escrita a mano tambien aca, y se habia
+    desincronizado: Las Vegas tenia el corte de votos el 21/11 a la 01:00
+    cuando la carrera larga el 22/11 a la 01:00 hora argentina. Los votos de
+    todo ese sabado se rechazaban por "tardios". Ahora hay una sola fuente de
+    verdad y no se puede volver a desfasar.
+    """
+    horarios = {}
+    for entrada in CALENDARIO:
+        iso = entrada.get("FechaISO")
+        if not iso:
+            continue                      # carrera tachada del calendario
+        nombre = re.sub(r"<[^>]+>", "", entrada["Carrera"]).strip()
+        horarios[normalizar_nombre_carrera(nombre)] = datetime.fromisoformat(iso)
+    return horarios
+
+
+INICIO_CARRERA = _horarios_de_largada()
 
 # -- Autenticacion ------------------------------------------------------------
 
@@ -94,11 +94,14 @@ def parsear_fecha(texto):
     return None
 
 def corte_carrera(nombre):
-    clave = quitar_tildes(nombre.strip())
-    iso = INICIO_CARRERA.get(clave) or INICIO_CARRERA.get(nombre.strip())
-    if not iso:
-        return None
-    return datetime.fromisoformat(iso).replace(tzinfo=ARG)
+    """Momento de largada, o None si el nombre no esta en el calendario.
+
+    Usa el normalizador canonico del proyecto, asi que tolera mayusculas,
+    tildes y guiones bajos ("PAISES BAJOS", "Paises_Bajos", "Países Bajos"
+    son la misma carrera). Antes la busqueda era sensible a mayusculas y un
+    voto escrito distinto se colaba sin control de horario.
+    """
+    return INICIO_CARRERA.get(normalizar_nombre_carrera(nombre))
 
 def nombre_archivo(carrera):
     limpio = quitar_tildes(carrera).strip().lower()
@@ -192,4 +195,5 @@ def fetch_y_guardar():
         print(f"   {duplicados_total} voto(s) duplicado(s) descartado(s) (se quedo con el mas reciente).")
 
 if __name__ == "__main__":
+    configurar_salida_utf8()
     fetch_y_guardar()

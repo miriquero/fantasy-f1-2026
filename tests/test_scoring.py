@@ -46,12 +46,15 @@ def test_calcular_puntos_acierto_exacto_y_vuelta_rapida():
     assert "Vuelta rápida" in detalle
 
 
-def test_calcular_puntos_fuera_del_top_10():
-    posiciones_reales = {}  # el piloto predicho no está en el top 10 real
+def test_calcular_puntos_piloto_que_no_figura_en_los_resultados():
+    # El piloto predicho no aparece en el resultado de la carrera (abandono, o
+    # quedó fuera del top 11 que guardamos). Esa es una rama distinta de la de
+    # "figura pero afuera del top 10", que cubre el test de más abajo.
+    posiciones_reales = {}
     row = _fila(**{"Primer puesto": "Yuki Tsunoda"})
     puntos, detalle = calcular_puntos_y_detalles(row, posiciones_reales, "", 0)
     assert puntos == 0
-    assert "Fuera del top 10 real" in detalle
+    assert "No terminó la carrera en el top 10" in detalle
 
 
 def test_calcular_puntos_colapinto_exacto():
