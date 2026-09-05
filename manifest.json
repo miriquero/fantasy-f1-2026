@@ -1,0 +1,25 @@
+{
+  "name": "Fantasy F1 2026",
+  "short_name": "Fantasy F1",
+  "description": "Torneo familiar de predicciones de Fórmula 1.",
+  "start_url": "ranking_f1.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "lang": "es-AR",
+  "icons": [
+    {
+      "src": "img/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "img/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

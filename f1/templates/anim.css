@@ -1,30 +1,22 @@
 
 /* ═══════════════════ ANIMACIONES Y MICRO-INTERACCIONES ═══════════════════ */
 
-/* Reveal escalonado al hacer scroll o cambiar de tab */
-.reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* Fade liviano para filas de tabla (sin transform, seguro en <tr>) */
-.row-reveal { opacity: 0; transition: opacity 0.4s ease; }
-.row-reveal.visible { opacity: 1; }
+/* .reveal y .row-reveal se definen en el esqueleto, junto con la red de
+   seguridad para cuando el JS no corre. Definirlos tambien aca los pisaba por
+   cascada (este archivo se inyecta despues) y la pagina quedaba en blanco. */
 
 /* Indicador deslizante bajo el tab activo */
 .tab-nav-inner { position: relative; }
 .tab-indicator {
     position: absolute; bottom: 0; height: 3px; background: var(--red);
     border-radius: 2px 2px 0 0;
-    transition: left 0.3s cubic-bezier(0.22,1,0.36,1), width 0.3s cubic-bezier(0.22,1,0.36,1);
+    transition: left 0.3s var(--curva), width 0.3s var(--curva);
     pointer-events: none;
 }
 
 /* Elevación consistente al pasar el mouse sobre cards */
 .podium-card, .stat-card, .hof-card, .perfil-card, .cal-card {
-    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease;
+    transition: transform 0.25s var(--curva), box-shadow 0.25s ease;
 }
 .podium-card:hover, .stat-card:hover, .hof-card:hover, .perfil-card:hover, .cal-card:hover {
     transform: translateY(-4px);
@@ -42,7 +34,7 @@
     from { opacity: 0; transform: translateY(28px) scale(0.92); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-.podium-card.podium-enter { animation: podiumIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+.podium-card.podium-enter { animation: podiumIn 0.55s var(--curva) both; }
 .podium-2.podium-enter { animation-delay: 0s; }
 .podium-1.podium-enter { animation-delay: 0.1s; }
 .podium-3.podium-enter { animation-delay: 0.2s; }
@@ -53,7 +45,7 @@
     60%  { transform: scale(1.05); }
     100% { opacity: 1; transform: scale(1); }
 }
-.logro-card.badge-pop { animation: badgePop 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+.logro-card.badge-pop { animation: badgePop 0.45s var(--curva) both; }
 
 /* Fade-in general al cargar la página */
 @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }

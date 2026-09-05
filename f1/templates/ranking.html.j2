@@ -4,12 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>F1 Predictions · 2026</title>
+<script>document.documentElement.classList.add('js');</script>
 <meta name="description" content="Torneo familiar de predicciones de F1 2026. Ranking, calendario y logros.">
 
 <link rel="icon" href="img/favicon.ico" sizes="any">
 <link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="img/favicon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+<!-- Instalable en la pantalla de inicio. En Android lo habilita el manifiesto;
+     en iPhone, las dos meta de apple-mobile-web-app. Una vez instalada, abre
+     sin la barra del navegador. -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080808">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fantasy F1">
+<meta name="mobile-web-app-capable" content="yes">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="F1 Predictions · 2026">
@@ -32,8 +43,27 @@
     --text: #F0F0F0; --muted: #888888; --muted-2: #555555;
     --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
     --green: #22c55e; --danger: #ef4444;
-    --font-display: 'Barlow Condensed', sans-serif;
-    --font-body: 'Barlow', sans-serif;
+    --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --font-body: 'Barlow', system-ui, -apple-system, sans-serif;
+
+    /* Escala tipografica. Antes habia 36 tamaños sueltos (0.52rem, 0.62rem,
+       0.68rem, 0.7rem...) elegidos uno por uno: eso no es jerarquia, es ruido.
+       Ahora son 15 escalones de una escala modular, y el piso son 11px porque
+       por debajo de eso no se lee en un telefono. */
+    --t-3xs: 0.6875rem;  --t-2xs: 0.75rem;    --t-xs:  0.8125rem;
+    --t-sm:  0.875rem;   --t-md:  0.9375rem;  --t-lg:  1.0625rem;
+    --t-xl:  1.1875rem;  --t-2xl: 1.375rem;   --t-3xl: 1.625rem;
+    --t-4xl: 2rem;       --t-5xl: 2.5rem;     --t-6xl: 3.25rem;
+    --t-7xl: 5rem;       --t-8xl: 6.5rem;     --t-9xl: 8rem;
+
+    /* Ritmo vertical: multiplos de 4. */
+    --e-1: 4px;   --e-2: 8px;   --e-3: 12px;  --e-4: 16px;
+    --e-5: 24px;  --e-6: 32px;  --e-7: 48px;
+
+    /* Movimiento. Una sola curva para todo, para que la pagina se sienta
+       de una pieza en vez de cinco animaciones distintas. */
+    --curva: cubic-bezier(0.22, 1, 0.36, 1);
+    --vel-1: 0.14s;  --vel-2: 0.24s;  --vel-3: 0.42s;
 }
 html { scroll-behavior: smooth; }
 body { font-family: var(--font-body); background: var(--bg); color: var(--text);
@@ -52,21 +82,21 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 }
 .header-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .brand-stripe { width: 3px; height: 28px; background: var(--red); border-radius: 2px; }
-.brand-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800;
+.brand-text { font-family: var(--font-display); font-size: var(--t-lg); font-weight: 800;
                letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.1; }
-.brand-sub { font-size: 0.62rem; color: var(--muted); font-weight: 400;
+.brand-sub { font-size: var(--t-3xs); color: var(--muted); font-weight: 400;
               letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; display: block; }
 
 /* Countdown en header — colapsa en pantallas muy chicas */
 .countdown-wrap { display: flex; align-items: center; gap: 8px; }
 .countdown-label {
-    font-family: var(--font-display); font-size: 0.6rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 700;
     letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
     white-space: nowrap; display: none;
 }
 @media (min-width: 480px) { .countdown-label { display: block; } }
 .countdown-race {
-    font-family: var(--font-display); font-size: 0.78rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-2xs); font-weight: 800;
     color: var(--red); text-transform: uppercase; letter-spacing: 0.5px;
     white-space: nowrap; display: none;
     max-width: 38vw; overflow: hidden; text-overflow: ellipsis;
@@ -75,15 +105,15 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .countdown-timer { display: flex; gap: 4px; flex-shrink: 0; }
 .countdown-unit { text-align: center; }
 .countdown-num {
-    font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-xl); font-weight: 800;
     color: var(--text); line-height: 1; display: block; min-width: 28px;
 }
 .countdown-unit-label {
-    font-size: 0.52rem; color: var(--muted); letter-spacing: 0.8px;
+    font-size: var(--t-3xs); color: var(--muted); letter-spacing: 0.8px;
     text-transform: uppercase; display: block;
 }
 .countdown-sep {
-    font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-lg); font-weight: 700;
     color: var(--red); align-self: flex-start; margin-top: 2px; line-height: 1;
 }
 /* Ocultar días en mobile para ahorrar espacio si es necesario */
@@ -122,7 +152,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     /* No forzar min-width — que scrollee naturalmente */
 }
 .tab-btn {
-    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
     letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
     background: none; border: none; border-bottom: 3px solid transparent;
     padding: 12px 14px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
@@ -145,7 +175,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 }
 .section-heading span { color: var(--red); }
 .section-label {
-    font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 700;
     letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted);
     margin-bottom: 12px; margin-top: 4px;
 }
@@ -156,13 +186,13 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .onboarding-toggle {
     width: 100%; background: var(--bg-3); border: none; color: var(--text);
     padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer; font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; font-family: var(--font-display); font-size: var(--t-sm); font-weight: 700;
     letter-spacing: 0.5px; text-transform: uppercase; min-height: 50px;
 }
 .onboarding-toggle:hover { background: var(--bg-4); }
-.onboarding-icon { font-size: 1.3rem; color: var(--muted); transition: transform 0.2s; }
+.onboarding-icon { font-size: var(--t-2xl); color: var(--muted); transition: transform 0.2s; }
 .onboarding.open .onboarding-icon { transform: rotate(45deg); }
-.onboarding-body { display: none; padding: 16px 18px; font-size: 0.9rem; color: #ccc; line-height: 1.7; }
+.onboarding-body { display: none; padding: 16px 18px; font-size: var(--t-sm); color: #ccc; line-height: 1.7; }
 .onboarding.open .onboarding-body { display: block; }
 .onboarding-body b { color: var(--text); }
 
@@ -177,7 +207,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .podium-card::before {
     content: attr(data-pos);
     position: absolute; right: -8px; bottom: -22px;
-    font-family: var(--font-display); font-weight: 800; font-size: 6.5rem; line-height: 1;
+    font-family: var(--font-display); font-weight: 800; font-size: var(--t-8xl); line-height: 1;
     color: rgba(255,255,255,0.035); z-index: 0; pointer-events: none;
 }
 /* Textura diagonal tipo speed-lines */
@@ -216,29 +246,29 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     background: radial-gradient(ellipse 130% 90% at 50% -15%, rgba(205,127,50,0.16), transparent 62%), var(--bg-2);
     box-shadow: 0 0 34px -14px rgba(205,127,50,0.25);
 }
-.podium-1::before { color: rgba(255,215,0,0.06); font-size: 8rem; }
+.podium-1::before { color: rgba(255,215,0,0.06); font-size: var(--t-9xl); }
 .podium-2::before { color: rgba(192,192,192,0.05); }
 .podium-3::before { color: rgba(205,127,50,0.05); }
 .podium-1 .podium-shine { animation-delay: 0s; }
 .podium-2 .podium-shine { animation-delay: 1.1s; }
 .podium-3 .podium-shine { animation-delay: 2.2s; }
-.podium-medal { font-size: 1.8rem; margin-bottom: 6px; }
-.podium-1 .podium-medal { font-size: 2.3rem; }
+.podium-medal { font-size: var(--t-3xl); margin-bottom: 6px; }
+.podium-1 .podium-medal { font-size: var(--t-5xl); }
 .podium-avatar { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
                    justify-content: center; font-family: var(--font-display); font-weight: 800;
-                   font-size: 1.1rem; margin: 0 auto 8px; }
-.podium-1 .podium-avatar { width: 64px; height: 64px; font-size: 1.3rem; }
+                   font-size: var(--t-lg); margin: 0 auto 8px; }
+.podium-1 .podium-avatar { width: 64px; height: 64px; font-size: var(--t-2xl); }
 .podium-1 .podium-avatar { background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
 .podium-2 .podium-avatar { background: rgba(192,192,192,0.15); color: var(--silver); border: 1px solid rgba(192,192,192,0.3); }
 .podium-3 .podium-avatar { background: rgba(205,127,50,0.15); color: var(--bronze); border: 1px solid rgba(205,127,50,0.3); }
-.podium-nombre { font-family: var(--font-display); font-weight: 800; font-size: 1rem; text-transform: uppercase;
+.podium-nombre { font-family: var(--font-display); font-weight: 800; font-size: var(--t-md); text-transform: uppercase;
                    letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.podium-1 .podium-nombre { font-size: 1.2rem; }
-.podium-pts { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; margin-top: 6px; }
-.podium-1 .podium-pts { font-size: 2rem; color: var(--gold); }
+.podium-1 .podium-nombre { font-size: var(--t-xl); }
+.podium-pts { font-family: var(--font-display); font-size: var(--t-3xl); font-weight: 800; margin-top: 6px; }
+.podium-1 .podium-pts { font-size: var(--t-4xl); color: var(--gold); }
 .podium-2 .podium-pts { color: var(--silver); }
 .podium-3 .podium-pts { color: var(--bronze); }
-.podium-pts-label { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.podium-pts-label { font-size: var(--t-3xs); color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 .podium-base { height: 8px; border-radius: 0 0 14px 14px; margin-top: 12px; }
 .podium-1 .podium-base { background: var(--gold); height: 14px; }
 .podium-2 .podium-base { background: var(--silver); height: 10px; }
@@ -247,7 +277,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 /* ═══ SUBSECCIONES DEL PANEL "MÁS" ═══ */
 .mas-subsection { margin-bottom: 8px; }
 .subsection-heading {
-    font-family: var(--font-display); font-size: 1.15rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-xl); font-weight: 800;
     letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 12px;
 }
 
@@ -263,17 +293,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     /* min-width adaptable: no forzar ancho que rompe mobile */
 }
 .data-table th {
-    font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 700;
     letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
     padding: 12px 14px; border-bottom: 1px solid var(--border);
     text-align: left; background: var(--bg-3); white-space: nowrap;
 }
 .data-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 @media (max-width: 400px) {
-    .data-table th { padding: 10px 8px; font-size: 0.62rem; letter-spacing: 1px; }
+    .data-table th { padding: 10px 8px; font-size: var(--t-3xs); letter-spacing: 1px; }
     .data-table td { padding: 10px 8px; }
-    .leaderboard .medal { width: 24px; height: 24px; font-size: 0.75rem; }
-    .leaderboard .pts-big { font-size: 1.1rem; }
+    .leaderboard .medal { width: 24px; height: 24px; font-size: var(--t-2xs); }
+    .leaderboard .pts-big { font-size: var(--t-lg); }
 }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr:hover td { background: rgba(255,255,255,0.025); }
@@ -281,23 +311,23 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .medal {
     display: inline-flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 50%;
-    font-family: var(--font-display); font-weight: 800; font-size: 0.85rem;
+    font-family: var(--font-display); font-weight: 800; font-size: var(--t-sm);
 }
 .medal.gold   { background: rgba(255,215,0,0.15);   color: var(--gold);   border: 1px solid rgba(255,215,0,0.3); }
 .medal.silver { background: rgba(192,192,192,0.12); color: var(--silver); border: 1px solid rgba(192,192,192,0.25); }
 .medal.bronze { background: rgba(205,127,50,0.12);  color: var(--bronze); border: 1px solid rgba(205,127,50,0.25); }
 .medal.plain  { background: var(--bg-4); color: var(--muted); border: 1px solid var(--border); }
-.driver-name  { display: block; font-weight: 600; font-size: 0.9rem; }
+.driver-name  { display: block; font-weight: 600; font-size: var(--t-sm); }
 @media (max-width: 480px) {
 }
-.pts-big  { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; }
+.pts-big  { font-family: var(--font-display); font-size: var(--t-xl); font-weight: 800; }
 .pts-chip {
-    font-family: var(--font-display); font-size: 0.95rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-md); font-weight: 700;
     background: var(--bg-4); padding: 3px 9px; border-radius: 6px; border: 1px solid var(--border);
 }
-.pts-tag { font-size: 0.7rem; color: var(--muted); font-weight: 400; }
-.trend-up      { color: var(--green);   font-weight: 700; font-size: 0.85rem; }
-.trend-down    { color: var(--danger);  font-weight: 700; font-size: 0.85rem; }
+.pts-tag { font-size: var(--t-3xs); color: var(--muted); font-weight: 400; }
+.trend-up      { color: var(--green);   font-weight: 700; font-size: var(--t-sm); }
+.trend-down    { color: var(--danger);  font-weight: 700; font-size: var(--t-sm); }
 .trend-neutral { color: var(--muted-2); font-weight: 700; }
 .divider { height: 1px; background: var(--border); margin: 24px 0; }
 
@@ -307,10 +337,67 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     border-radius: 12px; padding: 16px; margin-bottom: 20px;
 }
 .chart-title {
-    font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 700;
     letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
 }
-.chart-hint { font-size: 0.72rem; color: var(--muted-2); margin: -6px 0 10px; }
+.chart-hint { font-size: var(--t-2xs); color: var(--muted-2); margin: -6px 0 10px; }
+
+
+/* ---- Cifras, movimiento y red de seguridad ----------------------------- */
+
+/* Cifras tabulares: los digitos pasan a tener todos el mismo ancho, asi las
+   columnas de puntos quedan alineadas y el contador no "baila" al cambiar de
+   segundo. En una pagina que es casi toda numeros, esto se nota mucho. */
+.pts-big, .pts-chip, .pts-tag, .medal, .perfil-pts, .perfil-stat-num,
+.podium-pts, .stat-num, .hof-stat-num, .logros-hero-num, .logros-lider-count,
+.logros-lider-pos, .logros-lider-total, .badge-counter, .countdown-num,
+.countdown-timer, .cd-num, .cd-mini-nums, .g-valor-num, .s-ultimo,
+table td, table th, .rnd-badge {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+/* Los titulos no parten mal la ultima palabra. */
+h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
+    text-wrap: balance;
+}
+
+/* Red de seguridad: .reveal arranca invisible y lo hace visible el JS. Si el
+   JS no corre (error, bloqueado, conexion cortada) la pagina entera quedaba
+   en blanco. Ahora ese estado inicial solo se aplica cuando hay JS, asi que
+   sin JS todo se ve igual, nada mas que sin la animacion de entrada. */
+.js .reveal { opacity: 0; transform: translateY(16px); }
+.js .row-reveal { opacity: 0; }
+.reveal, .row-reveal { opacity: 1; transform: none; }
+.reveal { transition: opacity var(--vel-3) var(--curva), transform var(--vel-3) var(--curva); }
+.row-reveal { transition: opacity var(--vel-2) ease; }
+.js .reveal.visible { opacity: 1; transform: translateY(0); }
+.js .row-reveal.visible { opacity: 1; }
+
+/* Entrada de los graficos: las barras crecen desde el eje y las lineas se
+   dibujan. Es el mismo gesto que hace la vista al leerlos. */
+@keyframes barraCrece { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.js .g-barra .g-valor { transform-origin: left center; animation: barraCrece var(--vel-3) var(--curva) both; }
+.js .g-barras .g-barra:nth-child(1) .g-valor { animation-delay: .02s; }
+.js .g-barras .g-barra:nth-child(2) .g-valor { animation-delay: .06s; }
+.js .g-barras .g-barra:nth-child(3) .g-valor { animation-delay: .10s; }
+.js .g-barras .g-barra:nth-child(4) .g-valor { animation-delay: .14s; }
+.js .g-barras .g-barra:nth-child(5) .g-valor { animation-delay: .18s; }
+.js .g-barras .g-barra:nth-child(n+6) .g-valor { animation-delay: .22s; }
+
+@keyframes lineaDibuja { from { stroke-dashoffset: 1200; } to { stroke-dashoffset: 0; } }
+.js .g-evolucion .g-linea { stroke-dasharray: 1200; animation: lineaDibuja 1.1s var(--curva) both; }
+.js .g-spark .s-linea { stroke-dasharray: 1200; animation: lineaDibuja .9s var(--curva) both; }
+
+/* Quien pidio menos movimiento ve la pagina quieta, pero completa: nada
+   depende de que una animacion termine para volverse visible. */
+@media (prefers-reduced-motion: reduce) {
+    .js .reveal, .js .row-reveal { opacity: 1 !important; transform: none !important; }
+    .js .g-barra .g-valor { animation: none; }
+    .js .g-evolucion .g-linea, .js .g-spark .s-linea {
+        stroke-dasharray: none; animation: none;
+    }
+}
 
 /* ---- Graficos SVG ------------------------------------------------------
    Reemplazan a los PNG de matplotlib. El color de cada serie llega por la
@@ -349,7 +436,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     border-radius: 12px;
 }
 .perfil-sel-btn {
-    font-family: var(--font-display); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-2xs); font-weight: 700;
     letter-spacing: 0.8px; text-transform: uppercase;
     background: var(--bg-3); border: 1px solid var(--border);
     color: var(--muted); padding: 7px 14px; border-radius: 8px;
@@ -368,11 +455,11 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 /* ═══ HALL OF FAME ═══ */
 .hof-wrap { padding: 0; }
 .hof-intro {
-    font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; line-height: 1.6;
+    font-size: var(--t-sm); color: var(--muted); margin-bottom: 28px; line-height: 1.6;
 }
 .hof-year-block { margin-bottom: 32px; }
 .hof-year-title {
-    font-family: var(--font-display); font-size: 0.65rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 800;
     letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
     margin-bottom: 14px; display: flex; align-items: center; gap: 12px;
 }
@@ -393,17 +480,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     pointer-events: none;
 }
 .hof-crown {
-    font-size: 3rem; flex-shrink: 0; line-height: 1;
+    font-size: var(--t-6xl); flex-shrink: 0; line-height: 1;
 }
 .hof-info { flex: 1; }
 .hof-nombre {
-    font-family: var(--font-display); font-size: 1.6rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-3xl); font-weight: 800;
     letter-spacing: 1px; text-transform: uppercase;
     color: #FFD700;
     margin-bottom: 4px;
 }
 .hof-temporada {
-    font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-2xs); font-weight: 700;
     letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
     margin-bottom: 12px;
 }
@@ -414,25 +501,25 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     display: flex; flex-direction: column; gap: 2px;
 }
 .hof-stat-num {
-    font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--text);
+    font-family: var(--font-display); font-size: var(--t-lg); font-weight: 800; color: var(--text);
 }
 .hof-stat-label {
-    font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+    font-size: var(--t-3xs); color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
 }
 .hof-trophy {
-    font-size: 5rem; flex-shrink: 0; opacity: 0.12;
+    font-size: var(--t-7xl); flex-shrink: 0; opacity: 0.12;
     position: absolute; right: 20px; bottom: -10px; line-height: 1;
 }
 @media (max-width: 480px) {
-    .hof-crown { font-size: 2rem; }
-    .hof-nombre { font-size: 1.2rem; }
+    .hof-crown { font-size: var(--t-4xl); }
+    .hof-nombre { font-size: var(--t-xl); }
     .hof-trophy { display: none; }
 }
 
 /* ═══ EXPORT ═══ */
 .export-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
 .export-btn {
-    font-family: var(--font-display); font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-2xs); font-weight: 700;
     letter-spacing: 1px; text-transform: uppercase; background: var(--bg-3);
     border: 1px solid var(--border-bright); color: var(--text);
     padding: 9px 16px; border-radius: 8px; cursor: pointer;
@@ -442,7 +529,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .export-btn:hover { background: var(--bg-4); border-color: var(--red); color: var(--red); }
 .export-btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
 .export-btn.primary:hover { background: #c50500; }
-.export-btn-sm { font-size: 0.72rem; padding: 7px 13px; letter-spacing: 0.8px; }
+.export-btn-sm { font-size: var(--t-2xs); padding: 7px 13px; letter-spacing: 0.8px; }
 .export-btn:disabled { opacity: 0.6; cursor: wait; }
 
 /* ═══ RACE ACCORDION ═══ */
@@ -459,17 +546,17 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .race-header:hover { background: var(--bg-4); }
 .race-title-wrap { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .race-badge {
-    font-family: var(--font-display); font-size: 0.7rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 800;
     letter-spacing: 1.5px; background: var(--red); color: #fff;
     padding: 3px 7px; border-radius: 5px; flex-shrink: 0;
 }
 .race-title {
-    font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-md); font-weight: 700;
     letter-spacing: 0.3px; text-transform: uppercase;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .toggle-icon {
-    font-size: 1.2rem; color: var(--muted); font-style: normal;
+    font-size: var(--t-xl); color: var(--muted); font-style: normal;
     transition: transform 0.2s; flex-shrink: 0; line-height: 1;
 }
 .race-body { display: none; padding: 16px; border-top: 1px solid var(--border); }
@@ -479,7 +566,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .detail-toggle {
     width: 100%; background: var(--bg-4); border: none; color: var(--text);
     padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
-    cursor: pointer; font-size: 0.88rem; font-weight: 600; transition: background 0.15s; gap: 8px;
+    cursor: pointer; font-size: var(--t-sm); font-weight: 600; transition: background 0.15s; gap: 8px;
     min-height: 48px;
 }
 .detail-toggle:hover { background: #262626; }
@@ -487,7 +574,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     display: none; padding: 12px 14px; background: var(--bg-2);
     border-top: 1px solid var(--border);
 }
-.detail-text { font-size: 0.84rem; color: #CCCCCC; line-height: 1.7; }
+.detail-text { font-size: var(--t-xs); color: #CCCCCC; line-height: 1.7; }
 
 /* ═══ STATS ═══ */
 .stats-grid {
@@ -503,11 +590,11 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 }
 .stat-card.accent { border-color: var(--red); background: rgba(225,6,0,0.06); }
 .stat-num  {
-    font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-4xl); font-weight: 800;
     color: var(--text); line-height: 1; margin-bottom: 5px;
 }
 .stat-desc {
-    font-size: 0.72rem; color: var(--muted); text-transform: uppercase;
+    font-size: var(--t-2xs); color: var(--muted); text-transform: uppercase;
     letter-spacing: 1px; font-family: var(--font-display);
 }
 .leader-banner {
@@ -516,15 +603,15 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
 }
 .leader-label {
-    font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 3px;
+    font-family: var(--font-display); font-size: var(--t-3xs); letter-spacing: 3px;
     font-weight: 800; color: var(--red); text-transform: uppercase; flex-shrink: 0;
 }
 .leader-name  {
-    font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-2xl); font-weight: 800;
     text-transform: uppercase; letter-spacing: 0.5px;
 }
 
-.cal-carrera { font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.3px; }
+.cal-carrera { font-family: var(--font-display); font-weight: 700; font-size: var(--t-sm); letter-spacing: 0.3px; }
 
 /* ═══ PERFILES ═══ */
 .perfiles-grid {
@@ -546,16 +633,16 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .perfil-avatar {
     width: 44px; height: 44px; border-radius: 50%; display: flex;
     align-items: center; justify-content: center; font-family: var(--font-display);
-    font-weight: 800; font-size: 1rem; flex-shrink: 0;
+    font-weight: 800; font-size: var(--t-md); flex-shrink: 0;
 }
 .perfil-info { flex: 1; min-width: 0; }
 .perfil-nombre {
-    font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-md); font-weight: 800;
     text-transform: uppercase; letter-spacing: 0.5px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .perfil-pos-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
-.perfil-pts { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; line-height: 1; }
+.perfil-pts { font-family: var(--font-display); font-size: var(--t-2xl); font-weight: 800; line-height: 1; }
 
 /* Stats mini: 4 col en desktop, 2x2 en mobile */
 .perfil-stats-mini {
@@ -578,11 +665,11 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 }
 .perfil-stat:last-child { border-right: none; }
 .perfil-stat-num   {
-    font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-2xl); font-weight: 800;
     color: var(--text); line-height: 1;
 }
 .perfil-stat-label {
-    font-size: 0.62rem; color: var(--muted); text-transform: uppercase;
+    font-size: var(--t-3xs); color: var(--muted); text-transform: uppercase;
     letter-spacing: 0.8px; margin-top: 3px; line-height: 1.3;
 }
 .perfil-spark-wrap { padding: 14px 14px 8px; border-bottom: 1px solid var(--border); }
@@ -593,14 +680,14 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .perfil-badges-wrap { padding: 12px 14px; border-bottom: 1px solid var(--border); }
 .badges-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
 .badge-hint {
-    font-size: 0.6rem; color: var(--muted-2); font-weight: 400;
+    font-size: var(--t-3xs); color: var(--muted-2); font-weight: 400;
     letter-spacing: 0; margin-left: 2px;
 }
 .badge-chip {
     position: relative;
     display: inline-flex; align-items: center; gap: 5px;
     padding: 6px 11px; border-radius: 20px;
-    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.3px;
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700; letter-spacing: 0.3px;
     cursor: pointer; border: none;
     transition: opacity 0.15s, transform 0.1s;
     user-select: none; -webkit-user-select: none;
@@ -612,14 +699,14 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     .badge-chip:hover { transform: translateY(-1px); }
 }
 .badge-chip:active { transform: scale(0.97); }
-.badge-emoji { font-size: 0.95rem; line-height: 1; }
+.badge-emoji { font-size: var(--t-md); line-height: 1; }
 .badge-nombre { white-space: nowrap; }
-.badge-nivel-tag { font-size: 0.72rem; line-height: 1; margin-left: 1px; opacity: 0.85; }
+.badge-nivel-tag { font-size: var(--t-2xs); line-height: 1; margin-left: 1px; opacity: 0.85; }
 .badge-counter {
     display: inline-flex; align-items: center;
     background: rgba(255,255,255,0.08); color: var(--muted);
     padding: 2px 8px; border-radius: 10px;
-    font-size: 0.68rem; font-weight: 700; letter-spacing: 1px;
+    font-size: var(--t-3xs); font-weight: 700; letter-spacing: 1px;
 }
 
 /* Tooltip de badge — usa absolute dentro de un wrapper para evitar
@@ -639,7 +726,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
     border: 1px solid rgba(255,255,255,0.18);
     color: #E8E8E8;
     font-family: var(--font-body);
-    font-size: 0.82rem;
+    font-size: var(--t-xs);
     font-weight: 400;
     line-height: 1.55;
     padding: 10px 14px;
@@ -669,12 +756,12 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 }
 
 /* ═══ EMPTY ═══ */
-.empty-msg { color: var(--muted); font-size: 0.9rem; font-style: italic; padding: 20px 0; }
+.empty-msg { color: var(--muted); font-size: var(--t-sm); font-style: italic; padding: 20px 0; }
 
 /* ═══ FOOTER ═══ */
 .site-footer {
     border-top: 1px solid var(--border); padding: 18px;
-    text-align: center; font-size: 0.75rem; color: var(--muted-2);
+    text-align: center; font-size: var(--t-2xs); color: var(--muted-2);
 }
 .footer-stripe { width: 28px; height: 3px; background: var(--red); border-radius: 2px; margin: 0 auto 10px; }
 
@@ -814,6 +901,9 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 <!-- Overlay para cerrar tooltip de badge al tocar fuera -->
 <div class="badge-tip-overlay" id="badge-overlay" onclick="closeBadgeTip()"></div>
 
+<!-- html2canvas: el boton "Imagen" lo llama pero la libreria no se cargaba
+     nunca, asi que ese boton tiraba "html2canvas is not defined". -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script>
 // ===== COUNTDOWN GLOBAL =====
 (function() {
@@ -1092,6 +1182,15 @@ function exportarCSV() {
 
 {{ LOGROS_JS }}
 {{ ANIM_JS }}
+
+// Service worker: la pagina se sirve por red primero (el ranking cambia dos
+// veces por dia y no puede quedar viejo) y las tipografias por cache. Si algo
+// falla, el sitio anda igual: esto es una mejora, no un requisito.
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+}
 </script>
 </body>
 </html>

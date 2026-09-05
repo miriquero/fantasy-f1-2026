@@ -27,7 +27,7 @@
     padding: 24px 20px; width: 100%;
 }
 .logros-eyebrow {
-    font-family: var(--font-display); font-size: 0.68rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 800;
     letter-spacing: 4px; text-transform: uppercase; color: var(--red);
     margin-bottom: 10px;
 }
@@ -38,7 +38,7 @@
 }
 .logros-title span { color: var(--red); }
 .logros-subtitle {
-    font-size: 0.82rem; color: #888888; margin-bottom: 20px; max-width: 500px;
+    font-size: var(--t-xs); color: #888888; margin-bottom: 20px; max-width: 500px;
     letter-spacing: 0.3px; line-height: 1.4;
 }
 .logros-hero-stats {
@@ -46,11 +46,11 @@
 }
 .logros-hero-stat { text-align: left; }
 .logros-hero-num {
-    font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-3xl); font-weight: 800;
     color: #FFFFFF; line-height: 1; display: block;
 }
 .logros-hero-desc {
-    font-size: 0.65rem; color: #666666; text-transform: uppercase;
+    font-size: var(--t-3xs); color: #666666; text-transform: uppercase;
     letter-spacing: 1.5px; display: block; margin-top: 3px;
     font-family: var(--font-display);
 }
@@ -73,13 +73,13 @@
     border-radius: 14px; padding: 16px; position: sticky; top: 80px;
 }
 .logros-sidebar-title {
-    font-family: var(--font-display); font-size: 0.7rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 800;
     letter-spacing: 2.5px; text-transform: uppercase; color: #888888;
     margin-bottom: 6px; margin-top: 20px;
 }
 .logros-sidebar-title:first-child { margin-top: 0; }
 .logros-sidebar-sub {
-    font-size: 0.72rem; color: #444444; margin-bottom: 16px;
+    font-size: var(--t-2xs); color: #444444; margin-bottom: 16px;
 }
 .logros-lideres-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
 .logros-lider-row {
@@ -89,11 +89,11 @@
     display: flex; align-items: center; gap: 6px; min-width: 80px;
 }
 .logros-lider-pos {
-    font-family: var(--font-display); font-size: 0.75rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-2xs); font-weight: 800;
     width: 22px; flex-shrink: 0;
 }
 .logros-lider-nombre {
-    font-family: var(--font-display); font-size: 0.82rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.3px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -107,16 +107,16 @@
 }
 .logros-lider-right { display: flex; align-items: baseline; gap: 1px; }
 .logros-lider-count {
-    font-family: var(--font-display); font-size: 0.95rem; font-weight: 800; color: #FFFFFF;
+    font-family: var(--font-display); font-size: var(--t-md); font-weight: 800; color: #FFFFFF;
 }
-.logros-lider-total { font-size: 0.65rem; color: #444444; }
+.logros-lider-total { font-size: var(--t-3xs); color: #444444; }
 .logros-leyenda { margin-top: 4px; display: flex; flex-direction: column; gap: 8px; }
 .logros-leyenda-row { display: flex; align-items: center; gap: 10px; }
 .logros-leyenda-dot {
     width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
 }
 .logros-leyenda-label {
-    font-family: var(--font-display); font-size: 0.8rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-xs); font-weight: 700;
     letter-spacing: 0.5px;
 }
 .logros-catalogo { display: flex; flex-direction: column; gap: 28px; }
@@ -126,11 +126,11 @@
     background: rgba(255,255,255,0.03); border-radius: 8px;
 }
 .logros-nivel-label {
-    font-family: var(--font-display); font-size: 0.88rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-sm); font-weight: 800;
     letter-spacing: 2px; text-transform: uppercase;
 }
 .logros-nivel-sub {
-    font-size: 0.7rem; color: #555555; font-family: var(--font-display);
+    font-size: var(--t-3xs); color: #555555; font-family: var(--font-display);
     font-weight: 600; letter-spacing: 1px;
 }
 .logros-cards-grid {
@@ -160,37 +160,37 @@
 .logro-bloqueado { filter: saturate(0.1); }
 .badge-lock {
     position: absolute; top: 10px; right: 12px;
-    font-size: 0.8rem; opacity: 0.35;
+    font-size: var(--t-xs); opacity: 0.35;
 }
 .logro-emoji-wrap {
     width: 48px; height: 48px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
 }
-.logro-emoji { font-size: 1.5rem; line-height: 1; }
+.logro-emoji { font-size: var(--t-2xl); line-height: 1; }
 .logro-content { flex: 1; min-width: 0; }
 .logro-nombre {
-    font-family: var(--font-display); font-size: 0.95rem; font-weight: 800;
+    font-family: var(--font-display); font-size: var(--t-md); font-weight: 800;
     letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 4px;
     line-height: 1.1;
 }
 .logro-desc-corta {
-    font-family: var(--font-display); font-size: 0.76rem; font-weight: 600;
+    font-family: var(--font-display); font-size: var(--t-2xs); font-weight: 600;
     letter-spacing: 0.2px; margin-bottom: 5px; line-height: 1.4;
 }
 .logro-desc-larga {
-    font-size: 0.72rem; line-height: 1.55; margin-bottom: 10px;
+    font-size: var(--t-2xs); line-height: 1.55; margin-bottom: 10px;
 }
 .badge-ganadores { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
 .badge-ganador-chip {
-    font-family: var(--font-display); font-size: 0.68rem; font-weight: 700;
+    font-family: var(--font-display); font-size: var(--t-3xs); font-weight: 700;
     letter-spacing: 0.5px; text-transform: uppercase;
     background: rgba(255,255,255,0.08); color: #CCCCCC;
     padding: 3px 9px; border-radius: 20px;
     border: 1px solid rgba(255,255,255,0.1);
 }
 .badge-nadie {
-    font-size: 0.68rem; color: #333333; font-style: italic;
+    font-size: var(--t-3xs); color: #333333; font-style: italic;
     font-family: var(--font-display);
 }
 /* ═══════════════════════════════════════════════════════ */

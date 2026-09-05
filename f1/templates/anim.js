@@ -36,7 +36,9 @@
         if (!panel) return;
         var items = panel.querySelectorAll('.reveal:not(.visible), .row-reveal:not(.visible)');
         items.forEach(function(el, i) {
-            setTimeout(function() { el.classList.add('visible'); }, i * 35);
+            // El retraso se corta a los 400 ms: con 30 elementos, i*35 hacia que
+            // el ultimo tardara mas de un segundo en aparecer.
+            setTimeout(function() { el.classList.add('visible'); }, Math.min(i * 35, 400));
         });
         var counters = panel.querySelectorAll('[data-countup]:not([data-counted])');
         counters.forEach(function(el, i) {
