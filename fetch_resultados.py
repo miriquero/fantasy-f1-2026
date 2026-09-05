@@ -9,10 +9,11 @@ Consulta la API Jolpica y guarda solo lo necesario:
 
 import json
 import time
-import unicodedata
 import urllib.request
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
+
+from f1.normalizacion import normalizar_nombre_carrera
 
 ARCHIVO_RESULTADOS = Path("resultados.json")
 BASE_URL = "https://api.jolpi.ca/ergast/f1/2026"
@@ -24,20 +25,14 @@ NOMBRE_A_ROUND = {
     "Monaco": 6, "Barcelona": 7, "Austria": 8, "Gran Bretana": 9,
     "Belgica": 10, "Hungría": 11, "Paises Bajos": 12, "Italia": 13,
     "Madrid": 14, "Azerbaiyn": 15, "Singapur": 16, "Austin": 17,
-    "Mexico": 18, "Brasil": 19, "Las Vegas": 20, "Qatar": 23,
-    "Abu Dhabi": 24,
+    "Mexico": 18, "Brasil": 19, "Las Vegas": 20, "Qatar": 21,
+    "Abu Dhabi": 22,
 }
 
 COLAPINTO_NUMBER = "43"
 
-def quitar_tildes(texto):
-    return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
-
-import unicodedata  # agregar al principio
-
 def fetch_json(url):
     try:
-        import urllib.request
         req = urllib.request.Request(url, headers={"User-Agent": "FantasyF1/1.0"})
         with urllib.request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read().decode("utf-8"))
@@ -111,7 +106,10 @@ def main():
 
         top11, vr, pos_col = resultado
 
-        resultados[carrera] = {
+        # Se normaliza la clave de carrera (misma normalización que usa fantasy_f1.py
+        # al leer este archivo) para que no se acumulen entradas casi-duplicadas como
+        # "Gran_bretana" y "Gran Bretana" para la misma carrera.
+        resultados[normalizar_nombre_carrera(carrera)] = {
             "resultado_carrera": top11,   # Solo 11 posiciones
             "vuelta_rapida": vr,
             "colapinto": pos_col,

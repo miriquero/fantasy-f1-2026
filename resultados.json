@@ -143,24 +143,7 @@
     "colapinto": "15",
     "_actualizado": "2026-07-16T23:03:11.111653+00:00"
   },
-  "Gran_bretana": {
-    "resultado_carrera": [
-      "Charles Leclerc",
-      "George Russell",
-      "Lewis Hamilton",
-      "Lando Norris",
-      "Isack Hadjar",
-      "Liam Lawson",
-      "Arvid Lindblad",
-      "Gabriel Bortoleto",
-      "Franco Colapinto",
-      "Pierre Gasly"
-    ],
-    "vuelta_rapida": "Andrea Kimi Antonelli",
-    "colapinto": "9",
-    "_actualizado": "2026-07-05T19:30:54.934510+00:00"
-  },
-  "Gran Bretana": {
+  "Gran Bretaña": {
     "resultado_carrera": [
       "Charles Leclerc",
       "George Russell",

@@ -1,2 +1,5 @@
 fantasy-f1-500915-613a0c111715.json
 respuestas_unificadas.csv
+__pycache__/
+*.pyc
+.pytest_cache/
