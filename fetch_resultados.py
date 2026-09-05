@@ -169,6 +169,9 @@ def main():
 
     with open(ARCHIVO_RESULTADOS, "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=2)
+        # Salto de linea final: sin esto, git marca "\ No newline at end
+        # of file" y ensucia el diff de cada corrida del bot.
+        f.write("\n")
 
     print("\n✅ Listo. Archivo resultados.json actualizado con Top 11.")
 
