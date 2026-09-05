@@ -11,6 +11,7 @@ from jinja2 import Environment, FileSystemLoader
 from .badges import generar_logros_panel_html
 from .calendario import generar_calendario_visual, obtener_proxima_carrera
 
+
 DIR_TEMPLATES = Path(__file__).parent / "templates"
 
 _entorno = None
@@ -69,8 +70,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
             medal_emoji = {1: "🥇", 2: "🥈", 3: "🥉"}
             cards = {}
             for _, row in top3.iterrows():
-                pos = int(row['Posición']); email = row['Dirección de correo electrónico']
-                nombre = email.split('@')[0]; pts = row['Puntos']
+                pos = int(row['Posición']); participante = row['Participante']
+                nombre = participante; pts = row['Puntos']
                 iniciales = nombre[:2].upper()
                 cards[pos] = f"""
                 <div class="podium-card podium-{pos}" data-pos="{pos}" onclick="irPerfil({pos-1})" style="cursor:pointer;" title="Ver perfil de {nombre}">
@@ -94,13 +95,13 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         if not resto.empty:
             rows_html = ""
             for _, row in resto.iterrows():
-                pos = row['Posición']; email = row['Dirección de correo electrónico']
-                nombre = email.split('@')[0]; pts = row['Puntos']
+                pos = row['Posición']; participante = row['Participante']
+                nombre = participante; pts = row['Puntos']
                 cambio = row.get('Cambio', '—')
                 rows_html += f"""
                 <tr class="row-reveal" onclick="irPerfil({int(pos)-1})" style="cursor:pointer;" title="Ver perfil de {nombre}">
                     <td><span class="medal plain">{pos}</span></td>
-                    <td><span class="driver-name">{nombre}</span><span class="driver-email">{email}</span></td>
+                    <td><span class="driver-name">{nombre}</span></td>
                     <td><span class="pts-big">{pts}</span></td>
                     <td>{cambio}</td>
                 </tr>"""
@@ -125,17 +126,17 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         carrera = ranking["Carrera"].iloc[0]
         table_rows = ""
         for j, row in ranking.iterrows():
-            email = row['Dirección de correo electrónico']; pts = row['Puntos']
+            participante = row['Participante']; pts = row['Puntos']
             table_rows += (f"<tr><td>{row['Posición']}</td>"
-                           f"<td>{email.split('@')[0]}<span class='driver-email'>{email}</span></td>"
+                           f"<td>{participante}</td>"
                            f"<td><span class='pts-chip'>{pts}</span></td></tr>")
         detalles_html = ""
         for j, row in ranking.iterrows():
-            email = row["Dirección de correo electrónico"]; detalles = row["Detalles"]
+            participante = row["Participante"]; detalles = row["Detalles"]
             detalles_html += f"""
             <div class="detail-row">
                 <button class="detail-toggle" onclick="toggleDetail('det-{i}-{j}')">
-                    <span>{email.split('@')[0]}</span>
+                    <span>{participante}</span>
                     <span class="toggle-icon" id="icon-det-{i}-{j}">＋</span>
                 </button>
                 <div id="det-{i}-{j}" class="detail-body">

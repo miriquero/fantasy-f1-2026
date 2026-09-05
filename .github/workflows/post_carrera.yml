@@ -16,6 +16,9 @@ jobs:
       CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
       CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
       GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+      # Mapa mail -> apodo. Si no esta cargado el workflow igual corre y no
+      # publica ningun mail: muestra la parte de antes del @.
+      PARTICIPANTES_JSON: ${{ secrets.PARTICIPANTES_JSON }}
 
     steps:
       - name: Checkout repository

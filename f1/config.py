@@ -2,7 +2,11 @@
 """Pilotos, calendario de la temporada y rutas de archivos."""
 
 CARPETA_RESPUESTAS = "respuestas"
+
+
 ARCHIVO_RESULTADOS = "resultados.json"
+
+
 PILOTOS = [
     "Max Verstappen", "Arvid Lindblad", "Charles Leclerc", "Lewis Hamilton",
     "Oscar Piastri", "Lando Norris", "George Russell", "Kimi Antonelli",
@@ -11,11 +15,15 @@ PILOTOS = [
     "Fernando Alonso", "Lance Stroll", "Gabriel Bortoletto", "Nico Hulkenberg",
     "Valtteri Bottas", "Sergio Perez", "Yuki Tsunoda"
 ]
+
+
 COL_PUESTOS = [
     "Primer puesto", "Segundo puesto", "Tercer puesto", "Cuarto puesto",
     "Quinto puesto", "Sexto puesto", "Séptimo puesto", "Octavo puesto",
     "Noveno puesto", "Décimo puesto"
 ]
+
+
 CALENDARIO = [
     {"Jornada": "R01", "Carrera": "AUSTRALIA",      "Fecha": "8 MAR",   "Hora Local": "15:00", "Hora Argentina": "01:00",              "FechaISO": "2026-03-08T01:00:00-03:00"},
     {"Jornada": "R02", "Carrera": "CHINA",           "Fecha": "15 MAR",  "Hora Local": "15:00", "Hora Argentina": "04:00",              "FechaISO": "2026-03-15T04:00:00-03:00"},
@@ -42,7 +50,11 @@ CALENDARIO = [
     {"Jornada": "R23", "Carrera": "QATAR",          "Fecha": "29 NOV",  "Hora Local": "19:00", "Hora Argentina": "13:00",              "FechaISO": "2026-11-29T13:00:00-03:00"},
     {"Jornada": "R24", "Carrera": "ABU DHABI",      "Fecha": "06 DIC",  "Hora Local": "17:00", "Hora Argentina": "10:00",              "FechaISO": "2026-12-06T10:00:00-03:00"},
 ]
+
+
 COLORES_PARTICIPANTES = ['#E10600','#00C8FF','#FFD700','#C77DFF','#39FF14','#FF6B35','#00E5CC','#FF69B4']
+
+
 FLAG_MAP = {
     "Australia": "🇦🇺", "China": "🇨🇳", "Japon": "🇯🇵", "Bahrein": "🇧🇭",
     "Arabia saudita": "🇸🇦", "Miami": "🇺🇸", "Canada": "🇨🇦", "Mónaco": "🇲🇨",
@@ -53,6 +65,8 @@ FLAG_MAP = {
     "Mexico": "🇲🇽", "Brasil": "🇧🇷", "Las vegas": "🇺🇸", "Qatar": "🇶🇦",
     "Abu dhabi": "🇦🇪",
 }
+
+
 def hex_to_rgba(hex_color: str, alpha: float) -> str:
     h = hex_color.lstrip('#')
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)

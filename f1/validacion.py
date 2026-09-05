@@ -5,7 +5,10 @@ from typing import Dict
 
 from .config import ARCHIVO_RESULTADOS, PILOTOS
 
+
 CAMPOS_REQUERIDOS = ["resultado_carrera", "vuelta_rapida", "colapinto"]
+
+
 def validar_resultados(resultados_por_carrera: Dict) -> bool:
     """
     Valida que el archivo resultados.json tenga la estructura correcta.

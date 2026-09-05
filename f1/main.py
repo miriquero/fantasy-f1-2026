@@ -21,6 +21,7 @@ from .render import generar_html
 from .scoring import calcular_cambios_posiciones, procesar_carrera
 from .validacion import validar_resultados
 
+
 ARCHIVO_SALIDA_HTML = "ranking_f1.html"
 
 
@@ -91,14 +92,14 @@ def main():
 
     if not all_rankings.empty:
         ranking_acumulado = (
-            all_rankings.groupby("Dirección de correo electrónico", as_index=False)["Puntos"]
+            all_rankings.groupby("Participante", as_index=False)["Puntos"]
             .sum().sort_values("Puntos", ascending=False).reset_index(drop=True)
         )
         ranking_acumulado["Posición"] = ranking_acumulado.index + 1
-        ranking_acumulado = ranking_acumulado[["Posición", "Dirección de correo electrónico", "Puntos"]]
+        ranking_acumulado = ranking_acumulado[["Posición", "Participante", "Puntos"]]
         ranking_acumulado = calcular_cambios_posiciones(all_rankings, ranking_acumulado)
     else:
-        ranking_acumulado = pd.DataFrame(columns=["Posición", "Dirección de correo electrónico", "Puntos", "Cambio"])
+        ranking_acumulado = pd.DataFrame(columns=["Posición", "Participante", "Puntos", "Cambio"])
 
     badges_por_participante = calcular_badges(all_rankings, all_dfs, ranking_acumulado)
 

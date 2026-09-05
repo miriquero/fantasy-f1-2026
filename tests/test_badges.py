@@ -2,7 +2,7 @@ import pandas as pd
 
 from f1.badges import calcular_badges
 
-EMAIL_COL = "Dirección de correo electrónico"
+EMAIL_COL = "Participante"
 
 CARRERAS = ["Carrera 1", "Carrera 2", "Carrera 3", "Carrera 4", "Carrera 5"]
 

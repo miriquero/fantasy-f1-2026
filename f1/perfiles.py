@@ -9,6 +9,7 @@ from .charts import generar_sparkline_perfil
 from .config import COLORES_PARTICIPANTES, hex_to_rgba
 from .scoring import calcular_historial_posiciones
 
+
 def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                            ranking_acumulado: pd.DataFrame,
                            badges_por_participante: Dict[str, List[Dict]]) -> str:
@@ -22,13 +23,13 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
 
     perfiles_html = ""
     for idx, (_, acum_row) in enumerate(ranking_acumulado.iterrows()):
-        email    = acum_row['Dirección de correo electrónico']
-        nombre   = email.split('@')[0]
+        participante    = acum_row['Participante']
+        nombre   = participante
         pos_gral = int(acum_row['Posición'])
         pts_tot  = int(acum_row['Puntos'])
         color    = COLORES_PARTICIPANTES[idx % len(COLORES_PARTICIPANTES)]
 
-        data_part = all_rankings[all_rankings["Dirección de correo electrónico"] == email]
+        data_part = all_rankings[all_rankings["Participante"] == participante]
         pts_por_carrera = [data_part[data_part['Carrera'] == c]['Puntos'].values[0]
                            if c in data_part['Carrera'].values else 0
                            for c in carreras_lista]
@@ -38,7 +39,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
         pos_hist = []
         if not historial_pos.empty:
             for c in carreras_lista:
-                row_h = historial_pos[(historial_pos["Dirección de correo electrónico"] == email) &
+                row_h = historial_pos[(historial_pos["Participante"] == participante) &
                                       (historial_pos["Carrera"] == c)]
                 pos_hist.append(int(row_h["Posición"].values[0]) if not row_h.empty else None)
 
@@ -52,16 +53,16 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
 
         exactos_total = 0
         if not df_all.empty:
-            part_df = df_all[df_all["Dirección de correo electrónico"] == email]
+            part_df = df_all[df_all["Participante"] == participante]
             for _, r in part_df.iterrows():
                 exactos_total += sum(1 for d in str(r['Detalles']).split('<br>') if 'Exacto en P' in d)
 
-        spark_b64  = generar_sparkline_perfil(email, all_rankings)
+        spark_b64  = generar_sparkline_perfil(participante, all_rankings)
         spark_html = (f'<img src="data:image/png;base64,{spark_b64}" alt="Puntos por carrera" class="spark-img">') if spark_b64 else ""
 
         hist_rows = ""
         for c in carreras_lista:
-            row_h = historial_pos[(historial_pos["Dirección de correo electrónico"] == email) &
+            row_h = historial_pos[(historial_pos["Participante"] == participante) &
                                   (historial_pos["Carrera"] == c)]
             pos_c = int(row_h["Posición"].values[0]) if not row_h.empty else "—"
             pts_c = int(data_part[data_part['Carrera'] == c]['Puntos'].values[0]) \
@@ -71,7 +72,7 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
                           f"<td>{medal_c} P{pos_c}</td>"
                           f"<td><span class='pts-chip'>{pts_c}</span></td></tr>")
 
-        badges = badges_por_participante.get(email, [])
+        badges = badges_por_participante.get(participante, [])
         n_badges = len(badges)
         if badges:
             nivel_order = ["BRONCE", "PLATA", "ORO", "LEGENDARIO", "CAMPEÓN"]
@@ -126,7 +127,6 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
                 <div class="perfil-avatar" style="background:{hex_to_rgba(color,0.13)};color:{color};border:1px solid {hex_to_rgba(color,0.27)};">{nombre[:2].upper()}</div>
                 <div class="perfil-info">
                     <div class="perfil-nombre">{nombre}</div>
-                    <div class="perfil-email">{email}</div>
                 </div>
                 <div class="perfil-pos-wrap">
                     {medal_str}
@@ -172,15 +172,19 @@ def generar_perfiles_html(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame
         """
 
     return perfiles_html
+
+
 def generar_perfil_selector_html(ranking_acumulado: pd.DataFrame) -> str:
     """Genera botones de selección para filtrar perfiles por participante."""
     if ranking_acumulado.empty:
         return ""
     btns = '<button class="perfil-sel-btn all-btn active" onclick="filtrarPerfil(this, \'all\')">Todos</button>'
     for idx, (_, row) in enumerate(ranking_acumulado.iterrows()):
-        nombre = row["Dirección de correo electrónico"].split("@")[0]
+        nombre = row["Participante"]
         btns += f'<button class="perfil-sel-btn" onclick="filtrarPerfil(this, {idx})">{nombre}</button>'
     return btns
+
+
 HALL_OF_FAME = [
     {
         "temporada": "2025",
@@ -191,6 +195,8 @@ HALL_OF_FAME = [
         ]
     },
 ]
+
+
 def generar_hof_panel_html() -> str:
     """Genera el panel Hall of Fame con los campeones históricos."""
     bloques = ""
@@ -224,17 +230,19 @@ def generar_hof_panel_html() -> str:
     {bloques}
 </div>
 '''
+
+
 def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
                                       ranking_acumulado: pd.DataFrame) -> str:
     if not all_dfs:
         return '<p class="empty-msg">No hay datos disponibles.</p>'
 
     df_all = pd.concat(all_dfs)
-    total_participantes = df_all['Dirección de correo electrónico'].nunique()
+    total_participantes = df_all['Participante'].nunique()
     total_predicciones  = len(df_all)
     puntos_totales      = df_all['Puntos'].sum()
     promedio_puntos     = puntos_totales / total_predicciones if total_predicciones > 0 else 0
-    lider = ranking_acumulado.iloc[0]['Dirección de correo electrónico'] \
+    lider = ranking_acumulado.iloc[0]['Participante'] \
             if not ranking_acumulado.empty else "N/A"
 
     orden_carreras = carreras_en_orden(df_all['Carrera'].unique().tolist())
@@ -256,8 +264,7 @@ def generar_estadisticas_adicionales(all_dfs: List[pd.DataFrame],
     </div>
     <div class="leader-banner">
         <span class="leader-label">LÍDER ACTUAL</span>
-        <span class="leader-name">{lider.split('@')[0]}</span>
-        <span class="leader-email">{lider}</span>
+        <span class="leader-name">{lider}</span>
     </div>
     <div class="section-label">MÁXIMOS POR CARRERA</div>
     <div class="table-wrapper">

@@ -11,13 +11,14 @@ import pandas as pd
 
 from .calendario import carreras_en_orden
 
+
 def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     if ranking_acumulado.empty:
         return ""
     plt.rcParams['font.family'] = 'DejaVu Sans'
     fig, ax = plt.subplots(figsize=(10, max(4, len(ranking_acumulado) * 0.45 + 1)))
     colors = ['#E10600' if i == 0 else '#2A2A2A' for i in range(len(ranking_acumulado))]
-    bars = ax.barh(ranking_acumulado["Dirección de correo electrónico"],
+    bars = ax.barh(ranking_acumulado["Participante"],
                    ranking_acumulado["Puntos"], color=colors, height=0.65, edgecolor='none')
     for bar, pts in zip(bars, ranking_acumulado["Puntos"]):
         ax.text(bar.get_width() + 1, bar.get_y() + bar.get_height()/2,
@@ -33,8 +34,10 @@ def generar_grafico_barras_acumulado(ranking_acumulado: pd.DataFrame) -> str:
     buf = BytesIO(); fig.savefig(buf, format="png", bbox_inches='tight', dpi=130); buf.seek(0)
     plt.close(fig)
     return base64.b64encode(buf.read()).decode('utf-8')
-def generar_sparkline_perfil(email: str, all_rankings: pd.DataFrame) -> str:
-    data = all_rankings[all_rankings["Dirección de correo electrónico"] == email]
+
+
+def generar_sparkline_perfil(participante: str, all_rankings: pd.DataFrame) -> str:
+    data = all_rankings[all_rankings["Participante"] == participante]
     if data.empty:
         return ""
     carreras = carreras_en_orden(data['Carrera'].unique().tolist())

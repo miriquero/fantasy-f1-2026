@@ -27,6 +27,7 @@ from googleapiclient.discovery import build
 from f1.config import CALENDARIO
 from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
+from f1.participantes import COLUMNA_PARTICIPANTE, nombre_participante
 
 # -- Configuracion ------------------------------------------------------------
 
@@ -126,6 +127,23 @@ def deduplicar(votos, col_email):
                 vistos[email] = (voto, marca)
     return [v for v, _ in vistos.values()]
 
+def _sin_mails(headers, votos, col_email):
+    """Cambia la columna de mail por el apodo publico.
+
+    Los CSV de `respuestas/` estan versionados en un repo publico, asi que el
+    mail no puede llegar al disco. Devuelve (cabeceras, filas) ya traducidas.
+    """
+    if not col_email:
+        return headers, votos
+    cabeceras = [COLUMNA_PARTICIPANTE if h == col_email else h for h in headers]
+    filas = []
+    for voto in votos:
+        fila = {k: v for k, v in voto.items() if k != col_email}
+        fila[COLUMNA_PARTICIPANTE] = nombre_participante(voto.get(col_email, ""))
+        filas.append(fila)
+    return cabeceras, filas
+
+
 def fetch_y_guardar():
     service = get_service()
     sheet   = service.spreadsheets()
@@ -162,8 +180,8 @@ def fetch_y_guardar():
         corte = corte_carrera(carrera)
 
         if marca and corte and marca >= corte:
-            email = row.get(col_email, "") if col_email else ""
-            print(f"  IGNORADO (tardio): {email} -> {carrera} ({row.get('Marca temporal')})")
+            quien = nombre_participante(row.get(col_email, "")) if col_email else "?"
+            print(f"  IGNORADO (tardio): {quien} -> {carrera} ({row.get('Marca temporal')})")
             omitidas += 1
             continue
 
@@ -181,10 +199,11 @@ def fetch_y_guardar():
             duplicados_total += duplicados
 
         ruta = CARPETA / f"respuestas_{nombre_archivo(carrera)}.csv"
+        cabeceras, filas = _sin_mails(headers, votos, col_email)
         with open(ruta, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=headers, extrasaction="ignore")
+            writer = csv.DictWriter(f, fieldnames=cabeceras, extrasaction="ignore")
             writer.writeheader()
-            writer.writerows(votos)
+            writer.writerows(filas)
         print(f"  OK {carrera:20s} -> {ruta} ({len(votos)} votos)")
 
     total = sum(len(v) for v in por_carrera.values()) - duplicados_total

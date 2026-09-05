@@ -3,3 +3,7 @@ respuestas_unificadas.csv
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Mapa mail -> apodo. Las claves son los mails de la familia y este repo es
+# publico: va como Secret PARTICIPANTES_JSON en GitHub Actions.
+participantes.json

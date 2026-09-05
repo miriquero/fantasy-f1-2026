@@ -8,6 +8,7 @@ from .calendario import carreras_en_orden
 from .config import COLORES_PARTICIPANTES, hex_to_rgba
 from .scoring import calcular_historial_posiciones
 
+
 BADGES = {
     "francotirador":  {
         "emoji": "🎯", "nombre": "Francotirador",       "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#E74C3C",
@@ -115,6 +116,8 @@ BADGES = {
         "progreso_max": 1,
     },
 }
+
+
 NIVEL_CONFIG = {
     "BRONCE":    {"color": "#CD7F32", "bg": "rgba(205,127,50,0.08)",  "border": "rgba(205,127,50,0.25)",  "label": "🥉 BRONCE",    "order": 1},
     "PLATA":     {"color": "#C0C0C0", "bg": "rgba(192,192,192,0.08)", "border": "rgba(192,192,192,0.25)", "label": "🥈 PLATA",     "order": 2},
@@ -122,6 +125,8 @@ NIVEL_CONFIG = {
     "LEGENDARIO":{"color": "#4A90E2", "bg": "rgba(74,144,226,0.08)",  "border": "rgba(74,144,226,0.3)",   "label": "💎 LEGENDARIO","order": 4},
     "CAMPEÓN":   {"color": "#F39C12", "bg": "rgba(243,156,18,0.08)",  "border": "rgba(243,156,18,0.3)",   "label": "🏆 CAMPEÓN",   "order": 5},
 }
+
+
 def calcular_pts_p6_p10(detalles_str: str) -> int:
     total = 0
     for line in detalles_str.split('<br>'):
@@ -133,6 +138,8 @@ def calcular_pts_p6_p10(detalles_str: str) -> int:
                 elif '+1' in line: total += 1
                 break
     return total
+
+
 def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                     ranking_acumulado: pd.DataFrame) -> Dict[str, List[Dict]]:
     if all_rankings.empty or ranking_acumulado.empty:
@@ -146,18 +153,18 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
 
     per_race_pos: Dict[str, Dict[str, int]] = {}
     for _, row in all_rankings.iterrows():
-        em = row['Dirección de correo electrónico']
+        em = row['Participante']
         per_race_pos.setdefault(em, {})[row['Carrera']] = int(row['Posición'])
 
     n_part_per_race: Dict[str, int] = {
-        c: int(all_rankings[all_rankings['Carrera'] == c]['Dirección de correo electrónico'].nunique())
+        c: int(all_rankings[all_rankings['Carrera'] == c]['Participante'].nunique())
         for c in carreras
     }
 
     cumul_pos: Dict[str, Dict[str, int]] = {}
     if not historial.empty:
         for _, row in historial.iterrows():
-            em = row['Dirección de correo electrónico']
+            em = row['Participante']
             cumul_pos.setdefault(em, {})[row['Carrera']] = int(row['Posición'])
 
     top1_per_race: Dict[str, List[str]] = {}
@@ -165,14 +172,14 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         sub = all_rankings[all_rankings['Carrera'] == c]
         if not sub.empty:
             mx = sub['Puntos'].max()
-            top1_per_race[c] = sub[sub['Puntos'] == mx]['Dirección de correo electrónico'].tolist()
+            top1_per_race[c] = sub[sub['Puntos'] == mx]['Participante'].tolist()
 
     arch_pts: Dict[str, int] = {
         em: sum(
             calcular_pts_p6_p10(str(r['Detalles']))
-            for _, r in df_all[df_all['Dirección de correo electrónico'] == em].iterrows()
+            for _, r in df_all[df_all['Participante'] == em].iterrows()
         )
-        for em in ranking_acumulado['Dirección de correo electrónico']
+        for em in ranking_acumulado['Participante']
     } if not df_all.empty else {}
     max_arch = max(arch_pts.values(), default=0)
 
@@ -182,14 +189,14 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
     badges_resultado: Dict[str, List[Dict]] = {}
 
     for _, acum_row in ranking_acumulado.iterrows():
-        email    = acum_row['Dirección de correo electrónico']
+        participante    = acum_row['Participante']
         pos_gral = int(acum_row['Posición'])
         badges: List[Dict] = []
 
-        part_df = df_all[df_all['Dirección de correo electrónico'] == email] \
+        part_df = df_all[df_all['Participante'] == participante] \
                   if not df_all.empty else pd.DataFrame()
-        my_rp   = per_race_pos.get(email, {})
-        my_cp   = cumul_pos.get(email, {})
+        my_rp   = per_race_pos.get(participante, {})
+        my_cp   = cumul_pos.get(participante, {})
 
         # 🎯 FRANCOTIRADOR
         p1_ok = sum(1 for _, r in part_df.iterrows() if 'Exacto en P1' in str(r['Detalles']))
@@ -222,7 +229,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Criterio: 4+ aciertos exactos.")})
 
         # 💣 BOMBA DE PUNTOS
-        bomba_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
+        bomba_n = sum(1 for c in carreras if participante in top1_per_race.get(c, []))
         if bomba_n >= 4:
             badges.append({**BADGES["bomba_puntos"],
                 "desc": (f"{BADGES['bomba_puntos']['nivel_emoji']} BRONCE · "
@@ -302,7 +309,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Criterio: 6+ carreras. La zona del caos total.")})
 
         # 🌊 MAREA ALTA
-        marea_n = sum(1 for c in carreras if email in top1_per_race.get(c, []))
+        marea_n = sum(1 for c in carreras if participante in top1_per_race.get(c, []))
         if marea_n >= 7:
             badges.append({**BADGES["marea_alta"],
                 "desc": (f"{BADGES['marea_alta']['nivel_emoji']} ORO · "
@@ -310,11 +317,11 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Criterio: 7+ victorias de fecha.")})
 
         # 🏗️ ARQUITECTO (se comparte en empate)
-        if max_arch > 0 and arch_pts.get(email, 0) == max_arch:
+        if max_arch > 0 and arch_pts.get(participante, 0) == max_arch:
             badges.append({**BADGES["arquitecto"],
                 "desc": (f"{BADGES['arquitecto']['nivel_emoji']} ORO · "
                          f"Mayor puntaje del grupo en predicciones de P6 a P10: "
-                         f"{arch_pts.get(email,0)} pts.")})
+                         f"{arch_pts.get(participante,0)} pts.")})
 
         # 🌌 ORÁCULO
         oraculo_n = sum(
@@ -346,13 +353,15 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Líder del ranking general acumulado. "
                          f"El logro más grande del torneo. Solo uno puede tenerlo.")})
 
-        badges_resultado[email] = badges
+        badges_resultado[participante] = badges
 
     return badges_resultado
+
+
 def generar_logros_panel_html(badges_por_participante: dict) -> str:
     ganadores_por_badge: dict = {k: [] for k in BADGES}
-    for email, badges in badges_por_participante.items():
-        nombre = email.split('@')[0]
+    for participante, badges in badges_por_participante.items():
+        nombre = participante
         for b in badges:
             for key, meta in BADGES.items():
                 if meta["nombre"] == b["nombre"]:
@@ -360,7 +369,7 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
                     break
 
     ranking_badges = sorted(
-        [(email.split('@')[0], len(badges)) for email, badges in badges_por_participante.items()],
+        [(participante, len(badges)) for participante, badges in badges_por_participante.items()],
         key=lambda x: -x[1]
     )
 

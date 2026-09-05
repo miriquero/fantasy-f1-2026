@@ -7,8 +7,11 @@ from typing import Dict
 
 from .config import PILOTOS
 
+
 def _quitar_acentos(s: str) -> str:
     return ''.join(c for c in unicodedata.normalize('NFKD', s) if not unicodedata.combining(c))
+
+
 ALIASES_PILOTOS = {
     # Bearman
     "oliver bearman": "Ollie Bearman",
@@ -40,7 +43,11 @@ ALIASES_PILOTOS = {
     "gabriel bortoleto": "Gabriel Bortoletto",
     "nico hülkenberg": "Nico Hulkenberg",
 }
+
+
 _PILOTOS_NORM = {_quitar_acentos(p).lower(): p for p in PILOTOS}
+
+
 def normalizar_piloto(nombre: str) -> str:
     """Traduce cualquier variante conocida (con o sin tilde, nombre largo, etc.)
     al nombre canónico usado en PILOTOS. Si no reconoce el nombre, lo deja
@@ -53,6 +60,8 @@ def normalizar_piloto(nombre: str) -> str:
     if limpio in ALIASES_PILOTOS:
         return ALIASES_PILOTOS[limpio]
     return str(nombre).strip()
+
+
 def normalizar_resultados_api(resultados_por_carrera: Dict) -> Dict:
     """Normaliza pilotos Y claves de carrera"""
     nuevos = {}
@@ -65,6 +74,8 @@ def normalizar_resultados_api(resultados_por_carrera: Dict) -> Dict:
                 datos["vuelta_rapida"] = normalizar_piloto(datos["vuelta_rapida"])
         nuevos[clave_norm] = datos
     return nuevos
+
+
 def normalizar_nombre_carrera(nombre: str) -> str:
     """Normaliza TODOS los nombres de carrera del calendario"""
     if not nombre:

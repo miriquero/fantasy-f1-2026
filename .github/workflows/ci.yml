@@ -1,8 +1,13 @@
 name: CI
 
+# Antes decia `branches-ignore: master`. Como el trabajo se hace directo en
+# master y sin pull requests, el resultado era que los tests no corrian nunca.
+# Los commits automaticos del bot de ranking no disparan workflows (GitHub no
+# reencadena workflows hechos con GITHUB_TOKEN), asi que no hace falta
+# excluirlos a mano.
 on:
   push:
-    branches-ignore:
+    branches:
       - master
   pull_request:
 

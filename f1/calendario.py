@@ -7,6 +7,7 @@ from typing import List, Tuple
 
 from .config import CALENDARIO, FLAG_MAP
 
+
 def get_orden_carreras() -> List[str]:
     orden = []
     for entry in CALENDARIO:
@@ -17,6 +18,8 @@ def get_orden_carreras() -> List[str]:
         if nombre not in orden:
             orden.append(nombre)
     return orden
+
+
 def carreras_en_orden(available: List[str]) -> List[str]:
     orden_cal = get_orden_carreras()
     available_set = set(available)
@@ -25,6 +28,8 @@ def carreras_en_orden(available: List[str]) -> List[str]:
         if c not in ordenadas:
             ordenadas.append(c)
     return ordenadas
+
+
 def obtener_proxima_carrera() -> Tuple[str, str]:
     ahora = datetime.now(timezone.utc)
     for item in CALENDARIO:
@@ -37,6 +42,8 @@ def obtener_proxima_carrera() -> Tuple[str, str]:
         except Exception:
             continue
     return "FIN DE TEMPORADA", ""
+
+
 def generar_calendario_visual(proxima_iso: str) -> str:
     ahora_utc = datetime.now(timezone.utc)
     total_validas = sum(1 for e in CALENDARIO if e.get("FechaISO"))

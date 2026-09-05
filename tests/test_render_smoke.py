@@ -1,7 +1,8 @@
 """
 Smoke test de punta a punta: corre el pipeline completo contra los datos
 reales del repo (respuestas/*.csv + resultados.json) y valida que el HTML
-generado no tenga fragmentos de template sin resolver ni datos faltantes.
+generado no tenga fragmentos de template sin resolver, datos faltantes ni
+mails de los participantes.
 
 No depende de red ni de credenciales: usa los archivos ya versionados.
 """
@@ -29,6 +30,11 @@ def test_pipeline_completo_genera_html_valido(tmp_path, monkeypatch):
     assert "</html>" in html
     assert "PUNTOS" in html.upper()
 
-    # Participantes reales del torneo deben aparecer en el ranking
-    assert "miriquero@gmail.com" in html
-    assert "alinaiaraceleste@gmail.com" in html
+    # Los participantes reales aparecen, pero por su apodo
+    assert "miriquero" in html
+    assert "alinaiaraceleste" in html
+
+    # Y ningun mail se filtra al HTML publicado: el repo y la pagina son
+    # publicos, asi que esto es una guarda, no un detalle cosmetico.
+    mails = set(re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}", html))
+    assert not mails, f"se filtraron mails al HTML: {sorted(mails)}"
