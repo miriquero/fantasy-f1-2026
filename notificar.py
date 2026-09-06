@@ -65,22 +65,14 @@ def main():
         )
     elif tipo == "recordatorio":
         mensaje = (
-            "🏎️ Che, se cierra la votacion!
-
-"
-            f"{extra}
-
-"
+            "⏳ ULTIMA HORA PARA VOTAR!\n\n"
+            f"{extra}\n\n"
             "El que no vota, no suma."
         )
     elif tipo == "tardios":
         mensaje = (
-            "⏰ Voto fuera de tiempo
-
-"
-            f"{extra}
-
-"
+            "⏰ Voto fuera de tiempo\n\n"
+            f"{extra}\n\n"
             "Ese voto no cuenta para el ranking. La votacion cierra cuando "
             "larga la carrera."
         )

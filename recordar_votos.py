@@ -9,9 +9,10 @@ posibles, el 22%. Y no está repartido parejo -- hay gente que se perdió más d
 la mitad de las carreras. El sistema avisaba cuando el ranking ya estaba
 actualizado, o sea cuando ya era tarde para votar; nadie avisaba antes.
 
-Corre todos los días y decide solo si tiene algo que decir: manda un mensaje
-únicamente cuando falta menos de `VENTANA_HORAS` para la largada, todavía hay
-gente sin votar, y no se avisó ya para esa carrera.
+Corre cada hora y decide solo si tiene algo que decir: manda un mensaje
+únicamente en la última hora antes de la largada, si todavía hay gente sin
+votar y no se avisó ya para esa carrera. El resto de las corridas no hacen
+nada y no molestan a nadie.
 
 Uso:
     python recordar_votos.py
@@ -27,10 +28,12 @@ from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
 from f1.participantes import nombre_participante
 
-# Cuánto antes de la largada se manda el recordatorio. 30 h alcanza para que
-# entre siempre en la corrida diaria del día anterior, sin avisar tan temprano
-# que la gente se olvide igual.
-VENTANA_HORAS = 30
+# El recordatorio sale en la última hora antes de la largada. Como el workflow
+# corre cada hora y GitHub suele disparar los cron con algunos minutos de
+# atraso, la ventana es de 110 minutos y no de 60 exactos: así siempre cae al
+# menos una corrida adentro. Si entran dos, la segunda no manda nada porque el
+# aviso queda registrado en estado_avisos.json.
+VENTANA_MINUTOS = 110
 
 
 def proxima_carrera(ahora=None):
@@ -100,11 +103,11 @@ def main():
         print("No quedan carreras en el calendario.")
         return
 
-    faltan_horas = (largada - datetime.now(timezone.utc)).total_seconds() / 3600
-    print(f"Próxima carrera: {carrera} — larga en {faltan_horas:.1f} h")
+    faltan_min = (largada - datetime.now(timezone.utc)).total_seconds() / 60
+    print(f"Próxima carrera: {carrera} — larga en {faltan_min:.0f} min")
 
-    if faltan_horas > VENTANA_HORAS:
-        print(f"Todavía falta mucho (más de {VENTANA_HORAS} h). No se avisa.")
+    if faltan_min > VENTANA_MINUTOS:
+        print(f"Todavía falta mucho (más de {VENTANA_MINUTOS} min). No se avisa.")
         return
 
     estado = leer_estado()
@@ -118,14 +121,11 @@ def main():
         return
 
     local = largada.astimezone()
-    # "Mañana" solo si de verdad es mañana: la ventana es de 30 h, asi que
-    # a veces la carrera cae el mismo dia.
-    hoy = datetime.now().astimezone().date()
-    cuando = "Hoy" if local.date() == hoy else "Mañana"
     lista = "\n".join(f"• {n}" for n in faltantes)
     anotar("recordatorio",
-           f"{cuando} corre {carrera} y todavía no votaron:\n{lista}\n\n"
-           f"Tienen tiempo hasta las {local:%H:%M}.")
+           f"{carrera} larga en {round(faltan_min)} minutos y todavía "
+           f"no votaron:\n{lista}\n\n"
+           f"La votación cierra a las {local:%H:%M}.")
 
     marcar_avisado(estado, "recordatorios", carrera)
     guardar_estado(estado)

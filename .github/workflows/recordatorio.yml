@@ -2,15 +2,17 @@ name: Recordatorio de votación
 
 # Sobre 13 carreras se dejaron de emitir 29 votos de 130 posibles: el 22%.
 # El aviso de "ranking actualizado" llega cuando ya cerró la votación, o sea
-# cuando ya es tarde. Este workflow avisa ANTES.
+# cuando ya es tarde. Este workflow avisa ANTES, en la última hora.
 #
-# Corre todos los días y el script decide solo si tiene algo que decir: manda
-# el mensaje únicamente si falta menos de 30 h para la largada, todavía hay
-# gente sin votar, y no se avisó ya para esa carrera.
+# Corre CADA HORA porque las carreras largan a horarios muy distintos (desde
+# la 01:00 hasta las 17:00 hora argentina) y no hay un cron que caiga una hora
+# antes de todas. El script decide: si no falta nadie por votar, o si la
+# largada no está en la próxima hora y media, no manda nada. En un repositorio
+# público los minutos de Actions no se cobran.
 
 on:
   schedule:
-    - cron: '0 21 * * *'     # 21:00 UTC = 18:00 ARG, todos los días
+    - cron: '0 * * * *'      # cada hora en punto; el script filtra
   workflow_dispatch:
 
 jobs:
