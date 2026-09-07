@@ -64,27 +64,50 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
         else:
             detalles.append(f"{piloto}: Fuera del top 10 real (pred P{posicion_predicha}, real P{posicion_real}) (0 pts)")
 
-    # Vuelta Rápida
+    # Vuelta rápida y Colapinto: la línea sale SIEMPRE, se haya acertado o no.
+    #
+    # Antes solo aparecían al acertar, y eso confundía a los participantes: los
+    # pilotos del top 10 muestran su línea aunque den 0 puntos ("Fuera del top
+    # 10 real"), así que cuando estas dos desaparecían parecía que el sistema
+    # se las había salteado, en vez de que se habían errado.
     vr = str(row.get("Vuelta Rápida", "")).strip()
-    if vr and vr == vuelta_rapida_real:
+    if not vuelta_rapida_real:
+        detalles.append(
+            f"Vuelta rápida: {vr or 'sin predicción'} — sin dato oficial (0 pts)")
+    elif vr and vr == vuelta_rapida_real:
         puntos += 10
         detalles.append(f"Vuelta rápida: {vr} (+10)")
+    elif vr:
+        detalles.append(
+            f"Vuelta rápida: {vr} — la hizo {vuelta_rapida_real} (0 pts)")
+    else:
+        detalles.append(
+            f"Vuelta rápida: sin predicción — la hizo {vuelta_rapida_real} (0 pts)")
 
-    # Colapinto
+    pred_colapinto_str = str(row.get("Franco Colapinto", "")).strip()
     try:
-        pred_colapinto_str = str(row.get("Franco Colapinto", "")).strip()
         pred_colapinto = convertir_posicion_a_numero(pred_colapinto_str)
-        if pred_colapinto == colapinto_real:
-            puntos += 10
-            detalles.append(f"Colapinto: EXACTO (+10)")
-        elif abs(pred_colapinto - colapinto_real) == 1 and colapinto_real != 0:
-            puntos += 5
-            detalles.append(f"Colapinto: diferencia de 1 (+5)")
     except (ValueError, TypeError):
-        # No cargó la predicción de Colapinto, o la escribió de una forma que
-        # no sabemos leer: no suma nada. Se atrapa solo eso a propósito; un
-        # `except:` pelado tapaba tambien errores de programación nuestros.
-        pass
+        # No cargó la predicción, o la escribió de una forma que no sabemos
+        # leer. Se atrapa solo eso a propósito; un `except:` pelado tapaba
+        # también errores de programación nuestros.
+        pred_colapinto = None
+
+    if pred_colapinto is None:
+        detalles.append("Colapinto: sin predicción (0 pts)")
+    elif not colapinto_real:
+        detalles.append(
+            f"Colapinto: pred P{pred_colapinto} — no terminó la carrera (0 pts)")
+    elif pred_colapinto == colapinto_real:
+        puntos += 10
+        detalles.append(f"Colapinto: Exacto en P{pred_colapinto} (+10)")
+    elif abs(pred_colapinto - colapinto_real) == 1:
+        puntos += 5
+        detalles.append(
+            f"Colapinto: Diff 1 (pred P{pred_colapinto}, real P{colapinto_real}) (+5)")
+    else:
+        detalles.append(
+            f"Colapinto: pred P{pred_colapinto}, terminó P{colapinto_real} (0 pts)")
 
     detalle_str = "<br>".join(detalles) if detalles else "Sin puntos"
     return puntos, detalle_str

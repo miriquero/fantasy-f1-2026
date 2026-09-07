@@ -61,7 +61,7 @@ def test_calcular_puntos_colapinto_exacto():
     row = _fila(**{"Franco Colapinto": "Décimo Puesto"})
     puntos, detalle = calcular_puntos_y_detalles(row, {}, "", 10)
     assert puntos == 10
-    assert "Colapinto: EXACTO" in detalle
+    assert "Colapinto: Exacto en P10 (+10)" in detalle
 
 
 def test_calcular_puntos_p10_predicho_p11_real_es_diferencia_de_uno():
