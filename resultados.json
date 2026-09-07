@@ -93,11 +93,11 @@
     "resultado_carrera": [
       "Andrea Kimi Antonelli",
       "Lewis Hamilton",
-      "Pierre Gasly",
       "Isack Hadjar",
       "Oscar Piastri",
       "Liam Lawson",
       "Arvid Lindblad",
+      "Pierre Gasly",
       "Alexander Albon",
       "Esteban Ocon",
       "Fernando Alonso",
@@ -105,7 +105,7 @@
     ],
     "vuelta_rapida": "Andrea Kimi Antonelli",
     "colapinto": "14",
-    "_actualizado": "2026-09-01T00:52:54.757937+00:00"
+    "_actualizado": "2026-09-07T00:53:18.325588+00:00"
   },
   "Barcelona": {
     "resultado_carrera": [
@@ -214,5 +214,23 @@
     "vuelta_rapida": "Charles Leclerc",
     "colapinto": "14",
     "_actualizado": "2026-09-01T00:52:54.757937+00:00"
+  },
+  "Italia": {
+    "resultado_carrera": [
+      "Andrea Kimi Antonelli",
+      "George Russell",
+      "Max Verstappen",
+      "Lando Norris",
+      "Oscar Piastri",
+      "Lewis Hamilton",
+      "Pierre Gasly",
+      "Arvid Lindblad",
+      "Franco Colapinto",
+      "Yuki Tsunoda",
+      "Gabriel Bortoleto"
+    ],
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "9",
+    "_actualizado": "2026-09-07T00:53:18.325588+00:00"
   }
 }
