@@ -1,0 +1,5 @@
+{
+  "_leeme": "Que avisos ya se mandaron, para no repetirlos. Lo escriben solos fetch_votos.py y recordar_votos.py. Se versiona para que la memoria sobreviva entre corridas del bot, y porque si el archivo no existe los pasos de git del workflow abortan con 'pathspec did not match'.",
+  "tardios": [],
+  "recordatorios": []
+}

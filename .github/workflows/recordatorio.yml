@@ -56,10 +56,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet estado_avisos.json 2>/dev/null; then
+          # Mismo motivo que en post_carrera.yml: `git diff --quiet <archivo>`
+          # aborta si el archivo no existe todavía, y estado_avisos.json recién
+          # aparece con el primer aviso.
+          if [ -z "$(git status --porcelain -- estado_avisos.json)" ]; then
             echo "Sin cambios de estado."
           else
-            git add estado_avisos.json
+            git add -A -- estado_avisos.json
             git commit -m "Auto: recordatorio de votación enviado"
             git push
           fi

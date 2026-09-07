@@ -67,10 +67,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          if git diff --quiet resultados.json respuestas/ ranking_f1.html estado_avisos.json; then
+          # Se usa `git status --porcelain` y no `git diff --quiet <archivos>`
+          # porque diff aborta con "fatal: no such path in the working tree" si
+          # alguno de los archivos todavía no existe. estado_avisos.json recién
+          # aparece la primera vez que hay un aviso que dar, así que hasta
+          # entonces este paso moría: el ranking se generaba bien y no se
+          # publicaba nunca. status tolera rutas que no existen.
+          CAMBIOS=$(git status --porcelain -- resultados.json respuestas/ ranking_f1.html estado_avisos.json)
+          if [ -z "$CAMBIOS" ]; then
             echo "No hay cambios nuevos."
           else
-            git add resultados.json respuestas/ ranking_f1.html estado_avisos.json
+            git add -A -- resultados.json respuestas/ ranking_f1.html estado_avisos.json
             git commit -m "Auto: Actualización diaria del ranking - $(date +'%Y-%m-%d %H:%M')"
             git push
             echo "Cambios subidos correctamente."
