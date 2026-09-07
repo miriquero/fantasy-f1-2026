@@ -110,6 +110,13 @@ def main():
         print(f"Todavía falta mucho (más de {VENTANA_MINUTOS} min). No se avisa.")
         return
 
+    # GitHub dispara los cron con atraso. Un atraso normal (de minutos) igual
+    # sirve: el aviso sale mas tarde pero a tiempo. Uno que pase la largada, no:
+    # avisar de una votacion ya cerrada solo genera reclamos.
+    if faltan_min <= 0:
+        print("La carrera ya largó. La votación está cerrada, no se avisa.")
+        return
+
     estado = leer_estado()
     if ya_avisado(estado, "recordatorios", carrera):
         print("Ya se mandó el recordatorio de esta carrera.")
