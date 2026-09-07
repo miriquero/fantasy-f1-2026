@@ -1,0 +1,13 @@
+# Fines de línea normalizados a LF dentro del repositorio.
+#
+# Sin esto había un tironeo permanente: el módulo csv de Python escribe \r\n,
+# así que el bot (que corre en Linux) commiteaba los CSV con CRLF, y cualquier
+# commit hecho desde Windows los convertía de vuelta a LF. Cada corrida
+# reescribía los archivos enteros sin que cambiara un solo dato, ensuciando
+# todos los diffs y arriesgando conflictos.
+* text=auto eol=lf
+
+# Binarios: git no debe tocarlos.
+*.png binary
+*.ico binary
+*.jpg binary

@@ -230,7 +230,12 @@ def fetch_y_guardar():
         ruta = CARPETA / f"respuestas_{nombre_archivo(carrera)}.csv"
         cabeceras, filas = _sin_mails(headers, votos, col_email)
         with open(ruta, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=cabeceras, extrasaction="ignore")
+            # El modulo csv termina las lineas con \r\n por defecto. Como el
+            # bot corre en Linux y yo edito desde Windows, cada lado guardaba
+            # los CSV con un fin de linea distinto y se pisaban el archivo
+            # entero en cada commit, sin que cambiara un solo dato.
+            writer = csv.DictWriter(f, fieldnames=cabeceras,
+                                    extrasaction="ignore", lineterminator="\n")
             writer.writeheader()
             writer.writerows(filas)
         print(f"  OK {carrera:20s} -> {ruta} ({len(votos)} votos)")
