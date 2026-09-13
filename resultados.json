@@ -232,5 +232,23 @@
     "vuelta_rapida": "Andrea Kimi Antonelli",
     "colapinto": "9",
     "_actualizado": "2026-09-07T00:53:18.325588+00:00"
+  },
+  "Madrid": {
+    "resultado_carrera": [
+      "Andrea Kimi Antonelli",
+      "Max Verstappen",
+      "Lando Norris",
+      "Charles Leclerc",
+      "George Russell",
+      "Liam Lawson",
+      "Franco Colapinto",
+      "Oscar Piastri",
+      "Arvid Lindblad",
+      "Nico Hülkenberg",
+      "Esteban Ocon"
+    ],
+    "vuelta_rapida": "George Russell",
+    "colapinto": "7",
+    "_actualizado": "2026-09-13T23:44:56.405727+00:00"
   }
 }
