@@ -21,7 +21,7 @@ BADGES = {
     "francotirador":  {
         "emoji": "🎯", "nombre": "Francotirador",       "nivel": "BRONCE",    "nivel_emoji": "🥉", "hex": "#E74C3C",
         "desc_corta":  "Acertar P1 exacto en 5 carreras distintas",
-        "desc_larga":  "No tienen que ser seguidas. Pero acertar 5 ganadores en 22 carreras requiere leer bien hasta las fechas más impredecibles.",
+        "desc_larga":  "No tienen que ser seguidas. Pero acertar 5 ganadores en 23 carreras requiere leer bien hasta las fechas más impredecibles.",
         "criterio":    "Acertar la posición exacta del ganador (P1) en 5 o más carreras de la temporada.",
         "progreso_max": 5,
     },
@@ -58,7 +58,7 @@ BADGES = {
         "desc_corta":  "Nunca terminar último en el ranking de ninguna carrera",
         "desc_larga":  "Con 10-12 jugadores, evitar el fondo absoluto durante toda la temporada es un logro de consistencia pura.",
         "criterio":    "No terminar nunca último en el ranking individual de ninguna carrera disputada.",
-        "progreso_max": 22,
+        "progreso_max": 23,
     },
     "remontada_epica":{
         "emoji": "📈", "nombre": "Remontada Épica",       "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#27AE60",
@@ -76,9 +76,9 @@ BADGES = {
     },
     "consistente":    {
         "emoji": "⚙️", "nombre": "Consistente",           "nivel": "PLATA",     "nivel_emoji": "🥈", "hex": "#7F8C8D",
-        "desc_corta":  "Top-50% del grupo en 17 de las 22 carreras",
+        "desc_corta":  "Top-50% del grupo en 17 de las 23 carreras",
         "desc_larga":  "Solo 5 fechas malas permitidas en toda la temporada. No hay margen para rachas negativas prolongadas.",
-        "criterio":    "Terminar en el top-50% del grupo en al menos 17 de las 22 carreras.",
+        "criterio":    "Terminar en el top-50% del grupo en al menos 17 de las 23 carreras.",
         "progreso_max": 17,
     },
     "apostador_nato": {
@@ -483,7 +483,7 @@ def generar_logros_panel_html(badges_por_participante: dict) -> str:
         <div class="logros-hero-content">
             <div class="logros-eyebrow">Sistema de Logros</div>
             <h2 class="logros-title">HAL<span>L OF</span><br>FAME</h2>
-            <p class="logros-subtitle">15 badges · 5 niveles · 22 carreras · Solo los mejores los desbloquean</p>
+            <p class="logros-subtitle">15 badges · 5 niveles · 23 carreras · Solo los mejores los desbloquean</p>
             <div class="logros-hero-stats">
                 <div class="logros-hero-stat">
                     <span class="logros-hero-num">{total_otorgados}</span>
