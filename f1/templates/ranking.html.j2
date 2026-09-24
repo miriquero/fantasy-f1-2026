@@ -826,6 +826,10 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
 </head>
 <body>
 
+<!-- Banderas y trazados de circuito. Se define una sola vez y cada
+     tarjeta lo referencia con <use>, asi no se repite el dibujo. -->
+{{ SPRITE }}
+
 <header class="site-header">
 <div class="header-inner">
     <div class="header-brand">

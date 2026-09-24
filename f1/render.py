@@ -181,6 +181,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
     # perfil_selector_html y hof_panel_html ya llegan como params
 
     return _plantilla().render(
+        SPRITE=_leer_asset("sprite.svg"),
         CAL_CSS=_leer_asset("calendario.css"),
         LOGROS_CSS=_leer_asset("logros.css"),
         ANIM_CSS=_leer_asset("anim.css"),

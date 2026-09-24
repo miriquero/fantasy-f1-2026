@@ -59,13 +59,23 @@ CALENDARIO = [
 ]
 
 
-FLAG_MAP = {
-    "Australia": "🇦🇺", "China": "🇨🇳", "Japon": "🇯🇵", "Bahrein": "🇧🇭",
-    "Arabia saudita": "🇸🇦", "Miami": "🇺🇸", "Canada": "🇨🇦", "Mónaco": "🇲🇨",
-    "Monaco": "🇲🇨", "Barcelona": "🇪🇸", "Austria": "🇦🇹", "Gran bretaña": "🇬🇧",
-    "Gran bretana": "🇬🇧", "Bélgica": "🇧🇪", "Belgica": "🇧🇪", "Hungría": "🇭🇺",
-    "Hungria": "🇭🇺", "Países bajos": "🇳🇱", "Paises bajos": "🇳🇱", "Italia": "🇮🇹",
-    "Madrid": "🇪🇸", "Azerbaiyn": "🇦🇿", "Singapur": "🇸🇬", "Austin": "🇺🇸",
-    "Mexico": "🇲🇽", "Brasil": "🇧🇷", "Las vegas": "🇺🇸", "Qatar": "🇶🇦",
-    "Abu dhabi": "🇦🇪",
+# Pais de cada carrera, en codigo ISO, para buscar su bandera en el sprite.
+#
+# Antes la bandera se guardaba aca como emoji. En Windows no se veia: una
+# bandera emoji son dos letras invisibles que la fuente tiene que combinar en
+# un dibujo, y Windows no trae ninguna fuente que lo haga. En los telefonos se
+# veia y en una PC no. Ahora son SVG de verdad (f1/templates/sprite.svg) y aca
+# solo queda a que pais corresponde cada carrera.
+#
+# Las claves son el nombre YA normalizado: una sola grafia por carrera, en vez
+# de las variantes que hacian falta cuando la busqueda era sensible a acentos.
+PAIS_MAP = {
+    "Australia": "au",   "China": "cn",         "Japon": "jp",
+    "Miami": "us",       "Canada": "ca",        "Monaco": "mc",
+    "Barcelona": "es",   "Austria": "at",       "Gran Bretaña": "gb",
+    "Belgica": "be",     "Hungría": "hu",       "Países Bajos": "nl",
+    "Italia": "it",      "Madrid": "es",        "Azerbaiyan": "az",
+    "Bahrein": "bh",     "Singapur": "sg",      "Austin": "us",
+    "Mexico": "mx",      "Brasil": "br",        "Las Vegas": "us",
+    "Qatar": "qa",       "Abu Dhabi": "ae",     "Arabia Saudita": "sa",
 }

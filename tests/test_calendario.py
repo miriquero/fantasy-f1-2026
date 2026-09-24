@@ -81,25 +81,58 @@ def test_una_carrera_que_la_api_no_conoce_se_saltea_sin_romper(capsys):
 
 
 def test_toda_carrera_tiene_su_bandera():
-    """Ninguna debe caer en la bandera generica.
+    """Ninguna carrera puede quedarse sin pais.
 
     La busqueda anterior era sensible a acentos: comparaba "BAHRÉIN".capitalize()
     contra la clave "Bahrein" del mapa, y "AZERBAIYÁN" contra "Azerbaiyn". Las
     dos salian con el cuadriculado generico y nadie lo noto hasta mirar el panel.
     """
-    from f1.calendario import bandera
+    from f1.calendario import codigo_pais
 
     for nombre in carreras_del_torneo():
-        assert bandera(nombre) != "🏁", f"{nombre} se quedo sin bandera"
+        assert codigo_pais(nombre), f"{nombre} se quedo sin pais"
 
 
 def test_la_bandera_se_encuentra_con_cualquier_grafia():
-    from f1.calendario import bandera
+    from f1.calendario import codigo_pais
 
     for variantes in [("BAHRÉIN", "Bahrein", "bahréin"),
                       ("AZERBAIYÁN", "Azerbaiyan", "azerbaiyn"),
                       ("GRAN BRETAÑA", "Gran Bretana", "gran bretaña"),
                       ("PAÍSES BAJOS", "Paises Bajos", "paises_bajos")]:
-        banderas = {bandera(v) for v in variantes}
-        assert len(banderas) == 1, f"{variantes} dan banderas distintas: {banderas}"
-        assert "🏁" not in banderas
+        codigos = {codigo_pais(v) for v in variantes}
+        assert len(codigos) == 1, f"{variantes} dan paises distintos: {codigos}"
+        assert "" not in codigos
+
+
+def test_la_bandera_es_svg_y_no_un_emoji():
+    """En Windows el emoji no se dibuja: son dos letras invisibles que la
+    fuente tiene que combinar, y Windows no trae ninguna que lo haga."""
+    from f1.calendario import bandera
+
+    markup = bandera("BAHRÉIN")
+    assert markup.startswith("<svg")
+    assert 'href="#b-bh"' in markup
+    # Ningun indicador regional (el rango de los emoji de bandera).
+    assert not any("\U0001F1E6" <= c <= "\U0001F1FF" for c in markup)
+
+
+def test_cada_carrera_referencia_simbolos_que_existen():
+    """Un <use> a un id inexistente no dibuja nada y no avisa.
+
+    Pasa apenas se agrega una carrera al calendario y no se regenera el
+    sprite: la tarjeta sale sin bandera ni trazado, en silencio.
+    """
+    import re
+    from pathlib import Path
+
+    from f1.calendario import bandera, circuito
+
+    sprite = (Path(__file__).resolve().parent.parent
+              / "f1" / "templates" / "sprite.svg").read_text(encoding="utf-8")
+    definidos = set(re.findall(r'<symbol id="([^"]+)"', sprite))
+
+    for nombre in carreras_del_torneo():
+        for markup in (bandera(nombre), circuito(nombre)):
+            for ref in re.findall(r'href="#([^"]+)"', markup):
+                assert ref in definidos, f"{nombre}: falta el simbolo '{ref}' en el sprite"

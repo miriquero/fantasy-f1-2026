@@ -5,23 +5,50 @@ import re
 from datetime import datetime, timezone
 from typing import List, Tuple
 
-from .config import CALENDARIO, FLAG_MAP
-from .normalizacion import normalizar_nombre_carrera
+from .config import CALENDARIO, PAIS_MAP
+from .normalizacion import _quitar_acentos, normalizar_nombre_carrera
 
-# FLAG_MAP tiene las banderas escritas de muchas formas ("Monaco" y "Mónaco",
-# "Gran bretana" y "Gran bretaña"), justamente porque la busqueda anterior era
-# sensible a acentos y mayusculas: hacia .capitalize() y comparaba literal. Aun
-# asi fallaba, porque el mapa guarda "Bahrein" y el calendario dice "BAHRÉIN",
-# y "Azerbaiyn" contra "AZERBAIYÁN". Las dos salian con la bandera generica.
-#
-# Pasando todo por el normalizador canonico, cualquier grafia encuentra su
-# bandera y las variantes duplicadas del mapa dejan de hacer falta.
-_BANDERAS = {normalizar_nombre_carrera(k): v for k, v in FLAG_MAP.items()}
+# Se indexa por el nombre normalizado, asi cualquier grafia del calendario o
+# del formulario encuentra lo suyo. La busqueda anterior comparaba
+# `.capitalize()` contra la clave literal y era sensible a acentos: "BAHRÉIN"
+# no encontraba "Bahrein" ni "AZERBAIYÁN" encontraba "Azerbaiyn".
+_PAISES = {normalizar_nombre_carrera(k): v for k, v in PAIS_MAP.items()}
+
+
+def _ident(nombre: str) -> str:
+    """Identificador dentro del sprite: 'GRAN BRETAÑA' -> 'gran-bretana'."""
+    return _quitar_acentos(normalizar_nombre_carrera(nombre)).lower().replace(" ", "-")
+
+
+def codigo_pais(nombre: str) -> str:
+    """Codigo ISO del pais de una carrera, o '' si no se conoce."""
+    return _PAISES.get(normalizar_nombre_carrera(nombre), "")
 
 
 def bandera(nombre: str) -> str:
-    """Bandera de una carrera, se escriba como se escriba."""
-    return _BANDERAS.get(normalizar_nombre_carrera(nombre), "🏁")
+    """Bandera de una carrera, como SVG.
+
+    Antes esto devolvia un emoji y en Windows no se veia: una bandera emoji
+    son dos letras invisibles que la fuente tiene que combinar en un dibujo, y
+    Windows no trae ninguna fuente que lo haga. Ahora sale del sprite, que es
+    SVG de verdad y se ve en cualquier sistema.
+    """
+    cc = codigo_pais(nombre)
+    if not cc:
+        return ""
+    return (f'<svg class="cal-bandera" viewBox="0 0 4 3" role="img" '
+            f'aria-label="{nombre}"><use href="#b-{cc}"/></svg>')
+
+
+def circuito(nombre: str) -> str:
+    """Trazado del circuito, como SVG.
+
+    Es el dibujo de la pista, no una foto: una foto tiene derechos y pesa
+    megas, y el trazado se reconoce igual. Sale de datos abiertos de F1
+    (ver el generador del sprite).
+    """
+    return (f'<svg class="cal-circuito" viewBox="0 0 100 100" aria-hidden="true">'
+            f'<use href="#c-{_ident(nombre)}"/></svg>')
 
 
 def get_orden_carreras() -> List[str]:
@@ -147,8 +174,11 @@ def generar_calendario_visual(proxima_iso: str) -> str:
         card = (
             f'<div class="cal-card {status} reveal">'
             f'<span class="rnd-badge">{td(jornada_limpio)}</span>'
+            f'{circuito(nombre_limpio)}'
+            f'<div class="cal-titulo">'
             f'<span class="cal-flag">{flag}</span>'
             f'<div class="cal-name">{td(nombre_limpio)}</div>'
+            f'</div>'
             f'<div class="cal-date-row">{td(fecha_limpio)}</div>'
             f'<div class="cal-time-arg">ARG {td(hora_arg_limpio)}</div>'
             f'{pill}'
