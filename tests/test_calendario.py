@@ -68,11 +68,38 @@ def test_los_rounds_salen_de_la_api_y_no_de_una_tabla_a_mano():
     mapa = fetch_resultados.rounds_del_torneo(calendario_api)
     assert mapa["SINGAPUR"] == 17
     assert mapa["ABU DHABI"] == 23
-    # La de Malasia no esta en el torneo, asi que no debe aparecer.
-    assert len(mapa) == 2
+    # El GP de Bahrein se corre en Malasia y AHORA SI forma parte del torneo:
+    # no se habia cancelado, se habia mudado. Se empareja solo por fecha.
+    assert mapa["BAHRÉIN"] == 16
+    assert len(mapa) == 3
 
 
 def test_una_carrera_que_la_api_no_conoce_se_saltea_sin_romper(capsys):
     mapa = fetch_resultados.rounds_del_torneo({"2026-12-06": (23, "Abu Dhabi Grand Prix")})
     assert list(mapa) == ["ABU DHABI"]
     assert "AVISO" in capsys.readouterr().out
+
+
+def test_toda_carrera_tiene_su_bandera():
+    """Ninguna debe caer en la bandera generica.
+
+    La busqueda anterior era sensible a acentos: comparaba "BAHRÉIN".capitalize()
+    contra la clave "Bahrein" del mapa, y "AZERBAIYÁN" contra "Azerbaiyn". Las
+    dos salian con el cuadriculado generico y nadie lo noto hasta mirar el panel.
+    """
+    from f1.calendario import bandera
+
+    for nombre in carreras_del_torneo():
+        assert bandera(nombre) != "🏁", f"{nombre} se quedo sin bandera"
+
+
+def test_la_bandera_se_encuentra_con_cualquier_grafia():
+    from f1.calendario import bandera
+
+    for variantes in [("BAHRÉIN", "Bahrein", "bahréin"),
+                      ("AZERBAIYÁN", "Azerbaiyan", "azerbaiyn"),
+                      ("GRAN BRETAÑA", "Gran Bretana", "gran bretaña"),
+                      ("PAÍSES BAJOS", "Paises Bajos", "paises_bajos")]:
+        banderas = {bandera(v) for v in variantes}
+        assert len(banderas) == 1, f"{variantes} dan banderas distintas: {banderas}"
+        assert "🏁" not in banderas

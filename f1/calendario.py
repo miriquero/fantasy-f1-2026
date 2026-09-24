@@ -8,6 +8,21 @@ from typing import List, Tuple
 from .config import CALENDARIO, FLAG_MAP
 from .normalizacion import normalizar_nombre_carrera
 
+# FLAG_MAP tiene las banderas escritas de muchas formas ("Monaco" y "Mónaco",
+# "Gran bretana" y "Gran bretaña"), justamente porque la busqueda anterior era
+# sensible a acentos y mayusculas: hacia .capitalize() y comparaba literal. Aun
+# asi fallaba, porque el mapa guarda "Bahrein" y el calendario dice "BAHRÉIN",
+# y "Azerbaiyn" contra "AZERBAIYÁN". Las dos salian con la bandera generica.
+#
+# Pasando todo por el normalizador canonico, cualquier grafia encuentra su
+# bandera y las variantes duplicadas del mapa dejan de hacer falta.
+_BANDERAS = {normalizar_nombre_carrera(k): v for k, v in FLAG_MAP.items()}
+
+
+def bandera(nombre: str) -> str:
+    """Bandera de una carrera, se escriba como se escriba."""
+    return _BANDERAS.get(normalizar_nombre_carrera(nombre), "🏁")
+
 
 def get_orden_carreras() -> List[str]:
     orden = []
@@ -77,13 +92,7 @@ def generar_calendario_visual(proxima_iso: str) -> str:
         fecha_limpio   = re.sub(r'<[^>]+>', '', entry["Fecha"]).strip()
         hora_arg_limpio = re.sub(r'<[^>]+>', '', entry["Hora Argentina"]).strip()
 
-        nombre_key = nombre_limpio.capitalize()
-        flag = FLAG_MAP.get(nombre_key, "🏁")
-        if flag == "🏁":
-            for k, v in FLAG_MAP.items():
-                if k.lower() == nombre_limpio.lower():
-                    flag = v
-                    break
+        flag = bandera(nombre_limpio)
 
         iso = entry.get("FechaISO")
 

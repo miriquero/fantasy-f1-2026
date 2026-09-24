@@ -28,12 +28,19 @@ from f1.consola import configurar_salida_utf8
 from f1.normalizacion import normalizar_nombre_carrera
 from f1.participantes import nombre_participante
 
-# El recordatorio sale en la última hora antes de la largada. Como el workflow
-# corre cada hora y GitHub suele disparar los cron con algunos minutos de
-# atraso, la ventana es de 110 minutos y no de 60 exactos: así siempre cae al
-# menos una corrida adentro. Si entran dos, la segunda no manda nada porque el
-# aviso queda registrado en estado_avisos.json.
-VENTANA_MINUTOS = 110
+# Dos ventanas, y el motivo es incómodo pero medible: GitHub NO ejecuta los
+# cron programados como uno espera. Con `cron: 0 * * * *` (24 por día) se
+# midieron 5,6 corridas diarias, el 23%, con huecos de 4,1 h de mediana y
+# hasta 10,6 h. Con una ventana de 110 minutos, el recordatorio de Madrid
+# nunca salió: entre las 03:28 y las 14:05 de ese día no corrió nada, y la
+# carrera era 13:00. Lauta y Sergio no votaron.
+#
+#   ANCHA  -> asegura la entrega. Con huecos de 10,6 h como máximo, una
+#             ventana de 20 h prácticamente siempre atrapa alguna corrida.
+#   ULTIMA -> es un extra. Solo sale si además cae una corrida cerca de la
+#             largada, y entonces avisa con urgencia.
+VENTANA_ANCHA = 20 * 60
+VENTANA_ULTIMA = 2 * 60
 
 
 def proxima_carrera(ahora=None):
@@ -97,6 +104,18 @@ def ya_votaron(nombre_carrera):
     return votaron
 
 
+def cuanto_falta(minutos: float) -> str:
+    """'47 minutos', '3 horas', '1 día' — como lo diría una persona."""
+    minutos = round(minutos)
+    if minutos < 90:
+        return f"{minutos} minuto{'s' if minutos != 1 else ''}"
+    horas = round(minutos / 60)
+    if horas < 24:
+        return f"{horas} hora{'s' if horas != 1 else ''}"
+    dias = round(horas / 24)
+    return f"{dias} día{'s' if dias != 1 else ''}"
+
+
 def main():
     carrera, largada = proxima_carrera()
     if not carrera:
@@ -106,20 +125,23 @@ def main():
     faltan_min = (largada - datetime.now(timezone.utc)).total_seconds() / 60
     print(f"Próxima carrera: {carrera} — larga en {faltan_min:.0f} min")
 
-    if faltan_min > VENTANA_MINUTOS:
-        print(f"Todavía falta mucho (más de {VENTANA_MINUTOS} min). No se avisa.")
-        return
-
-    # GitHub dispara los cron con atraso. Un atraso normal (de minutos) igual
-    # sirve: el aviso sale mas tarde pero a tiempo. Uno que pase la largada, no:
-    # avisar de una votacion ya cerrada solo genera reclamos.
+    # Avisar de una votacion ya cerrada solo genera reclamos.
     if faltan_min <= 0:
         print("La carrera ya largó. La votación está cerrada, no se avisa.")
         return
 
+    if faltan_min > VENTANA_ANCHA:
+        print(f"Todavía falta mucho (más de {VENTANA_ANCHA} min). No se avisa.")
+        return
+
+    # Dos avisos con memoria separada. El ancho es el que asegura la entrega;
+    # el urgente es un extra que sale solo si alguna corrida cae cerca.
+    urgente = faltan_min <= VENTANA_ULTIMA
+    clave = "ultima_hora" if urgente else "recordatorios"
+
     estado = leer_estado()
-    if ya_avisado(estado, "recordatorios", carrera):
-        print("Ya se mandó el recordatorio de esta carrera.")
+    if ya_avisado(estado, clave, carrera):
+        print(f"Ya se mandó el aviso '{clave}' de esta carrera.")
         return
 
     faltantes = sorted(plantel() - ya_votaron(carrera))
@@ -129,14 +151,19 @@ def main():
 
     local = largada.astimezone()
     lista = "\n".join(f"• {n}" for n in faltantes)
-    anotar("recordatorio",
-           f"{carrera} larga en {round(faltan_min)} minutos y todavía "
-           f"no votaron:\n{lista}\n\n"
-           f"La votación cierra a las {local:%H:%M}.")
+    texto = (f"{carrera} larga en {cuanto_falta(faltan_min)} y todavía "
+             f"no votaron:\n{lista}\n\n"
+             f"La votación cierra a las {local:%H:%M}.")
 
-    marcar_avisado(estado, "recordatorios", carrera)
+    anotar("ultima_hora" if urgente else "recordatorio", texto)
+    marcar_avisado(estado, clave, carrera)
+    if urgente:
+        # Se llegó directo a la última hora sin que saliera el aviso ancho:
+        # mandarlo después ya no tendría sentido.
+        marcar_avisado(estado, "recordatorios", carrera)
     guardar_estado(estado)
-    print(f"Recordatorio para {len(faltantes)}: {', '.join(faltantes)}")
+
+    print(f"Aviso '{clave}' para {len(faltantes)}: {', '.join(faltantes)}")
 
 
 if __name__ == "__main__":

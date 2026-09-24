@@ -65,9 +65,15 @@ def main():
         )
     elif tipo == "recordatorio":
         mensaje = (
-            "⏳ ULTIMA HORA PARA VOTAR!\n\n"
+            "🏎️ Se viene la carrera y falta que voten!\n\n"
             f"{extra}\n\n"
             "El que no vota, no suma."
+        )
+    elif tipo == "ultima_hora":
+        mensaje = (
+            "⏳ ULTIMA HORA PARA VOTAR!\n\n"
+            f"{extra}\n\n"
+            "Despues de la largada ya no cuenta."
         )
     elif tipo == "tardios":
         mensaje = (

@@ -44,12 +44,17 @@ jobs:
       - name: Ver quién falta votar
         run: python recordar_votos.py
 
+      # Dos avisos distintos: el ancho (asegura la entrega) y el de última hora
+      # (sale solo si además una corrida cae cerca de la largada). El script
+      # deja como mucho uno de los dos por corrida.
       - name: Avisar por WhatsApp
         run: |
-          if [ -s avisos/recordatorio.txt ]; then
+          if [ -s avisos/ultima_hora.txt ]; then
+            python notificar.py ultima_hora "$(cat avisos/ultima_hora.txt)"
+          elif [ -s avisos/recordatorio.txt ]; then
             python notificar.py recordatorio "$(cat avisos/recordatorio.txt)"
           else
-            echo "Nada para recordar hoy."
+            echo "Nada para recordar ahora."
           fi
 
       - name: Recordar que ya se avisó

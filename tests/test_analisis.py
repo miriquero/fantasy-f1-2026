@@ -28,8 +28,10 @@ def test_el_maximo_por_carrera_coincide_con_las_reglas_de_puntaje():
 
 
 def test_el_torneo_tiene_las_carreras_del_calendario():
-    # Las tachadas no cuentan: no se juegan.
-    assert carreras_totales() == 22
+    # 23: las 22 originales mas Bahrein, que no se cancelo sino que se mudo a
+    # Malasia y corre el 4 de octubre. Arabia Saudita si esta cancelada y no
+    # cuenta. Si este numero cambia, la proyeccion al titulo cambia con el.
+    assert carreras_totales() == 23
 
 
 def test_el_puntero_no_tiene_diferencia():
@@ -40,9 +42,13 @@ def test_el_puntero_no_tiene_diferencia():
 
 
 def test_queda_sin_chances_quien_no_llega_ni_ganando_todo():
-    # Falta 1 carrera: se pueden sumar 120 puntos como máximo.
+    # Con una sola carrera por delante se pueden sumar 120 puntos como maximo.
+    # Se deriva del calendario para que agregar o sacar una carrera no rompa
+    # esta prueba: lo que se testea es la regla, no cuantas carreras hay.
+    una_carrera_por_delante = carreras_totales() - 1
     proy = proyeccion_titulo(
-        _acumulado([("ana", 500), ("beto", 400), ("caro", 300)]), carreras_jugadas=21)
+        _acumulado([("ana", 500), ("beto", 400), ("caro", 300)]),
+        carreras_jugadas=una_carrera_por_delante)
     por_nombre = {p["participante"]: p for p in proy}
     assert por_nombre["beto"]["vivo"] is True      # está a 100, alcanza
     assert por_nombre["caro"]["vivo"] is False     # está a 200, no alcanza
@@ -50,12 +56,15 @@ def test_queda_sin_chances_quien_no_llega_ni_ganando_todo():
 
 def test_el_limite_exacto_todavia_cuenta_como_vivo():
     # Justo a 120 con una carrera por delante: empata, y empatar es llegar.
+    una_carrera_por_delante = carreras_totales() - 1
     proy = proyeccion_titulo(
-        _acumulado([("ana", 500), ("beto", 500 - MAXIMO_POR_CARRERA)]), carreras_jugadas=21)
+        _acumulado([("ana", 500), ("beto", 500 - MAXIMO_POR_CARRERA)]),
+        carreras_jugadas=una_carrera_por_delante)
     assert proy[1]["vivo"] is True
 
     proy = proyeccion_titulo(
-        _acumulado([("ana", 500), ("beto", 500 - MAXIMO_POR_CARRERA - 1)]), carreras_jugadas=21)
+        _acumulado([("ana", 500), ("beto", 500 - MAXIMO_POR_CARRERA - 1)]),
+        carreras_jugadas=una_carrera_por_delante)
     assert proy[1]["vivo"] is False
 
 
