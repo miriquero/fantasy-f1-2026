@@ -82,6 +82,11 @@ def main():
             "Ese voto no cuenta para el ranking. La votacion cierra cuando "
             "larga la carrera."
         )
+    elif tipo == "carrera_desconocida":
+        mensaje = (
+            "⚠️ Revisar el formulario\n\n"
+            f"{extra}"
+        )
     elif tipo == "penalidad":
         mensaje = (
             "🚩 Atencion! La FIA aplico una penalidad y el orden de una carrera CAMBIO\n\n"

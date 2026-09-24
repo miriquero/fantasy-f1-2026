@@ -43,6 +43,14 @@ jobs:
       # Los dos scripts anteriores dejan un archivo en avisos/ cuando pasa algo
       # que la familia deberia saber. Si no pasa nada, no hay archivo y no se
       # manda ningun mensaje.
+      - name: Avisar si el formulario tiene una carrera desconocida
+        run: |
+          if [ -s avisos/carrera_desconocida.txt ]; then
+            python notificar.py carrera_desconocida "$(cat avisos/carrera_desconocida.txt)"
+          else
+            echo "Todas las carreras del formulario estan en el calendario."
+          fi
+
       - name: Avisar si la FIA corrigio un resultado
         run: |
           if [ -s avisos/penalidad.txt ]; then

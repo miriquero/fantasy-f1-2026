@@ -120,6 +120,15 @@ def normalizar_nombre_carrera(nombre: str) -> str:
         # carrera se salteaba en silencio y no puntuaba nadie.
         "azerbaiyan": "Azerbaiyan",
         "azerbaiyn": "Azerbaiyan",
+        # El GP de Bahrein no se cancelo: desde 2026 se corre en Sepang
+        # (Malasia). Se aceptan las grafias que el formulario podria mandar,
+        # para que un voto no caiga en una carrera fantasma solo por como se
+        # escribio la opcion.
+        "bahrein": "Bahrein",
+        "bahrain": "Bahrein",
+        "malasia": "Bahrein",
+        "sepang": "Bahrein",
+
         "singapur": "Singapur",
         "austin": "Austin",
         "mexico": "Mexico",

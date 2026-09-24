@@ -216,6 +216,20 @@ def fetch_y_guardar():
 
         por_carrera.setdefault(carrera, []).append(row)
 
+    # Una opcion del formulario que el calendario no conozca es una falla
+    # silenciosa cara: los votos se guardan igual, pero nunca hay un corte de
+    # votacion ni resultados para esa carrera, asi que no puntua nadie y nadie
+    # se entera. Pasa apenas se agrega una carrera nueva y se la escribe
+    # distinto ("Bahrain" en vez de "Bahréin"). Que avise.
+    desconocidas = sorted({c for c in por_carrera if corte_carrera(c) is None})
+    if desconocidas:
+        print(f"  AVISO: el formulario ofrece carreras que el calendario no "
+              f"conoce: {', '.join(desconocidas)}")
+        anotar("carrera_desconocida",
+               "El formulario tiene opciones que el calendario no reconoce:\n"
+               + "\n".join(f"• {c}" for c in desconocidas)
+               + "\n\nEsos votos no van a puntuar hasta que coincidan los nombres.")
+
     CARPETA.mkdir(exist_ok=True)
     duplicados_total = 0
 
