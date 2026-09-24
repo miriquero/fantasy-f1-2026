@@ -874,6 +874,7 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
     <span class="tab-indicator" id="tab-indicator"></span>
     <button class="tab-btn active" onclick="openTab(event,'panel-acumulado')">Acumulado</button>
     <button class="tab-btn" onclick="openTab(event,'panel-carreras')">Carreras</button>
+    <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
     <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
     <button class="tab-btn" onclick="openTab(event,'panel-mas')">Más ▾</button>
@@ -909,6 +910,12 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
     {{ rankings_por_carrera_html }}
 </div>
 
+<div id="panel-calendario" class="tab-panel">
+    <h2 class="section-heading">Calen<span>dario</span></h2>
+    <p class="section-label" style="margin-bottom:18px;">F1 2026 · Horarios ARG (GMT−3)</p>
+    {{ calendario_html }}
+</div>
+
 {{ logros_panel_html }}
 
 <div id="panel-perfiles" class="tab-panel">
@@ -933,14 +940,6 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
 
     <div class="mas-subsection">
         {{ hof_panel_html }}
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="mas-subsection">
-        <h3 class="subsection-heading">Calendario</h3>
-        <p class="section-label" style="margin-bottom:18px;">F1 2026 · Horarios ARG (GMT−3)</p>
-        {{ calendario_html }}
     </div>
 </div>
 
