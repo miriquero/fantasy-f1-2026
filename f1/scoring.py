@@ -1,13 +1,68 @@
 # -*- coding: utf-8 -*-
 """Puntos por carrera y armado del ranking acumulado."""
 
+import re
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 from .calendario import carreras_en_orden
 from .config import COL_PUESTOS
 from .participantes import COLUMNA_PARTICIPANTE, nombre_participante
+
+
+# ---- Lectura de los detalles -----------------------------------------------
+#
+# Los logros necesitan saber QUE acerto cada uno, y lo unico que queda guardado
+# es el texto que arma calcular_puntos_y_detalles(). Estas funciones son el
+# unico lugar que lo interpreta, y viven al lado del codigo que lo escribe para
+# que una y otra cosa no se separen.
+#
+# Se pusieron aca despues de que ese acoplamiento rompiera tres cosas en
+# silencio:
+#   - al reformatear "Colapinto: EXACTO" a "Colapinto: Exacto en P9", el logro
+#     de Colapinto quedo inalcanzable para siempre;
+#   - y esa misma linea empezo a contarse como acierto de posicion de un
+#     piloto, porque contiene "Exacto en P9", inflando otro logro;
+#   - buscar "Exacto en P1" con `in` tambien matchea "Exacto en P10", asi que
+#     los aciertos del decimo puesto se contaban como aciertos del ganador.
+# Ninguna de las tres fallaba: los logros simplemente daban mal.
+
+SEPARADOR_DETALLE = "<br>"
+PREFIJO_COLAPINTO = "Colapinto:"
+PREFIJO_VUELTA_RAPIDA = "Vuelta rápida:"
+
+
+def lineas_detalle(detalles) -> List[str]:
+    """Las lineas del detalle de una carrera, sin las vacias."""
+    return [l for l in str(detalles).split(SEPARADOR_DETALLE) if l.strip()]
+
+
+def lineas_de_pilotos(detalles) -> List[str]:
+    """Solo las posiciones del top 10: sin vuelta rapida ni Colapinto."""
+    return [l for l in lineas_detalle(detalles)
+            if not l.startswith((PREFIJO_COLAPINTO, PREFIJO_VUELTA_RAPIDA))]
+
+
+def acerto_posicion(detalles, posicion: int) -> bool:
+    """Si clavo exacto el piloto de esa posicion del top 10.
+
+    El \\b es lo que evita que P10 cuente como P1.
+    """
+    marca = re.compile(rf"Exacto en P{posicion}\b")
+    return any(marca.search(l) for l in lineas_de_pilotos(detalles))
+
+
+def cuantas_posiciones_exactas(detalles) -> int:
+    """Cuantos pilotos del top 10 clavo exactos en esa carrera."""
+    return sum(1 for l in lineas_de_pilotos(detalles) if "Exacto en P" in l)
+
+
+def acerto_colapinto(detalles) -> bool:
+    """Si acerto la posicion exacta de Colapinto en esa carrera."""
+    return any(l.startswith(f"{PREFIJO_COLAPINTO} Exacto")
+               for l in lineas_detalle(detalles))
 
 
 def puntos_posicion(predicha: int, real: int) -> int:

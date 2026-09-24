@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 """Sistema de logros: definicion de los badges y quien los desbloqueo."""
 
+import re
+
 import pandas as pd
 from typing import Dict, List
 
 from .calendario import carreras_en_orden
 from .paleta import color_participante, hex_a_rgba
-from .scoring import calcular_historial_posiciones
+from .scoring import (
+    acerto_colapinto,
+    acerto_posicion,
+    calcular_historial_posiciones,
+    cuantas_posiciones_exactas,
+    lineas_de_pilotos,
+)
 
 
 BADGES = {
@@ -128,14 +136,22 @@ NIVEL_CONFIG = {
 
 
 def calcular_pts_p6_p10(detalles_str: str) -> int:
+    """Puntos sacados en la zona de atras del top 10, de P6 a P10.
+
+    Solo mira las lineas de pilotos: la de Colapinto tambien dice "Exacto en
+    P9" o "pred P9," y se contaba como si fuera una posicion del top 10.
+    """
     total = 0
-    for line in detalles_str.split('<br>'):
+    for line in lineas_de_pilotos(detalles_str):
         for pos in range(6, 11):
-            if f'Exacto en P{pos}' in line:
-                total += 10; break
-            elif f'pred P{pos},' in line:
-                if '+5' in line:   total += 5
-                elif '+1' in line: total += 1
+            if re.search(rf'Exacto en P{pos}\b', line):
+                total += 10
+                break
+            if f'pred P{pos},' in line:
+                if '+5' in line:
+                    total += 5
+                elif '+1' in line:
+                    total += 1
                 break
     return total
 
@@ -184,7 +200,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
     max_arch = max(arch_pts.values(), default=0)
 
     def exactos_en_fila(det: str) -> int:
-        return sum(1 for d in str(det).split('<br>') if 'Exacto en P' in d)
+        return cuantas_posiciones_exactas(det)
 
     badges_resultado: Dict[str, List[Dict]] = {}
 
@@ -199,7 +215,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         my_cp   = cumul_pos.get(participante, {})
 
         # 🎯 FRANCOTIRADOR
-        p1_ok = sum(1 for _, r in part_df.iterrows() if 'Exacto en P1' in str(r['Detalles']))
+        p1_ok = sum(1 for _, r in part_df.iterrows() if acerto_posicion(r['Detalles'], 1))
         if p1_ok >= 5:
             badges.append({**BADGES["francotirador"],
                 "desc": (f"{BADGES['francotirador']['nivel_emoji']} BRONCE · "
@@ -221,7 +237,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
                          f"Criterio: 3+ fechas consecutivas en el podio grupal.")})
 
         # 🇦🇷 HINCHA DE FRANCO
-        cola_ok = sum(1 for _, r in part_df.iterrows() if 'Colapinto: EXACTO' in str(r['Detalles']))
+        cola_ok = sum(1 for _, r in part_df.iterrows() if acerto_colapinto(r['Detalles']))
         if cola_ok >= 4:
             badges.append({**BADGES["hincha_franco"],
                 "desc": (f"{BADGES['hincha_franco']['nivel_emoji']} BRONCE · "
@@ -278,7 +294,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         # 🧠 ESTRATEGA
         estratega_carrera = None
         for _, r in part_df.iterrows():
-            if all(f'Exacto en P{p}' in str(r['Detalles']) for p in range(1, 6)):
+            if all(acerto_posicion(r['Detalles'], p) for p in range(1, 6)):
                 estratega_carrera = r['Carrera']; break
         if estratega_carrera:
             badges.append({**BADGES["estratega"],
@@ -299,7 +315,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         apuesta_carreras = set()
         for _, r in part_df.iterrows():
             det = str(r['Detalles'])
-            if any(f'Exacto en P{p}' in det for p in range(7, 11)):
+            if any(acerto_posicion(det, p) for p in range(7, 11)):
                 apuesta_carreras.add(r['Carrera'])
         if len(apuesta_carreras) >= 6:
             badges.append({**BADGES["apostador_nato"],
@@ -326,7 +342,7 @@ def calcular_badges(all_rankings: pd.DataFrame, all_dfs: List[pd.DataFrame],
         # 🌌 ORÁCULO
         oraculo_n = sum(
             1 for _, r in part_df.iterrows()
-            if all(f'Exacto en P{p}' in str(r['Detalles']) for p in range(1, 4))
+            if all(acerto_posicion(r['Detalles'], p) for p in range(1, 4))
         )
         if oraculo_n >= 5:
             badges.append({**BADGES["oraculo"],
