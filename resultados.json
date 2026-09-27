@@ -250,5 +250,23 @@
     "vuelta_rapida": "George Russell",
     "colapinto": "7",
     "_actualizado": "2026-09-13T23:44:56.405727+00:00"
+  },
+  "Azerbaiyan": {
+    "resultado_carrera": [
+      "George Russell",
+      "Max Verstappen",
+      "Isack Hadjar",
+      "Charles Leclerc",
+      "Andrea Kimi Antonelli",
+      "Lewis Hamilton",
+      "Arvid Lindblad",
+      "Esteban Ocon",
+      "Oliver Bearman",
+      "Carlos Sainz",
+      "Nico Hülkenberg"
+    ],
+    "vuelta_rapida": "George Russell",
+    "colapinto": "17",
+    "_actualizado": "2026-09-27T16:08:56.634207+00:00"
   }
 }
