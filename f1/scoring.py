@@ -70,14 +70,12 @@ def puntos_posicion(predicha: int, real: int) -> int:
 
     Es la regla del torneo escrita en un solo lugar:
       - clavarla exacta ............ 10
-      - errarle por un puesto ......  5  (vale aunque el real haya sido P11)
+      - errarle por un puesto ......  5  (solo si terminó en el top 10)
       - solo acertar que entraba ...  1
       - el resto ...................  0
-
-    Antes esta funcion existia pero no la llamaba nadie, y ademas devolvia 1
-    donde el calculo real da 0: cualquiera que la leyera para entender el
-    puntaje se llevaba una idea equivocada.
     """
+    if real > 10:
+        return 0
     if predicha == real:
         return 10
     if abs(predicha - real) == 1:
@@ -99,8 +97,8 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
         posicion_predicha = i
         posicion_real = posiciones_reales.get(piloto)
 
-        if posicion_real is None:
-            # Piloto no terminó la carrera (no está en los resultados) → 0 puntos
+        if posicion_real is None or posicion_real > 10:
+            # Piloto no terminó la carrera (o terminó fuera del top 10 real) → 0 puntos
             detalles.append(f"{piloto}: No terminó la carrera en el top 10 (0 pts)")
             continue
 
