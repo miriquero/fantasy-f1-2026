@@ -9,6 +9,15 @@ from .config import ARCHIVO_RESULTADOS, PILOTOS
 CAMPOS_REQUERIDOS = ["resultado_carrera", "vuelta_rapida", "colapinto"]
 
 
+# Hasta donde puede llegar la posicion de Colapinto. Estaba fijo en 20, que era
+# el tamano de la grilla de temporadas anteriores. En 2026 corren 11 equipos: en
+# Singapur clasificaron 22 autos y Colapinto termino 21, asi que el validador
+# rechazaba el resultado y no se calculaban los puntos de NADIE en esa carrera.
+# Ahora sale de la lista de pilotos del torneo, para que acompane cualquier
+# cambio de grilla sin que haya que acordarse de venir a tocar esto.
+MAX_POSICION = len(PILOTOS)
+
+
 def validar_resultados(resultados_por_carrera: Dict) -> bool:
     """
     Valida que el archivo resultados.json tenga la estructura correcta.
@@ -88,7 +97,7 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
             print(f"Advertencia: [{carrera}] vuelta rápida de un piloto no "
                   f"reconocido: \"{vr}\". Nadie suma puntos por vuelta rápida.")
 
-        # colapinto: número entero entre 1 y 20 (o 0 si no clasificó/abandonó)
+        # colapinto: posicion entera dentro de la grilla (o 0 si no clasifico/abandono)
         col = datos["colapinto"]
         # Aceptar tanto int como string numérico (ej: 14 o "14")
         try:
@@ -99,8 +108,8 @@ def validar_resultados(resultados_por_carrera: Dict) -> bool:
                 f"    Ejemplo: 14 si terminó 14°, 0 si no clasificó o abandonó."
             )
             col_int = None
-        if col_int is not None and not (0 <= col_int <= 20):
-            errores.append(f"  · [{carrera}] 'colapinto' tiene valor inválido: {col}. Debe estar entre 0 y 20.")
+        if col_int is not None and not (0 <= col_int <= MAX_POSICION):
+            errores.append(f"  · [{carrera}] 'colapinto' tiene valor inválido: {col}. Debe estar entre 0 y {MAX_POSICION}.")
 
     if errores:
         print(f"\n❌ Se encontraron {len(errores)} error(es) en {ARCHIVO_RESULTADOS}:\n")

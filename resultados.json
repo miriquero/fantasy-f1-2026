@@ -286,5 +286,23 @@
     "vuelta_rapida": "Max Verstappen",
     "colapinto": "13",
     "_actualizado": "2026-10-04T19:34:09.383256+00:00"
+  },
+  "Singapur": {
+    "resultado_carrera": [
+      "Max Verstappen",
+      "Charles Leclerc",
+      "Andrea Kimi Antonelli",
+      "Lando Norris",
+      "Oscar Piastri",
+      "Lewis Hamilton",
+      "Liam Lawson",
+      "Nico Hülkenberg",
+      "George Russell",
+      "Isack Hadjar",
+      "Pierre Gasly"
+    ],
+    "vuelta_rapida": "Charles Leclerc",
+    "colapinto": "21",
+    "_actualizado": "2026-10-11T17:26:28.220517+00:00"
   }
 }
