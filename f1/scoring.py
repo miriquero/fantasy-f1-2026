@@ -122,9 +122,9 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
             detalles.append(f"{piloto}: No terminó la carrera en el top 10 (0 pts)")
             continue
 
-        # Ojo con el orden: la diferencia de 1 se evalua ANTES de descartar por
-        # "fuera del top 10 real". Un predicho P10 que termina P11 sigue siendo
-        # diferencia de 1 y suma 5, aunque el real quede un puesto afuera.
+        # Llegado aca el piloto termino dentro del top 10, asi que siempre se
+        # cobra algo: 10, 5 o 1. El cero vive todo arriba, en el filtro de
+        # "no termino en el top 10", y no hay un cuarto caso.
         ganados = puntos_posicion(posicion_predicha, posicion_real)
         puntos += ganados
 
@@ -132,10 +132,8 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
             detalles.append(f"{piloto}: Exacto en P{posicion_predicha} (+10)")
         elif ganados == 5:
             detalles.append(f"{piloto}: Diff 1 (pred P{posicion_predicha}, real P{posicion_real}) (+5)")
-        elif ganados == 1:
-            detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
         else:
-            detalles.append(f"{piloto}: Fuera del top 10 real (pred P{posicion_predicha}, real P{posicion_real}) (0 pts)")
+            detalles.append(f"{piloto}: En top 10 (pred P{posicion_predicha}, real P{posicion_real}) (+1)")
 
     # Vuelta rápida y Colapinto: la línea sale SIEMPRE, se haya acertado o no.
     #

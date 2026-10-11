@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from f1.scoring import calcular_puntos_y_detalles, convertir_posicion_a_numero, puntos_posicion
 
@@ -64,22 +65,34 @@ def test_calcular_puntos_colapinto_exacto():
     assert "Colapinto: Exacto en P10 (+10)" in detalle
 
 
-def test_calcular_puntos_p10_predicho_p11_real_es_diferencia_de_uno():
-    # Si predije a un piloto en el P10 y terminó P11, cuenta como "diferencia
-    # de uno" (5 pts), no como "fuera del top 10" (0 pts).
+# El que termina fuera del top 10 no paga nada, cualquiera sea la prediccion.
+#
+# Esta es LA regla de borde del torneo y conviene tenerla escrita: antes un
+# predicho P10 que terminaba P11 cobraba 5 puntos por "errarle por uno". Ya no.
+# El top 10 es el corte y abajo de ahi no hay nada, ni el punto de consuelo ni
+# la diferencia de uno. Los tests que fijaban la regla anterior quedaron rojos
+# una semana sin que nadie se enterara, porque los commits del bot no disparan
+# CI; estos fijan la vigente.
+@pytest.mark.parametrize("columna, predicho", [
+    ("Décimo puesto", 10),   # el caso pegado al corte: P10 predicho, P11 real
+    ("Octavo puesto", 8),
+    ("Primer puesto", 1),
+])
+def test_el_que_termina_p11_no_paga_nada(columna, predicho):
     posiciones_reales = {"Esteban Ocon": 11}
-    row = _fila(**{"Décimo puesto": "Esteban Ocon"})
+    row = _fila(**{columna: "Esteban Ocon"})
     puntos, detalle = calcular_puntos_y_detalles(row, posiciones_reales, "", 0)
-    assert puntos == 5
-    assert "Diff 1 (pred P10, real P11)" in detalle
+    assert puntos == 0, detalle
+    assert "No terminó la carrera en el top 10" in detalle
+    # y que no se cuele ninguna de las dos formas de cobrar
+    assert "Diff 1" not in detalle
+    assert "En top 10" not in detalle
 
 
-def test_calcular_puntos_p11_real_sin_prediccion_p10_no_suma():
-    # Si el piloto termina P11 pero se lo predijo en un puesto que no es P10
-    # (ni P12, que no existe como predicción posible), no debe sumar el punto
-    # de consuelo de "top 10" — P11 no es top 10.
-    posiciones_reales = {"Esteban Ocon": 11}
-    row = _fila(**{"Octavo puesto": "Esteban Ocon"})
-    puntos, detalle = calcular_puntos_y_detalles(row, posiciones_reales, "", 0)
-    assert puntos == 0
-    assert "Fuera del top 10 real" in detalle
+def test_dentro_del_top_10_siempre_se_cobra_algo():
+    """La contracara: adentro del corte no existe el cero. Por eso el detalle
+    ya no necesita una linea de "fuera del top 10 real" para un piloto que SI
+    termino adentro — esa rama era inalcanzable."""
+    for predicho in range(1, 11):
+        for real in range(1, 11):
+            assert puntos_posicion(predicho, real) in (1, 5, 10)
