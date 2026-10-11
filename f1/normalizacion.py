@@ -55,6 +55,12 @@ def normalizar_piloto(nombre: str) -> str:
     if not nombre:
         return nombre
     limpio = _quitar_acentos(str(nombre).strip()).lower()
+    # Una celda con solo espacios llegaba hasta el ultimo recurso de mas abajo,
+    # que parte el nombre para comparar apellidos, y ahi explotaba: de un string
+    # vacio no sale ningun apellido. Importa desde que el voto tambien se
+    # normaliza, porque esta funcion pasa por cada celda de cada prediccion.
+    if not limpio:
+        return ""
     if limpio in _PILOTOS_NORM:
         return _PILOTOS_NORM[limpio]
     if limpio in ALIASES_PILOTOS:

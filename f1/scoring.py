@@ -9,6 +9,7 @@ from typing import Dict, List, Tuple
 
 from .calendario import carreras_en_orden
 from .config import COL_PUESTOS
+from .normalizacion import normalizar_piloto
 from .participantes import COLUMNA_PARTICIPANTE, nombre_participante
 
 
@@ -89,8 +90,27 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
     puntos = 0
     detalles = []
 
+    # Esta funcion compara pilotos por nombre canonico, de los dos lados del
+    # cruce y sin confiar en que quien la llame ya haya normalizado. Es la
+    # unica forma de que un piloto predicho se encuentre con el mismo piloto
+    # del resultado: cuando solo se normalizaba una punta, el .get fallaba en
+    # silencio y la prediccion se contaba como "no entro al top 10".
+    posiciones_reales = {normalizar_piloto(p): pos
+                         for p, pos in (posiciones_reales or {}).items()}
+    vuelta_rapida_real = normalizar_piloto(vuelta_rapida_real)
+
     for i, col in enumerate(COL_PUESTOS, 1):
-        piloto = str(row.get(col, "")).strip()
+        # Se normaliza el nombre que vino del formulario antes de buscarlo.
+        #
+        # El resultado de la API ya pasa por normalizar_piloto(), el voto no
+        # pasaba, y entonces las dos puntas del cruce no hablaban el mismo
+        # idioma: el formulario ofrece "Nico Hülkenberg" con dieresis y "Olie
+        # Bearman" con una sola L, mientras la lista del torneo escribe "Nico
+        # Hulkenberg" y "Ollie Bearman". El .get fallaba, el calculo concluia
+        # que el piloto no habia entrado al top 10 y daba 0 sin avisar nada.
+        # Fueron 16 predicciones mal puntuadas en 8 carreras de 2026, incluido
+        # un exacto de 10 puntos contado como cero.
+        piloto = normalizar_piloto(str(row.get(col, "")).strip())
         if not piloto:
             continue
 
@@ -123,7 +143,7 @@ def calcular_puntos_y_detalles(row, posiciones_reales: Dict, vuelta_rapida_real:
     # pilotos del top 10 muestran su línea aunque den 0 puntos ("Fuera del top
     # 10 real"), así que cuando estas dos desaparecían parecía que el sistema
     # se las había salteado, en vez de que se habían errado.
-    vr = str(row.get("Vuelta Rápida", "")).strip()
+    vr = normalizar_piloto(str(row.get("Vuelta Rápida", "")).strip())
     if not vuelta_rapida_real:
         detalles.append(
             f"Vuelta rápida: {vr or 'sin predicción'} — sin dato oficial (0 pts)")
