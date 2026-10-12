@@ -1,0 +1,71 @@
+name: Fantasy F1 2027 - AutoPilot
+
+on:
+  schedule:
+    # Se ejecuta cada 2 horas durante sábados y domingos
+    # FastF1 es tan rápido que apenas termina la carrera (o unas horas después),
+    # el bot encontrará los datos, procesará los puntos y se dormirá el resto de la semana.
+    - cron: '0 12-23 * * 5,6,0' 
+  workflow_dispatch:
+
+jobs:
+  actualizar-ranking:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    env:
+      CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+      CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+      GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+      PARTICIPANTES_JSON: ${{ secrets.PARTICIPANTES_JSON }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias 2027
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install fastf1  # <-- El núcleo de la velocidad de 2027
+
+      - name: Crear carpeta de caché para FastF1
+        run: mkdir -p fastf1_cache
+
+      - name: Actualizar votos desde Google Sheets
+        run: python fetch_votos.py
+
+      - name: Extraer resultados al instante (FastF1)
+        # Aquí se usará el nuevo script de la carpeta 2027
+        run: python temporada_2027/fetch_resultados_2027.py
+
+      - name: Generar ranking HTML
+        run: python fantasy_f1.py
+
+      - name: Commit y Push (Solo si hubo carrera y cambios)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          CAMBIOS=$(git status --porcelain -- resultados.json respuestas/ ranking_f1.html)
+          if [ -z "$CAMBIOS" ]; then
+            echo "Sin cambios. La carrera no terminó o ya fue procesada."
+          else
+            git add -A -- resultados.json respuestas/ ranking_f1.html
+            git commit -m "AutoPilot 2027: Ranking actualizado al instante 🏎️"
+            git push
+            echo "Nuevos puntos publicados."
+          fi
+
+      - name: Notificar por WhatsApp
+        if: success()
+        run: |
+          CAMBIOS=$(git status --porcelain -- ranking_f1.html)
+          if [ -n "$CAMBIOS" ]; then
+            python notificar.py exito "https://miriquero.github.io/fantasy-f1-2026/ranking_f1.html"
+          fi
