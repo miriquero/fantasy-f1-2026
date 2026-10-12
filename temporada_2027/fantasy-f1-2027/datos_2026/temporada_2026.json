@@ -1,0 +1,3834 @@
+{
+ "temporada": 2026,
+ "piloto_seguido": "Franco Colapinto",
+ "pilotos": [
+  {
+   "codigo_api": "max_verstappen",
+   "nombre": "Max Verstappen"
+  },
+  {
+   "codigo_api": "arvid_lindblad",
+   "nombre": "Arvid Lindblad"
+  },
+  {
+   "codigo_api": "charles_leclerc",
+   "nombre": "Charles Leclerc"
+  },
+  {
+   "codigo_api": "lewis_hamilton",
+   "nombre": "Lewis Hamilton"
+  },
+  {
+   "codigo_api": "oscar_piastri",
+   "nombre": "Oscar Piastri"
+  },
+  {
+   "codigo_api": "lando_norris",
+   "nombre": "Lando Norris"
+  },
+  {
+   "codigo_api": "george_russell",
+   "nombre": "George Russell"
+  },
+  {
+   "codigo_api": "kimi_antonelli",
+   "nombre": "Kimi Antonelli"
+  },
+  {
+   "codigo_api": "pierre_gasly",
+   "nombre": "Pierre Gasly"
+  },
+  {
+   "codigo_api": "franco_colapinto",
+   "nombre": "Franco Colapinto"
+  },
+  {
+   "codigo_api": "carlos_sainz",
+   "nombre": "Carlos Sainz"
+  },
+  {
+   "codigo_api": "alex_albon",
+   "nombre": "Alex Albon"
+  },
+  {
+   "codigo_api": "esteban_ocon",
+   "nombre": "Esteban Ocon"
+  },
+  {
+   "codigo_api": "ollie_bearman",
+   "nombre": "Ollie Bearman"
+  },
+  {
+   "codigo_api": "liam_lawson",
+   "nombre": "Liam Lawson"
+  },
+  {
+   "codigo_api": "isack_hadjar",
+   "nombre": "Isack Hadjar"
+  },
+  {
+   "codigo_api": "fernando_alonso",
+   "nombre": "Fernando Alonso"
+  },
+  {
+   "codigo_api": "lance_stroll",
+   "nombre": "Lance Stroll"
+  },
+  {
+   "codigo_api": "gabriel_bortoletto",
+   "nombre": "Gabriel Bortoletto"
+  },
+  {
+   "codigo_api": "nico_hulkenberg",
+   "nombre": "Nico Hulkenberg"
+  },
+  {
+   "codigo_api": "valtteri_bottas",
+   "nombre": "Valtteri Bottas"
+  },
+  {
+   "codigo_api": "sergio_perez",
+   "nombre": "Sergio Perez"
+  },
+  {
+   "codigo_api": "yuki_tsunoda",
+   "nombre": "Yuki Tsunoda"
+  }
+ ],
+ "carreras": [
+  {
+   "ronda": 1,
+   "nombre": "Australia",
+   "largada": "2026-03-08T01:00:00-03:00"
+  },
+  {
+   "ronda": 2,
+   "nombre": "China",
+   "largada": "2026-03-15T04:00:00-03:00"
+  },
+  {
+   "ronda": 3,
+   "nombre": "Japon",
+   "largada": "2026-03-29T02:00:00-03:00"
+  },
+  {
+   "ronda": 6,
+   "nombre": "Miami",
+   "largada": "2026-05-03T17:00:00-03:00"
+  },
+  {
+   "ronda": 7,
+   "nombre": "Canada",
+   "largada": "2026-05-24T17:00:00-03:00"
+  },
+  {
+   "ronda": 8,
+   "nombre": "Monaco",
+   "largada": "2026-06-07T10:00:00-03:00"
+  },
+  {
+   "ronda": 9,
+   "nombre": "Barcelona",
+   "largada": "2026-06-14T10:00:00-03:00"
+  },
+  {
+   "ronda": 10,
+   "nombre": "Austria",
+   "largada": "2026-06-28T10:00:00-03:00"
+  },
+  {
+   "ronda": 11,
+   "nombre": "Gran Bretaña",
+   "largada": "2026-07-05T11:00:00-03:00"
+  },
+  {
+   "ronda": 12,
+   "nombre": "Belgica",
+   "largada": "2026-07-19T10:00:00-03:00"
+  },
+  {
+   "ronda": 13,
+   "nombre": "Hungría",
+   "largada": "2026-07-26T10:00:00-03:00"
+  },
+  {
+   "ronda": 14,
+   "nombre": "Países Bajos",
+   "largada": "2026-08-23T10:00:00-03:00"
+  },
+  {
+   "ronda": 15,
+   "nombre": "Italia",
+   "largada": "2026-09-06T10:00:00-03:00"
+  },
+  {
+   "ronda": 16,
+   "nombre": "Madrid",
+   "largada": "2026-09-13T10:00:00-03:00"
+  },
+  {
+   "ronda": 17,
+   "nombre": "Azerbaiyan",
+   "largada": "2026-09-26T08:00:00-03:00"
+  },
+  {
+   "ronda": 18,
+   "nombre": "Bahrein",
+   "largada": "2026-10-04T04:00:00-03:00"
+  },
+  {
+   "ronda": 19,
+   "nombre": "Singapur",
+   "largada": "2026-10-11T09:00:00-03:00"
+  },
+  {
+   "ronda": 20,
+   "nombre": "Austin",
+   "largada": "2026-10-25T17:00:00-03:00"
+  },
+  {
+   "ronda": 21,
+   "nombre": "Mexico",
+   "largada": "2026-11-01T17:00:00-03:00"
+  },
+  {
+   "ronda": 22,
+   "nombre": "Brasil",
+   "largada": "2026-11-08T14:00:00-03:00"
+  },
+  {
+   "ronda": 23,
+   "nombre": "Las Vegas",
+   "largada": "2026-11-22T01:00:00-03:00"
+  },
+  {
+   "ronda": 24,
+   "nombre": "Qatar",
+   "largada": "2026-11-29T13:00:00-03:00"
+  },
+  {
+   "ronda": 25,
+   "nombre": "Abu Dhabi",
+   "largada": "2026-12-06T10:00:00-03:00"
+  }
+ ],
+ "participantes": [
+  "alinaiaraceleste",
+  "damiantourres",
+  "eugeniabanini",
+  "friquero",
+  "lautarotourres",
+  "miriquero",
+  "riquerole",
+  "riqueropetiniha",
+  "riquerorori1993",
+  "sergiopede92"
+ ],
+ "votos": [
+  {
+   "carrera": "Australia",
+   "participante": "riquerorori1993",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lando_norris",
+    "lewis_hamilton",
+    "max_verstappen",
+    "isack_hadjar",
+    "pierre_gasly",
+    "esteban_ocon"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Australia",
+   "participante": "riquerole",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "oscar_piastri",
+    "max_verstappen",
+    "isack_hadjar",
+    "lando_norris",
+    "lewis_hamilton",
+    "arvid_lindblad",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Australia",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "oscar_piastri",
+    "isack_hadjar",
+    "lando_norris",
+    "lewis_hamilton",
+    "gabriel_bortoletto",
+    "arvid_lindblad",
+    "max_verstappen"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Australia",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "max_verstappen",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Australia",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "lando_norris",
+    "max_verstappen",
+    "nico_hulkenberg",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Australia",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "isack_hadjar",
+    "lando_norris",
+    "lewis_hamilton",
+    "liam_lawson",
+    "max_verstappen",
+    "gabriel_bortoletto",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Australia",
+   "participante": "friquero",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "isack_hadjar",
+    "oscar_piastri",
+    "lando_norris",
+    "max_verstappen",
+    "arvid_lindblad",
+    "gabriel_bortoletto",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Austria",
+   "participante": "friquero",
+   "top10": [
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "george_russell",
+    "lando_norris",
+    "max_verstappen",
+    "liam_lawson",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Austria",
+   "participante": "riquerole",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Austria",
+   "participante": "lautarotourres",
+   "top10": [
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "george_russell",
+    "charles_leclerc",
+    "max_verstappen",
+    "isack_hadjar",
+    "lando_norris",
+    "pierre_gasly",
+    "oscar_piastri",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Austria",
+   "participante": "damiantourres",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "pierre_gasly",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Austria",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "max_verstappen",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lando_norris",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Austria",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "max_verstappen",
+    "charles_leclerc",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Austria",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Austria",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "charles_leclerc",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "max_verstappen",
+    "lando_norris",
+    "isack_hadjar",
+    "lewis_hamilton",
+    "arvid_lindblad",
+    "pierre_gasly",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "lautarotourres",
+   "top10": [
+    "george_russell",
+    "oscar_piastri",
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "pierre_gasly",
+    "max_verstappen",
+    "franco_colapinto",
+    "carlos_sainz",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "riquerorori1993",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lando_norris",
+    "max_verstappen",
+    "lewis_hamilton",
+    "pierre_gasly",
+    "kimi_antonelli",
+    "franco_colapinto",
+    "carlos_sainz"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "max_verstappen",
+    "kimi_antonelli",
+    "lando_norris",
+    "lewis_hamilton",
+    "pierre_gasly",
+    "isack_hadjar",
+    "franco_colapinto",
+    "oscar_piastri"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "isack_hadjar",
+    "george_russell",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "max_verstappen",
+    "lando_norris",
+    "arvid_lindblad",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "damiantourres",
+   "top10": [
+    "george_russell",
+    "lando_norris",
+    "max_verstappen",
+    "kimi_antonelli",
+    "isack_hadjar",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "pierre_gasly",
+    "franco_colapinto",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lando_norris",
+    "max_verstappen",
+    "isack_hadjar",
+    "franco_colapinto",
+    "pierre_gasly",
+    "lewis_hamilton"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "friquero",
+   "top10": [
+    "george_russell",
+    "max_verstappen",
+    "lando_norris",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "oscar_piastri",
+    "pierre_gasly",
+    "isack_hadjar",
+    "carlos_sainz"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Azerbaiyan",
+   "participante": "eugeniabanini",
+   "top10": [
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "lando_norris",
+    "max_verstappen",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "franco_colapinto",
+    "ollie_bearman"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "isack_hadjar",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "lando_norris",
+    "oscar_piastri",
+    "pierre_gasly",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "eugeniabanini",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "lando_norris",
+    "george_russell",
+    "charles_leclerc",
+    "isack_hadjar",
+    "oscar_piastri",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 17
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "riquerole",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "charles_leclerc",
+    "lando_norris",
+    "oscar_piastri",
+    "pierre_gasly",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 16
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "miriquero",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "isack_hadjar",
+    "lando_norris",
+    "oscar_piastri",
+    "george_russell",
+    "pierre_gasly",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "george_russell",
+    "oscar_piastri",
+    "lando_norris",
+    "isack_hadjar",
+    "pierre_gasly",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "friquero",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "isack_hadjar",
+    "lando_norris",
+    "oscar_piastri",
+    "george_russell",
+    "pierre_gasly",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "riquerorori1993",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "lando_norris",
+    "oscar_piastri",
+    "george_russell",
+    "isack_hadjar",
+    "fernando_alonso",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "lautarotourres",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "george_russell",
+    "lewis_hamilton",
+    "lando_norris",
+    "charles_leclerc",
+    "isack_hadjar",
+    "pierre_gasly",
+    "oscar_piastri",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Bahrein",
+   "participante": "damiantourres",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "charles_leclerc",
+    "isack_hadjar",
+    "lewis_hamilton",
+    "george_russell",
+    "oscar_piastri",
+    "liam_lawson",
+    "pierre_gasly",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "lautarotourres",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "charles_leclerc",
+    "isack_hadjar",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "riquerole",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "charles_leclerc",
+    "max_verstappen",
+    "lando_norris",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "damiantourres",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lando_norris",
+    "lewis_hamilton",
+    "max_verstappen",
+    "charles_leclerc",
+    "liam_lawson",
+    "arvid_lindblad",
+    "nico_hulkenberg",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "eugeniabanini",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "lewis_hamilton",
+    "george_russell",
+    "max_verstappen",
+    "oscar_piastri",
+    "charles_leclerc",
+    "isack_hadjar",
+    "liam_lawson",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "george_russell",
+    "oscar_piastri",
+    "liam_lawson",
+    "arvid_lindblad",
+    "isack_hadjar",
+    "charles_leclerc",
+    "lando_norris",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "friquero",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "charles_leclerc",
+    "isack_hadjar",
+    "nico_hulkenberg",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "miriquero",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "lando_norris",
+    "charles_leclerc",
+    "oscar_piastri",
+    "max_verstappen",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Barcelona",
+   "participante": "riquerorori1993",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lando_norris",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "max_verstappen",
+    "isack_hadjar",
+    "charles_leclerc",
+    "liam_lawson",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "lautarotourres",
+   "top10": [
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "george_russell",
+    "liam_lawson",
+    "franco_colapinto",
+    "pierre_gasly",
+    "lando_norris",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 6
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "max_verstappen",
+    "george_russell",
+    "oscar_piastri",
+    "lando_norris",
+    "pierre_gasly",
+    "franco_colapinto",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "riquerorori1993",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "george_russell",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "gabriel_bortoletto",
+    "pierre_gasly",
+    "liam_lawson",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "lando_norris",
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "arvid_lindblad",
+    "isack_hadjar",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "damiantourres",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "max_verstappen",
+    "lewis_hamilton",
+    "lando_norris",
+    "liam_lawson",
+    "isack_hadjar",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "eugeniabanini",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "arvid_lindblad",
+    "lando_norris",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "friquero",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lando_norris",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 3
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "miriquero",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "lando_norris",
+    "arvid_lindblad",
+    "liam_lawson",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Belgica",
+   "participante": "riquerole",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "george_russell",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "arvid_lindblad",
+    "gabriel_bortoletto",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Canada",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lando_norris",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "max_verstappen",
+    "isack_hadjar",
+    "charles_leclerc",
+    "franco_colapinto",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Canada",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "oscar_piastri",
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "isack_hadjar",
+    "franco_colapinto",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Canada",
+   "participante": "lautarotourres",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "charles_leclerc",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Canada",
+   "participante": "sergiopede92",
+   "top10": [
+    "lando_norris",
+    "george_russell",
+    "oscar_piastri",
+    "charles_leclerc",
+    "max_verstappen",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "fernando_alonso",
+    "alex_albon",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Canada",
+   "participante": "riquerole",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "lando_norris",
+    "oscar_piastri",
+    "charles_leclerc",
+    "max_verstappen",
+    "isack_hadjar",
+    "franco_colapinto",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "lewis_hamilton",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Canada",
+   "participante": "riquerorori1993",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "max_verstappen",
+    "charles_leclerc",
+    "franco_colapinto",
+    "pierre_gasly",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Canada",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "george_russell",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "max_verstappen",
+    "franco_colapinto",
+    "arvid_lindblad",
+    "isack_hadjar",
+    "carlos_sainz"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 7
+  },
+  {
+   "carrera": "Canada",
+   "participante": "friquero",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "george_russell",
+    "oscar_piastri",
+    "max_verstappen",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "arvid_lindblad",
+    "franco_colapinto",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Canada",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "isack_hadjar",
+    "franco_colapinto",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Canada",
+   "participante": "damiantourres",
+   "top10": [
+    "lando_norris",
+    "kimi_antonelli",
+    "max_verstappen",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "liam_lawson",
+    "franco_colapinto",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "China",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "lando_norris",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "max_verstappen",
+    "pierre_gasly",
+    "isack_hadjar",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "China",
+   "participante": "riquerorori1993",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lando_norris",
+    "max_verstappen",
+    "pierre_gasly",
+    "ollie_bearman",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "China",
+   "participante": "sergiopede92",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "charles_leclerc",
+    "oscar_piastri",
+    "pierre_gasly",
+    "ollie_bearman",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "China",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lando_norris",
+    "pierre_gasly",
+    "max_verstappen",
+    "isack_hadjar",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "China",
+   "participante": "riquerole",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "ollie_bearman",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "China",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "lando_norris",
+    "oscar_piastri",
+    "max_verstappen",
+    "isack_hadjar",
+    "pierre_gasly",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "China",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "oscar_piastri",
+    "max_verstappen",
+    "lando_norris",
+    "isack_hadjar",
+    "pierre_gasly",
+    "ollie_bearman"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "george_russell",
+    "max_verstappen",
+    "charles_leclerc",
+    "isack_hadjar",
+    "oscar_piastri",
+    "lando_norris",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "riquerorori1993",
+   "top10": [
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "george_russell",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "lautarotourres",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "max_verstappen",
+    "lando_norris",
+    "isack_hadjar",
+    "oscar_piastri",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "damiantourres",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 16
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "sergiopede92",
+   "top10": [
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "george_russell",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "max_verstappen",
+    "oscar_piastri",
+    "lando_norris",
+    "isack_hadjar",
+    "liam_lawson",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "eugeniabanini",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "max_verstappen",
+    "lando_norris",
+    "isack_hadjar",
+    "oscar_piastri",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "miriquero",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "isack_hadjar",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "riquerole",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 16
+  },
+  {
+   "carrera": "Gran Bretaña",
+   "participante": "friquero",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "max_verstappen",
+    "lando_norris",
+    "isack_hadjar",
+    "oscar_piastri",
+    "arvid_lindblad",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lando_norris",
+    "george_russell",
+    "max_verstappen",
+    "oscar_piastri",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "miriquero",
+   "top10": [
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "george_russell",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "riquerole",
+   "top10": [
+    "lando_norris",
+    "charles_leclerc",
+    "oscar_piastri",
+    "max_verstappen",
+    "lewis_hamilton",
+    "george_russell",
+    "kimi_antonelli",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "riquerorori1993",
+   "top10": [
+    "lando_norris",
+    "oscar_piastri",
+    "charles_leclerc",
+    "max_verstappen",
+    "lewis_hamilton",
+    "george_russell",
+    "kimi_antonelli",
+    "isack_hadjar",
+    "nico_hulkenberg",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "oscar_piastri",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "eugeniabanini",
+   "top10": [
+    "charles_leclerc",
+    "max_verstappen",
+    "lewis_hamilton",
+    "lando_norris",
+    "kimi_antonelli",
+    "isack_hadjar",
+    "oscar_piastri",
+    "george_russell",
+    "arvid_lindblad",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "damiantourres",
+   "top10": [
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "oscar_piastri",
+    "max_verstappen",
+    "george_russell",
+    "nico_hulkenberg",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "lewis_hamilton",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Hungría",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "charles_leclerc",
+    "lando_norris",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "max_verstappen",
+    "george_russell",
+    "arvid_lindblad",
+    "isack_hadjar",
+    "franco_colapinto",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Italia",
+   "participante": "riquerole",
+   "top10": [
+    "george_russell",
+    "oscar_piastri",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "pierre_gasly",
+    "max_verstappen",
+    "franco_colapinto",
+    "lando_norris",
+    "kimi_antonelli",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 7
+  },
+  {
+   "carrera": "Italia",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "pierre_gasly",
+    "lewis_hamilton",
+    "max_verstappen",
+    "oscar_piastri",
+    "lando_norris",
+    "franco_colapinto",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Italia",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "pierre_gasly",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "franco_colapinto",
+    "arvid_lindblad",
+    "ollie_bearman"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Italia",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "lewis_hamilton",
+    "charles_leclerc",
+    "pierre_gasly",
+    "max_verstappen",
+    "lando_norris",
+    "franco_colapinto",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "liam_lawson",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "lewis_hamilton",
+   "pos_seguido": 6
+  },
+  {
+   "carrera": "Italia",
+   "participante": "riquerorori1993",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "max_verstappen",
+    "pierre_gasly",
+    "lando_norris",
+    "franco_colapinto",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 7
+  },
+  {
+   "carrera": "Italia",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "george_russell",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "pierre_gasly",
+    "lewis_hamilton",
+    "max_verstappen",
+    "lando_norris",
+    "oscar_piastri",
+    "arvid_lindblad",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Italia",
+   "participante": "friquero",
+   "top10": [
+    "george_russell",
+    "pierre_gasly",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "franco_colapinto",
+    "kimi_antonelli",
+    "max_verstappen",
+    "lando_norris",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "pierre_gasly",
+   "pos_seguido": 6
+  },
+  {
+   "carrera": "Italia",
+   "participante": "damiantourres",
+   "top10": [
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lando_norris",
+    "pierre_gasly",
+    "max_verstappen",
+    "arvid_lindblad",
+    "franco_colapinto",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Japon",
+   "participante": "riquerorori1993",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "oscar_piastri",
+    "charles_leclerc",
+    "lando_norris",
+    "lewis_hamilton",
+    "max_verstappen",
+    "pierre_gasly",
+    "isack_hadjar",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Japon",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "isack_hadjar",
+    "arvid_lindblad",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Japon",
+   "participante": "miriquero",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "lando_norris",
+    "max_verstappen",
+    "pierre_gasly",
+    "ollie_bearman",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Japon",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "oscar_piastri",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "pierre_gasly",
+    "gabriel_bortoletto",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Japon",
+   "participante": "riquerole",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "lando_norris",
+    "oscar_piastri",
+    "max_verstappen",
+    "pierre_gasly",
+    "isack_hadjar",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "lewis_hamilton",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Japon",
+   "participante": "sergiopede92",
+   "top10": [
+    "george_russell",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "pierre_gasly",
+    "ollie_bearman",
+    "max_verstappen",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Japon",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "pierre_gasly",
+    "isack_hadjar",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "riquerole",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "max_verstappen",
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "franco_colapinto",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lando_norris",
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "liam_lawson",
+    "franco_colapinto",
+    "arvid_lindblad",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "riquerorori1993",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "franco_colapinto",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "max_verstappen",
+    "lando_norris",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "oscar_piastri",
+    "liam_lawson",
+    "arvid_lindblad",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "damiantourres",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "max_verstappen",
+    "george_russell",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "liam_lawson",
+    "nico_hulkenberg",
+    "franco_colapinto",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "eugeniabanini",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lando_norris",
+    "lewis_hamilton",
+    "george_russell",
+    "oscar_piastri",
+    "charles_leclerc",
+    "franco_colapinto",
+    "liam_lawson",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "miriquero",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "liam_lawson",
+    "franco_colapinto",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Madrid",
+   "participante": "friquero",
+   "top10": [
+    "lando_norris",
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "oscar_piastri",
+    "franco_colapinto",
+    "liam_lawson",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 7
+  },
+  {
+   "carrera": "Miami",
+   "participante": "sergiopede92",
+   "top10": [
+    "lando_norris",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "max_verstappen",
+    "lewis_hamilton",
+    "franco_colapinto",
+    "pierre_gasly",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "oscar_piastri",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Miami",
+   "participante": "riquerorori1993",
+   "top10": [
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "george_russell",
+    "lewis_hamilton",
+    "franco_colapinto",
+    "isack_hadjar",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Miami",
+   "participante": "miriquero",
+   "top10": [
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "george_russell",
+    "lewis_hamilton",
+    "franco_colapinto",
+    "pierre_gasly",
+    "ollie_bearman"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Miami",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "charles_leclerc",
+    "george_russell",
+    "lando_norris",
+    "max_verstappen",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "pierre_gasly",
+    "franco_colapinto",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Miami",
+   "participante": "riquerole",
+   "top10": [
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lando_norris",
+    "george_russell",
+    "lewis_hamilton",
+    "max_verstappen",
+    "oscar_piastri",
+    "pierre_gasly",
+    "franco_colapinto",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 9
+  },
+  {
+   "carrera": "Miami",
+   "participante": "eugeniabanini",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lando_norris",
+    "lewis_hamilton",
+    "george_russell",
+    "oscar_piastri",
+    "franco_colapinto",
+    "pierre_gasly",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Miami",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "charles_leclerc",
+    "lando_norris",
+    "kimi_antonelli",
+    "max_verstappen",
+    "george_russell",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "franco_colapinto",
+    "isack_hadjar",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 8
+  },
+  {
+   "carrera": "Miami",
+   "participante": "friquero",
+   "top10": [
+    "lando_norris",
+    "charles_leclerc",
+    "oscar_piastri",
+    "max_verstappen",
+    "george_russell",
+    "lewis_hamilton",
+    "franco_colapinto",
+    "pierre_gasly",
+    "gabriel_bortoletto",
+    "isack_hadjar"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 7
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "riquerole",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "george_russell",
+    "isack_hadjar",
+    "oscar_piastri",
+    "lando_norris",
+    "pierre_gasly",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "sergiopede92",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "isack_hadjar",
+    "oscar_piastri",
+    "lando_norris",
+    "pierre_gasly",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "lautarotourres",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "george_russell",
+    "lando_norris",
+    "oscar_piastri",
+    "pierre_gasly",
+    "liam_lawson",
+    "carlos_sainz"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "isack_hadjar",
+    "pierre_gasly",
+    "carlos_sainz",
+    "liam_lawson",
+    "alex_albon"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "riquerorori1993",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "isack_hadjar",
+    "lando_norris",
+    "pierre_gasly",
+    "alex_albon"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "max_verstappen",
+    "lewis_hamilton",
+    "george_russell",
+    "charles_leclerc",
+    "isack_hadjar",
+    "oscar_piastri",
+    "lando_norris",
+    "carlos_sainz",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "damiantourres",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "isack_hadjar",
+    "george_russell",
+    "oscar_piastri",
+    "alex_albon",
+    "carlos_sainz",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "eugeniabanini",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "oscar_piastri",
+    "lando_norris",
+    "isack_hadjar",
+    "pierre_gasly",
+    "carlos_sainz"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "miriquero",
+   "top10": [
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "max_verstappen",
+    "isack_hadjar",
+    "george_russell",
+    "oscar_piastri",
+    "lando_norris",
+    "pierre_gasly",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Monaco",
+   "participante": "friquero",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "george_russell",
+    "oscar_piastri",
+    "lando_norris",
+    "isack_hadjar",
+    "pierre_gasly",
+    "carlos_sainz"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lando_norris",
+    "oscar_piastri",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "liam_lawson",
+    "arvid_lindblad",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "riquerorori1993",
+   "top10": [
+    "lando_norris",
+    "george_russell",
+    "kimi_antonelli",
+    "oscar_piastri",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "gabriel_bortoletto",
+    "liam_lawson",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "damiantourres",
+   "top10": [
+    "lando_norris",
+    "kimi_antonelli",
+    "george_russell",
+    "oscar_piastri",
+    "charles_leclerc",
+    "max_verstappen",
+    "lewis_hamilton",
+    "arvid_lindblad",
+    "pierre_gasly",
+    "liam_lawson"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "charles_leclerc",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "max_verstappen",
+    "liam_lawson",
+    "george_russell",
+    "pierre_gasly",
+    "gabriel_bortoletto"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "miriquero",
+   "top10": [
+    "lando_norris",
+    "george_russell",
+    "kimi_antonelli",
+    "oscar_piastri",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "max_verstappen",
+    "liam_lawson",
+    "gabriel_bortoletto",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "lando_norris",
+   "pos_seguido": 20
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "eugeniabanini",
+   "top10": [
+    "george_russell",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "lando_norris",
+    "max_verstappen",
+    "oscar_piastri",
+    "charles_leclerc",
+    "liam_lawson",
+    "gabriel_bortoletto",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "lewis_hamilton",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "riquerole",
+   "top10": [
+    "kimi_antonelli",
+    "lando_norris",
+    "george_russell",
+    "oscar_piastri",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "max_verstappen",
+    "liam_lawson",
+    "gabriel_bortoletto",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "kimi_antonelli",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Países Bajos",
+   "participante": "friquero",
+   "top10": [
+    "kimi_antonelli",
+    "george_russell",
+    "lando_norris",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "oscar_piastri",
+    "max_verstappen",
+    "liam_lawson",
+    "arvid_lindblad",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "george_russell",
+   "pos_seguido": 11
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "eugeniabanini",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "charles_leclerc",
+    "lando_norris",
+    "oscar_piastri",
+    "liam_lawson",
+    "arvid_lindblad",
+    "pierre_gasly",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "miriquero",
+   "top10": [
+    "max_verstappen",
+    "charles_leclerc",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "liam_lawson",
+    "pierre_gasly",
+    "arvid_lindblad",
+    "george_russell"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 12
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "riquerole",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "lando_norris",
+    "george_russell",
+    "oscar_piastri",
+    "pierre_gasly",
+    "arvid_lindblad",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "riquerorori1993",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "pierre_gasly",
+    "liam_lawson",
+    "george_russell",
+    "nico_hulkenberg"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 14
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "riqueropetiniha",
+   "top10": [
+    "lewis_hamilton",
+    "max_verstappen",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lando_norris",
+    "isack_hadjar",
+    "liam_lawson",
+    "george_russell",
+    "pierre_gasly",
+    "franco_colapinto"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 10
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "alinaiaraceleste",
+   "top10": [
+    "max_verstappen",
+    "kimi_antonelli",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "george_russell",
+    "lando_norris",
+    "oscar_piastri",
+    "liam_lawson",
+    "arvid_lindblad",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "lautarotourres",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "pierre_gasly",
+    "liam_lawson",
+    "george_russell",
+    "nico_hulkenberg",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "max_verstappen",
+   "pos_seguido": 13
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "damiantourres",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "oscar_piastri",
+    "lando_norris",
+    "liam_lawson",
+    "george_russell",
+    "nico_hulkenberg",
+    "arvid_lindblad"
+   ],
+   "vuelta_rapida": "lewis_hamilton",
+   "pos_seguido": 15
+  },
+  {
+   "carrera": "Singapur",
+   "participante": "friquero",
+   "top10": [
+    "max_verstappen",
+    "lewis_hamilton",
+    "charles_leclerc",
+    "kimi_antonelli",
+    "lando_norris",
+    "oscar_piastri",
+    "george_russell",
+    "liam_lawson",
+    "arvid_lindblad",
+    "pierre_gasly"
+   ],
+   "vuelta_rapida": "charles_leclerc",
+   "pos_seguido": 12
+  }
+ ],
+ "resultados": {
+  "Australia": {
+   "clasificacion": [
+    {
+     "piloto": "george_russell",
+     "posicion": 1
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 2
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 3
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 4
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 5
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 6
+    },
+    {
+     "piloto": "ollie_bearman",
+     "posicion": 7
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 8
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 9
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 10
+    },
+    {
+     "piloto": "esteban_ocon",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 14
+    }
+   ],
+   "vuelta_rapida": "max_verstappen"
+  },
+  "China": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 2
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 3
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 4
+    },
+    {
+     "piloto": "ollie_bearman",
+     "posicion": 5
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 6
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 7
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 8
+    },
+    {
+     "piloto": "carlos_sainz",
+     "posicion": 9
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 10
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Japon": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 2
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 3
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 4
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 5
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 6
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 7
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 8
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 9
+    },
+    {
+     "piloto": "esteban_ocon",
+     "posicion": 10
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 16
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Miami": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 2
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 3
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 4
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 5
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 6
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 7
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 8
+    },
+    {
+     "piloto": "carlos_sainz",
+     "posicion": 9
+    },
+    {
+     "piloto": "alex_albon",
+     "posicion": 10
+    },
+    {
+     "piloto": "ollie_bearman",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "lando_norris"
+  },
+  "Canada": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 2
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 3
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 4
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 5
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 6
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 7
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 8
+    },
+    {
+     "piloto": "carlos_sainz",
+     "posicion": 9
+    },
+    {
+     "piloto": "ollie_bearman",
+     "posicion": 10
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Monaco": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 2
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 3
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 4
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 5
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 6
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 7
+    },
+    {
+     "piloto": "alex_albon",
+     "posicion": 8
+    },
+    {
+     "piloto": "esteban_ocon",
+     "posicion": 9
+    },
+    {
+     "piloto": "fernando_alonso",
+     "posicion": 10
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 14
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Barcelona": {
+   "clasificacion": [
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 1
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 2
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 3
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 4
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 5
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 6
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 7
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 8
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 9
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 10
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "lewis_hamilton"
+  },
+  "Austria": {
+   "clasificacion": [
+    {
+     "piloto": "george_russell",
+     "posicion": 1
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 2
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 3
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 4
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 5
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 6
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 7
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 8
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 9
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 10
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 15
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Gran Bretaña": {
+   "clasificacion": [
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 1
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 2
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 3
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 4
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 5
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 6
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 7
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 8
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 9
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 10
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Belgica": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 2
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 3
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 4
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 5
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 6
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 7
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 8
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 9
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 10
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "lando_norris"
+  },
+  "Hungría": {
+   "clasificacion": [
+    {
+     "piloto": "lando_norris",
+     "posicion": 1
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 2
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 3
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 4
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 5
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 6
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 7
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 8
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 9
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 10
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 15
+    }
+   ],
+   "vuelta_rapida": "charles_leclerc"
+  },
+  "Países Bajos": {
+   "clasificacion": [
+    {
+     "piloto": "lando_norris",
+     "posicion": 1
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 2
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 3
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 4
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 5
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 6
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 7
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 8
+    },
+    {
+     "piloto": "fernando_alonso",
+     "posicion": 9
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 10
+    },
+    {
+     "piloto": "yuki_tsunoda",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 14
+    }
+   ],
+   "vuelta_rapida": "charles_leclerc"
+  },
+  "Italia": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 2
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 3
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 4
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 5
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 6
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 7
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 8
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 9
+    },
+    {
+     "piloto": "yuki_tsunoda",
+     "posicion": 10
+    },
+    {
+     "piloto": "gabriel_bortoletto",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "kimi_antonelli"
+  },
+  "Madrid": {
+   "clasificacion": [
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 1
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 2
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 3
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 4
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 5
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 6
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 7
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 8
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 9
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 10
+    },
+    {
+     "piloto": "esteban_ocon",
+     "posicion": 11
+    }
+   ],
+   "vuelta_rapida": "george_russell"
+  },
+  "Azerbaiyan": {
+   "clasificacion": [
+    {
+     "piloto": "george_russell",
+     "posicion": 1
+    },
+    {
+     "piloto": "max_verstappen",
+     "posicion": 2
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 3
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 4
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 5
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 6
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 7
+    },
+    {
+     "piloto": "esteban_ocon",
+     "posicion": 8
+    },
+    {
+     "piloto": "ollie_bearman",
+     "posicion": 9
+    },
+    {
+     "piloto": "carlos_sainz",
+     "posicion": 10
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 17
+    }
+   ],
+   "vuelta_rapida": "george_russell"
+  },
+  "Bahrein": {
+   "clasificacion": [
+    {
+     "piloto": "max_verstappen",
+     "posicion": 1
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 2
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 3
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 4
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 5
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 6
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 7
+    },
+    {
+     "piloto": "fernando_alonso",
+     "posicion": 8
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 9
+    },
+    {
+     "piloto": "arvid_lindblad",
+     "posicion": 10
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 13
+    }
+   ],
+   "vuelta_rapida": "max_verstappen"
+  },
+  "Singapur": {
+   "clasificacion": [
+    {
+     "piloto": "max_verstappen",
+     "posicion": 1
+    },
+    {
+     "piloto": "charles_leclerc",
+     "posicion": 2
+    },
+    {
+     "piloto": "kimi_antonelli",
+     "posicion": 3
+    },
+    {
+     "piloto": "lando_norris",
+     "posicion": 4
+    },
+    {
+     "piloto": "oscar_piastri",
+     "posicion": 5
+    },
+    {
+     "piloto": "lewis_hamilton",
+     "posicion": 6
+    },
+    {
+     "piloto": "liam_lawson",
+     "posicion": 7
+    },
+    {
+     "piloto": "nico_hulkenberg",
+     "posicion": 8
+    },
+    {
+     "piloto": "george_russell",
+     "posicion": 9
+    },
+    {
+     "piloto": "isack_hadjar",
+     "posicion": 10
+    },
+    {
+     "piloto": "pierre_gasly",
+     "posicion": 11
+    },
+    {
+     "piloto": "franco_colapinto",
+     "posicion": 21
+    }
+   ],
+   "vuelta_rapida": "charles_leclerc"
+  }
+ },
+ "esperado": {
+  "Australia": {
+   "miriquero": 72,
+   "friquero": 65,
+   "riquerorori1993": 61,
+   "riqueropetiniha": 52,
+   "alinaiaraceleste": 52,
+   "riquerole": 47,
+   "eugeniabanini": 38
+  },
+  "Austria": {
+   "miriquero": 64,
+   "riquerole": 59,
+   "alinaiaraceleste": 51,
+   "eugeniabanini": 45,
+   "lautarotourres": 45,
+   "friquero": 32,
+   "riqueropetiniha": 31,
+   "damiantourres": 26
+  },
+  "Azerbaiyan": {
+   "friquero": 52,
+   "lautarotourres": 41,
+   "miriquero": 34,
+   "alinaiaraceleste": 34,
+   "riquerorori1993": 33,
+   "eugeniabanini": 33,
+   "riqueropetiniha": 32,
+   "damiantourres": 26
+  },
+  "Bahrein": {
+   "riquerorori1993": 67,
+   "miriquero": 57,
+   "riqueropetiniha": 48,
+   "friquero": 42,
+   "riquerole": 38,
+   "eugeniabanini": 35,
+   "damiantourres": 31,
+   "alinaiaraceleste": 29,
+   "lautarotourres": 25
+  },
+  "Barcelona": {
+   "riquerorori1993": 42,
+   "lautarotourres": 34,
+   "miriquero": 33,
+   "damiantourres": 31,
+   "alinaiaraceleste": 29,
+   "friquero": 28,
+   "eugeniabanini": 28,
+   "riqueropetiniha": 28,
+   "riquerole": 19
+  },
+  "Belgica": {
+   "riquerorori1993": 61,
+   "riqueropetiniha": 47,
+   "miriquero": 43,
+   "riquerole": 42,
+   "friquero": 39,
+   "damiantourres": 38,
+   "lautarotourres": 33,
+   "eugeniabanini": 32,
+   "alinaiaraceleste": 30
+  },
+  "Canada": {
+   "damiantourres": 33,
+   "riqueropetiniha": 28,
+   "alinaiaraceleste": 25,
+   "friquero": 25,
+   "lautarotourres": 24,
+   "eugeniabanini": 20,
+   "riquerole": 20,
+   "riquerorori1993": 15,
+   "sergiopede92": 14,
+   "miriquero": 11
+  },
+  "China": {
+   "miriquero": 60,
+   "eugeniabanini": 53,
+   "riquerole": 51,
+   "riqueropetiniha": 42,
+   "alinaiaraceleste": 38,
+   "riquerorori1993": 33,
+   "sergiopede92": 29
+  },
+  "Gran Bretaña": {
+   "miriquero": 39,
+   "friquero": 35,
+   "lautarotourres": 34,
+   "damiantourres": 34,
+   "alinaiaraceleste": 29,
+   "eugeniabanini": 25,
+   "riqueropetiniha": 25,
+   "riquerorori1993": 24,
+   "riquerole": 21,
+   "sergiopede92": 20
+  },
+  "Hungría": {
+   "riquerole": 49,
+   "damiantourres": 48,
+   "riquerorori1993": 43,
+   "eugeniabanini": 35,
+   "riqueropetiniha": 34,
+   "miriquero": 30,
+   "alinaiaraceleste": 22
+  },
+  "Italia": {
+   "damiantourres": 48,
+   "miriquero": 31,
+   "alinaiaraceleste": 30,
+   "eugeniabanini": 29,
+   "friquero": 21,
+   "riquerorori1993": 16,
+   "riqueropetiniha": 15,
+   "riquerole": 12
+  },
+  "Japon": {
+   "riquerorori1993": 61,
+   "sergiopede92": 53,
+   "alinaiaraceleste": 51,
+   "riquerole": 38,
+   "riqueropetiniha": 37,
+   "miriquero": 33,
+   "eugeniabanini": 33
+  },
+  "Madrid": {
+   "riqueropetiniha": 61,
+   "eugeniabanini": 53,
+   "riquerorori1993": 51,
+   "riquerole": 47,
+   "friquero": 43,
+   "alinaiaraceleste": 39,
+   "damiantourres": 37,
+   "miriquero": 35
+  },
+  "Miami": {
+   "friquero": 66,
+   "miriquero": 48,
+   "alinaiaraceleste": 39,
+   "riquerole": 38,
+   "riqueropetiniha": 38,
+   "sergiopede92": 37,
+   "riquerorori1993": 34,
+   "eugeniabanini": 25
+  },
+  "Monaco": {
+   "miriquero": 34,
+   "alinaiaraceleste": 33,
+   "riqueropetiniha": 33,
+   "sergiopede92": 29,
+   "damiantourres": 23,
+   "lautarotourres": 23,
+   "riquerorori1993": 19,
+   "friquero": 19,
+   "eugeniabanini": 18,
+   "riquerole": 10
+  },
+  "Países Bajos": {
+   "damiantourres": 58,
+   "miriquero": 47,
+   "friquero": 46,
+   "alinaiaraceleste": 43,
+   "eugeniabanini": 43,
+   "riqueropetiniha": 43,
+   "riquerole": 36,
+   "riquerorori1993": 33
+  },
+  "Singapur": {
+   "lautarotourres": 61,
+   "riquerorori1993": 57,
+   "damiantourres": 52,
+   "miriquero": 51,
+   "riqueropetiniha": 47,
+   "friquero": 47,
+   "eugeniabanini": 43,
+   "alinaiaraceleste": 25,
+   "riquerole": 24
+  }
+ }
+}

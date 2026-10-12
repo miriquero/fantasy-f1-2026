@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import pandas as pd
 from f1.normalizacion import normalizar_nombre_carrera

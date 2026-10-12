@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 import json
 import os
 from f1.scoring import procesar_carrera
