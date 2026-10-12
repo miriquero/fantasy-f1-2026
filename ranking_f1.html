@@ -1181,6 +1181,93 @@ body { animation: pageIn 0.4s ease; }
 }
 /* ═══════════════════════════════════════════════════════ */
 
+/* ═══ PESTAÑA FINAL ═══ */
+.tab-btn-final { color: var(--gold); }
+.fin-espera { text-align: center; padding: var(--e-6) var(--e-4); border: 1px dashed var(--border-bright);
+    border-radius: 14px; background: var(--bg-2); margin-bottom: var(--e-5); }
+.fin-espera-ico { font-size: var(--t-6xl); line-height: 1; margin-bottom: var(--e-3); }
+.fin-espera-tit { font-family: var(--font-display); font-size: var(--t-2xl); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--e-2); }
+.fin-espera-sub { color: var(--muted); font-size: var(--t-sm); margin-top: var(--e-1); }
+.fin-espera-sub b { color: var(--text); }
+.fin-vista-previa { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.3);
+    color: var(--gold); border-radius: 10px; padding: var(--e-2) var(--e-3);
+    font-size: var(--t-xs); margin-bottom: var(--e-4); }
+
+/* Podio: tres escalones que suben en orden 3º, 2º, 1º. */
+.fin-podio { display: flex; align-items: flex-end; justify-content: center; gap: var(--e-2);
+    min-height: 330px; padding-top: var(--e-4); }
+.fin-escalon { all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+    width: 32%; max-width: 200px; text-align: center; -webkit-tap-highlight-color: transparent; }
+.fin-escalon:focus-visible { outline: 2px solid var(--c); outline-offset: 4px; border-radius: 10px; }
+.fin-medalla { font-size: var(--t-4xl); line-height: 1; }
+.fin-nombre { font-family: var(--font-display); font-weight: 700; font-size: var(--t-lg);
+    margin-top: var(--e-1); word-break: break-word; }
+.fin-puntos { font-family: var(--font-display); font-weight: 800; font-size: var(--t-2xl); color: var(--c); }
+.fin-puntos small { font-size: var(--t-2xs); color: var(--muted); font-weight: 600; }
+.fin-bloque { width: 100%; margin-top: var(--e-2); border-radius: 10px 10px 0 0;
+    background: linear-gradient(180deg, var(--c-suave), var(--bg-3));
+    border: 1px solid var(--c); border-bottom: none; display: flex; justify-content: center;
+    padding-top: var(--e-3); }
+.fin-num { font-family: var(--font-display); font-weight: 800; font-size: var(--t-5xl); color: var(--c); opacity: 0.9; }
+/* Oro, plata y bronce: el color de cada participante queda para el nombre. */
+.fin-escalon-1 { --m: var(--gold); }
+.fin-escalon-2 { --m: var(--silver); }
+.fin-escalon-3 { --m: var(--bronze); }
+.fin-escalon .fin-bloque { border-color: var(--m);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--m) 22%, transparent), var(--bg-3)); }
+.fin-escalon .fin-num, .fin-escalon .fin-puntos { color: var(--m); }
+.fin-escalon .fin-nombre { color: var(--c); }
+.fin-escalon-1 .fin-bloque { height: 150px; }
+.fin-escalon-2 .fin-bloque { height: 110px; }
+.fin-escalon-3 .fin-bloque { height: 80px; }
+.fin-escalon-1 .fin-medalla { font-size: var(--t-5xl); }
+.fin-detalle { display: none; flex-direction: column; gap: 2px; font-size: var(--t-2xs);
+    color: var(--muted); margin-top: var(--e-2); padding: var(--e-2); background: var(--bg-2);
+    border: 1px solid var(--border); border-radius: 8px; width: 100%; }
+.fin-escalon.abierto .fin-detalle { display: flex; }
+.fin-ayuda { text-align: center; color: var(--muted-2); font-size: var(--t-2xs); margin-top: var(--e-2); }
+
+/* La animación solo corre cuando se abre la pestaña (clase fin-animar). */
+.fin-oculto .fin-escalon { opacity: 0; }
+.fin-animar .fin-escalon { opacity: 0; transform: translateY(40px);
+    animation: finSube var(--vel-3) var(--curva) forwards; animation-duration: 0.7s; }
+.fin-animar .fin-escalon-3 { animation-delay: 0.2s; }
+.fin-animar .fin-escalon-2 { animation-delay: 0.9s; }
+.fin-animar .fin-escalon-1 { animation-delay: 1.6s; }
+@keyframes finSube { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .fin-animar .fin-escalon { animation: none; opacity: 1; transform: none; }
+}
+.fin-confeti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
+
+/* Tu temporada */
+.fin-chips { display: flex; flex-wrap: wrap; gap: var(--e-2); margin-bottom: var(--e-4); }
+.fin-chip { all: unset; cursor: pointer; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--border-bright); font-size: var(--t-xs); color: var(--muted); }
+.fin-chip:hover { color: var(--text); }
+.fin-chip.activo { border-color: var(--c); color: var(--text); background: var(--bg-3); }
+.fin-tarjeta { max-width: 460px; margin: 0 auto; border-radius: 18px; overflow: hidden;
+    background: linear-gradient(160deg, var(--c-suave), var(--bg-2) 45%);
+    border: 1px solid var(--c); }
+.fin-tarjeta-cab { display: flex; flex-direction: column; padding: var(--e-5) var(--e-5) var(--e-4);
+    border-bottom: 1px solid var(--border); }
+.fin-tarjeta-sub { font-size: var(--t-2xs); letter-spacing: 2px; text-transform: uppercase; color: var(--c); }
+.fin-tarjeta-nombre { font-family: var(--font-display); font-weight: 800; font-size: var(--t-4xl);
+    line-height: 1.1; word-break: break-word; }
+.fin-tarjeta-resumen { color: var(--muted); font-size: var(--t-sm); }
+.fin-tarjeta-resumen b { color: var(--c); font-size: var(--t-lg); }
+.fin-datos { display: flex; flex-direction: column; padding: var(--e-3) var(--e-5) var(--e-4); }
+.fin-dato { display: grid; grid-template-columns: 28px 1fr; grid-template-rows: auto auto;
+    column-gap: var(--e-2); padding: var(--e-2) 0; border-bottom: 1px solid var(--border); }
+.fin-dato:last-child { border-bottom: none; }
+.fin-dato-ico { grid-row: span 2; font-size: var(--t-xl); line-height: 1.4; }
+.fin-dato-tit { font-size: var(--t-2xs); color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.fin-dato-val { font-weight: 600; font-size: var(--t-md); }
+.fin-dato-val small { color: var(--muted); font-weight: 400; font-size: var(--t-xs); }
+.fin-tarjeta-pie { padding: var(--e-2) var(--e-5); font-size: var(--t-3xs); color: var(--muted-2);
+    border-top: 1px solid var(--border); text-align: right; }
+
 </style>
 </head>
 <body>
@@ -1371,6 +1458,7 @@ body { animation: pageIn 0.4s ease; }
     <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
     <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
+    <button class="tab-btn tab-btn-final" onclick="openTab(event,'panel-final')">🏁 Final</button>
     <button class="tab-btn" onclick="openTab(event,'panel-mas')">Más ▾</button>
 </div>
 </nav>
@@ -4049,6 +4137,207 @@ body { animation: pageIn 0.4s ease; }
         </div>
 </div>
 
+
+<div id="panel-final" class="tab-panel" data-terminada="0">
+    <h2 class="section-heading">La <span>Final</span></h2>
+    <p class="section-label" style="margin-bottom:18px;">Temporada 2026 · 17 de 23 carreras</p>
+    
+    <div class="fin-espera">
+        <div class="fin-espera-ico">🏁</div>
+        <p class="fin-espera-tit">La Final se abre sola cuando termine la última carrera</p>
+        <p class="fin-espera-sub">Faltan <b>6</b> carreras
+           · se corre el <span data-fecha="2026-12-06T10:00:00-03:00"></span></p>
+        <p class="fin-espera-sub">Con chances matemáticas de salir campeón:
+           <b>10</b> · miriquero, riquerorori1993, riqueropetiniha, alinaiaraceleste, eugeniabanini, friquero, riquerole, damiantourres, lautarotourres, sergiopede92</p>
+    </div>
+    <div class="fin-revelado" hidden>
+    <div class="fin-contenido">
+        <h3 class="subsection-heading">El podio</h3>
+        
+    <div class="fin-podio" data-confeti="#008300">
+        
+        <button class="fin-escalon fin-escalon-2" type="button"
+                style="--c:#d95926;--c-suave:rgba(217,89,38,0.18)"
+                onclick="this.classList.toggle('abierto')" aria-label="riquerorori1993, puesto 2">
+            <span class="fin-medalla">🥈</span>
+            <span class="fin-nombre">riquerorori1993</span>
+            <span class="fin-puntos">650 <small>pts</small></span>
+            <span class="fin-bloque"><span class="fin-num">2</span></span>
+            <span class="fin-detalle">
+                <span>🏁 4 carreras ganadas</span>
+                <span>🏅 3 logros</span>
+                <span>⭐ Mejor: Bahrein (67 pts)</span>
+            </span>
+        </button>
+        <button class="fin-escalon fin-escalon-1" type="button"
+                style="--c:#008300;--c-suave:rgba(0,131,0,0.18)"
+                onclick="this.classList.toggle('abierto')" aria-label="miriquero, puesto 1">
+            <span class="fin-medalla">🥇</span>
+            <span class="fin-nombre">miriquero</span>
+            <span class="fin-puntos">722 <small>pts</small></span>
+            <span class="fin-bloque"><span class="fin-num">1</span></span>
+            <span class="fin-detalle">
+                <span>🏁 5 carreras ganadas</span>
+                <span>🏅 7 logros</span>
+                <span>⭐ Mejor: Australia (72 pts)</span>
+            </span>
+        </button>
+        <button class="fin-escalon fin-escalon-3" type="button"
+                style="--c:#d95926;--c-suave:rgba(217,89,38,0.18)"
+                onclick="this.classList.toggle('abierto')" aria-label="riqueropetiniha, puesto 3">
+            <span class="fin-medalla">🥉</span>
+            <span class="fin-nombre">riqueropetiniha</span>
+            <span class="fin-puntos">641 <small>pts</small></span>
+            <span class="fin-bloque"><span class="fin-num">3</span></span>
+            <span class="fin-detalle">
+                <span>🏁 1 carrera ganada</span>
+                <span>🏅 4 logros</span>
+                <span>⭐ Mejor: Madrid (61 pts)</span>
+            </span>
+        </button>
+    </div>
+    <p class="fin-ayuda">Tocá cada escalón para ver su temporada</p>
+        <div class="divider"></div>
+        <h3 class="subsection-heading">Tu temporada</h3>
+        <p class="section-label" style="margin-bottom:12px;">Elegí tu nombre · después la podés bajar como imagen y mandarla al grupo</p>
+        <div class="fin-chips"><button class="fin-chip" type="button" onclick="finMostrar(0)" style="--c:#008300">miriquero</button><button class="fin-chip" type="button" onclick="finMostrar(1)" style="--c:#d95926">riquerorori1993</button><button class="fin-chip" type="button" onclick="finMostrar(2)" style="--c:#d95926">riqueropetiniha</button><button class="fin-chip" type="button" onclick="finMostrar(3)" style="--c:#e66767">alinaiaraceleste</button><button class="fin-chip" type="button" onclick="finMostrar(4)" style="--c:#e66767">eugeniabanini</button><button class="fin-chip" type="button" onclick="finMostrar(5)" style="--c:#008300">friquero</button><button class="fin-chip" type="button" onclick="finMostrar(6)" style="--c:#3987e5">riquerole</button><button class="fin-chip" type="button" onclick="finMostrar(7)" style="--c:#9085e9">damiantourres</button><button class="fin-chip" type="button" onclick="finMostrar(8)" style="--c:#d55181">lautarotourres</button><button class="fin-chip" type="button" onclick="finMostrar(9)" style="--c:#199e70">sergiopede92</button></div>
+        <div class="fin-tarjetas">
+    <article class="fin-tarjeta" id="fin-tarjeta-0" data-i="0"
+             style="--c:#008300;--c-suave:rgba(0,131,0,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">miriquero</span>
+            <span class="fin-tarjeta-resumen">
+                <b>1º</b> · 722 pts · 17 carreras ·
+                5 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">George Russell <small>· lo pusiste 1º 7 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Oscar Piastri <small>· 5 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Australia <small>· 72 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Canada <small>· 11 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">40 <small>· arriba del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😎</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">Nadie: no hay rival que te haya ganado más de lo que le ganaste</span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-1" data-i="1"
+             style="--c:#d95926;--c-suave:rgba(217,89,38,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">riquerorori1993</span>
+            <span class="fin-tarjeta-resumen">
+                <b>2º</b> · 650 pts · 16 carreras ·
+                4 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">Kimi Antonelli <small>· lo pusiste 1º 6 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Oscar Piastri <small>· 6 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Bahrein <small>· 67 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Canada <small>· 15 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">33 <small>· arriba del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">friquero <small>· te ganó 7 de 13</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-2" data-i="2"
+             style="--c:#d95926;--c-suave:rgba(217,89,38,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">riqueropetiniha</span>
+            <span class="fin-tarjeta-resumen">
+                <b>3º</b> · 641 pts · 17 carreras ·
+                1 ganada
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">Kimi Antonelli <small>· lo pusiste 1º 5 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Pierre Gasly <small>· 6 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Madrid <small>· 61 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Italia <small>· 15 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">26 <small>· arriba del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">miriquero <small>· te ganó 12 de 17</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-3" data-i="3"
+             style="--c:#e66767;--c-suave:rgba(230,103,103,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">alinaiaraceleste</span>
+            <span class="fin-tarjeta-resumen">
+                <b>4º</b> · 599 pts · 17 carreras ·
+                0 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">Kimi Antonelli <small>· lo pusiste 1º 11 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Oscar Piastri <small>· 6 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Australia <small>· 52 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Hungría <small>· 22 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">21 <small>· abajo del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">miriquero <small>· te ganó 13 de 17</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-4" data-i="4"
+             style="--c:#e66767;--c-suave:rgba(230,103,103,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">eugeniabanini</span>
+            <span class="fin-tarjeta-resumen">
+                <b>5º</b> · 588 pts · 17 carreras ·
+                0 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">George Russell <small>· lo pusiste 1º 7 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Oscar Piastri <small>· 6 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">China <small>· 53 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Monaco <small>· 18 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">20 <small>· abajo del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">miriquero <small>· te ganó 13 de 17</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-5" data-i="5"
+             style="--c:#008300;--c-suave:rgba(0,131,0,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">friquero</span>
+            <span class="fin-tarjeta-resumen">
+                <b>6º</b> · 560 pts · 14 carreras ·
+                2 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">George Russell <small>· lo pusiste 1º 4 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Pierre Gasly <small>· 6 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Miami <small>· 66 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Monaco <small>· 19 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">24 <small>· arriba del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">miriquero <small>· te ganó 10 de 14</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-6" data-i="6"
+             style="--c:#3987e5;--c-suave:rgba(57,135,229,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">riquerole</span>
+            <span class="fin-tarjeta-resumen">
+                <b>7º</b> · 551 pts · 16 carreras ·
+                1 ganada
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">George Russell <small>· lo pusiste 1º 6 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Oscar Piastri <small>· 5 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Austria <small>· 59 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Monaco <small>· 10 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">24 <small>· arriba del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">miriquero <small>· te ganó 12 de 16</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-7" data-i="7"
+             style="--c:#9085e9;--c-suave:rgba(144,133,233,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">damiantourres</span>
+            <span class="fin-tarjeta-resumen">
+                <b>8º</b> · 485 pts · 13 carreras ·
+                3 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">Kimi Antonelli <small>· lo pusiste 1º 5 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Nico Hulkenberg <small>· 6 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Países Bajos <small>· 58 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Monaco <small>· 23 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">21 <small>· abajo del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">miriquero <small>· te ganó 7 de 13</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-8" data-i="8"
+             style="--c:#d55181;--c-suave:rgba(213,81,129,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">lautarotourres</span>
+            <span class="fin-tarjeta-resumen">
+                <b>9º</b> · 320 pts · 9 carreras ·
+                1 ganada
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">George Russell <small>· lo pusiste 1º 3 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Pierre Gasly <small>· 5 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Singapur <small>· 61 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Monaco <small>· 23 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">13 <small>· abajo del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">friquero <small>· te ganó 5 de 9</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article>
+    <article class="fin-tarjeta" id="fin-tarjeta-9" data-i="9"
+             style="--c:#199e70;--c-suave:rgba(25,158,112,0.16)" hidden>
+        <header class="fin-tarjeta-cab">
+            <span class="fin-tarjeta-sub">Tu temporada 2026</span>
+            <span class="fin-tarjeta-nombre">sergiopede92</span>
+            <span class="fin-tarjeta-resumen">
+                <b>10º</b> · 182 pts · 6 carreras ·
+                0 ganadas
+            </span>
+        </header>
+        <div class="fin-datos"><div class="fin-dato"><span class="fin-dato-ico">❤️</span><span class="fin-dato-tit">Tu piloto fetiche</span><span class="fin-dato-val">George Russell <small>· lo pusiste 1º 2 veces</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🗡️</span><span class="fin-dato-tit">El que más te traicionó</span><span class="fin-dato-val">Lando Norris <small>· 3 veces fuera del top 10</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🚀</span><span class="fin-dato-tit">Tu mejor carrera</span><span class="fin-dato-val">Japon <small>· 53 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🧱</span><span class="fin-dato-tit">Tu peor carrera</span><span class="fin-dato-val">Canada <small>· 14 pts</small></span></div><div class="fin-dato"><span class="fin-dato-ico">🎯</span><span class="fin-dato-tit">Aciertos exactos</span><span class="fin-dato-val">8 <small>· abajo del promedio familiar (23.0)</small></span></div><div class="fin-dato"><span class="fin-dato-ico">😤</span><span class="fin-dato-tit">Tu némesis</span><span class="fin-dato-val">alinaiaraceleste <small>· te ganó 5 de 6</small></span></div></div>
+        <footer class="fin-tarjeta-pie">F1 Predictions · Torneo familiar</footer>
+    </article></div>
+        <div class="export-bar" style="margin-top:12px;">
+            <button class="export-btn primary" id="fin-bajar" type="button" onclick="finBajar()" hidden>⬇ Bajar mi tarjeta</button>
+        </div>
+    </div></div>
+</div>
+
 <div id="panel-mas" class="tab-panel">
     <h2 class="section-heading">Más <span>Información</span></h2>
     <p class="section-label" style="margin-bottom:18px;">Estadísticas, historia y calendario de la temporada</p>
@@ -4114,7 +4403,7 @@ body { animation: pageIn 0.4s ease; }
 
 <footer class="site-footer">
     <div class="footer-stripe"></div>
-    11/10/2026 · 21:49
+    12/10/2026 · 16:37
 </footer>
 
 <!-- Overlay para cerrar tooltip de badge al tocar fuera -->
@@ -4503,6 +4792,118 @@ function exportarCSV() {
         init();
     }
 })();
+
+// ===== PESTAÑA FINAL =====
+// Se revela sola cuando termina la temporada (data-terminada="1"). Antes,
+// con ?final=1 en la dirección se ve una vista previa con los datos de hoy.
+(function () {
+    var panel = document.getElementById('panel-final');
+    if (!panel) return;
+    var terminada = panel.getAttribute('data-terminada') === '1';
+    var previa = /[?&]final=1\b/.test(location.search);
+    var revelado = panel.querySelector('.fin-revelado');
+
+    // Fecha de la última carrera en el horario del que mira.
+    panel.querySelectorAll('[data-fecha]').forEach(function (el) {
+        var iso = el.getAttribute('data-fecha');
+        if (!iso) return;
+        var d = new Date(iso);
+        el.textContent = d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })
+            + ', ' + d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    });
+
+    if (!terminada && previa && revelado) {
+        revelado.hidden = false;
+        // En la vista previa se ve como el día de la final: sin el cartel de espera.
+        var espera = panel.querySelector('.fin-espera');
+        if (espera) espera.hidden = true;
+        var aviso = document.createElement('p');
+        aviso.className = 'fin-vista-previa';
+        aviso.textContent = 'Vista previa: así se vería la Final si la temporada terminara hoy. La familia todavía no la ve.';
+        revelado.insertBefore(aviso, revelado.firstChild);
+    }
+    var visible = revelado && !revelado.hidden;
+
+    // Con la temporada terminada (o en vista previa), la página abre en la Final.
+    var boton = document.querySelector('.tab-btn[onclick*="panel-final"]');
+    if (boton && (terminada || previa)) {
+        setTimeout(function () {
+            boton.click();
+            // La barra de pestañas se desplaza con animación: cuando termina,
+            // se reacomoda el indicador rojo (si no, queda debajo de otra).
+            setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 700);
+        }, 0);
+    }
+
+    // El podio sube (y cae el confeti) recién cuando se lo ve en pantalla.
+    var podio = panel.querySelector('.fin-podio');
+    if (podio && visible) {
+        podio.classList.add('fin-oculto');
+        var animado = false;
+        var arrancar = function () {
+            if (animado) return;
+            animado = true;
+            podio.classList.remove('fin-oculto');
+            podio.classList.add('fin-animar');
+            setTimeout(function () { confeti(podio.getAttribute('data-confeti')); }, 2200);
+        };
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entradas, obs) {
+                if (entradas.some(function (e) { return e.isIntersecting; })) { obs.disconnect(); arrancar(); }
+            }, { threshold: 0.4 }).observe(podio);
+        } else {
+            arrancar();
+        }
+    }
+
+    function confeti(color) {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var lienzo = document.createElement('canvas');
+        lienzo.className = 'fin-confeti';
+        document.body.appendChild(lienzo);
+        var ctx = lienzo.getContext('2d');
+        var W = lienzo.width = window.innerWidth, H = lienzo.height = window.innerHeight;
+        var colores = [color || '#FFD700', '#FFD700', '#FFFFFF', color || '#E10600'];
+        var piezas = [];
+        for (var i = 0; i < 160; i++) {
+            piezas.push({ x: Math.random() * W, y: -20 - Math.random() * H * 0.5,
+                          vx: (Math.random() - 0.5) * 2, vy: 2 + Math.random() * 3,
+                          r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.2,
+                          w: 6 + Math.random() * 6, h: 3 + Math.random() * 4,
+                          c: colores[i % colores.length] });
+        }
+        var inicio = performance.now();
+        function cuadro(t) {
+            ctx.clearRect(0, 0, W, H);
+            piezas.forEach(function (p) {
+                p.x += p.vx; p.y += p.vy; p.r += p.vr;
+                ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+                ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+            });
+            if (t - inicio < 4500) requestAnimationFrame(cuadro); else lienzo.remove();
+        }
+        requestAnimationFrame(cuadro);
+    }
+})();
+
+function finMostrar(i) {
+    document.querySelectorAll('.fin-tarjeta').forEach(function (t) { t.hidden = String(t.getAttribute('data-i')) !== String(i); });
+    document.querySelectorAll('.fin-chip').forEach(function (c, j) { c.classList.toggle('activo', j === i); });
+    var bajar = document.getElementById('fin-bajar');
+    if (bajar) bajar.hidden = false;
+}
+
+function finBajar() {
+    var tarjeta = document.querySelector('.fin-tarjeta:not([hidden])');
+    if (!tarjeta || typeof html2canvas === 'undefined') return;
+    html2canvas(tarjeta, { backgroundColor: '#080808', scale: 2 }).then(function (lienzo) {
+        var nombre = (tarjeta.querySelector('.fin-tarjeta-nombre') || {}).textContent || 'tarjeta';
+        var a = document.createElement('a');
+        a.download = 'mi-temporada-2026-' + nombre.trim().replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '.png';
+        a.href = lienzo.toDataURL('image/png');
+        a.click();
+    });
+}
 
 
 // Cara a cara: muestra el panel de la persona elegida y esconde el resto.
