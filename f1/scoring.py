@@ -60,6 +60,12 @@ def cuantas_posiciones_exactas(detalles) -> int:
     return sum(1 for l in lineas_de_pilotos(detalles) if "Exacto en P" in l)
 
 
+def pilotos_fuera_del_top10(detalles) -> List[str]:
+    """Los pilotos que puso en su top 10 y terminaron afuera (0 puntos)."""
+    marca = ": No terminó la carrera en el top 10"
+    return [l.split(marca)[0] for l in lineas_de_pilotos(detalles) if marca in l]
+
+
 def acerto_colapinto(detalles) -> bool:
     """Si acerto la posicion exacta de Colapinto en esa carrera."""
     return any(l.startswith(f"{PREFIJO_COLAPINTO} Exacto")

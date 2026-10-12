@@ -822,6 +822,7 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
 {{ CAL_CSS }}
 {{ LOGROS_CSS }}
 {{ ANIM_CSS }}
+{{ FINAL_CSS }}
 </style>
 </head>
 <body>
@@ -877,6 +878,7 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
     <button class="tab-btn" onclick="openTab(event,'panel-calendario')">Calendario</button>
     <button class="tab-btn" onclick="openTab(event,'panel-logros')">Logros</button>
     <button class="tab-btn" onclick="openTab(event,'panel-perfiles')">Perfiles</button>
+    {% if final_html %}<button class="tab-btn tab-btn-final" onclick="openTab(event,'panel-final')">🏁 Final</button>{% endif %}
     <button class="tab-btn" onclick="openTab(event,'panel-mas')">Más ▾</button>
 </div>
 </nav>
@@ -924,6 +926,8 @@ h1, h2, h3, .section-heading, .chart-title, .perfil-nombre, .badge-nombre {
     <div class="perfil-selector-wrap" id="perfil-selector-wrap">{{ perfil_selector_html }}</div>
     <div class="perfiles-grid" id="perfiles-grid">{{ perfiles_html }}</div>
 </div>
+
+{{ final_html }}
 
 <div id="panel-mas" class="tab-panel">
     <h2 class="section-heading">Más <span>Información</span></h2>
@@ -1234,6 +1238,7 @@ function exportarCSV() {
 
 {{ LOGROS_JS }}
 {{ ANIM_JS }}
+{{ FINAL_JS }}
 
 // Cara a cara: muestra el panel de la persona elegida y esconde el resto.
 function mostrarDuelos(nombre) {

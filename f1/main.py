@@ -8,6 +8,7 @@ import re
 import pandas as pd
 
 from .analisis import generar_panel_analisis
+from .final import generar_panel_final
 from .badges import calcular_badges
 from .graficos import grafico_barras_acumulado, grafico_evolucion
 from .config import ARCHIVO_RESULTADOS, CALENDARIO, CARPETA_RESPUESTAS
@@ -116,6 +117,8 @@ def main():
     perfil_selector_html   = generar_perfil_selector_html(ranking_acumulado)
     hof_panel_html         = generar_hof_panel_html()
     analisis_html          = generar_panel_analisis(ranking_acumulado, all_rankings)
+    final_html             = generar_panel_final(ranking_acumulado, all_rankings,
+                                                 all_dfs, badges_por_participante)
 
     html_content = generar_html(
         rankings_por_carrera, ranking_acumulado,
@@ -126,6 +129,7 @@ def main():
         perfil_selector_html=perfil_selector_html,
         hof_panel_html=hof_panel_html,
         analisis_html=analisis_html,
+        final_html=final_html,
     )
 
     with open(ARCHIVO_SALIDA_HTML, "w", encoding="utf-8") as f:
