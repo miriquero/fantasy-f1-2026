@@ -37,12 +37,9 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  ranking_acumulado: pd.DataFrame,
                  grafico_barras: str,
                  grafico_evol: str,
-                 stats_adicionales: str,
                  perfiles_html: str,
                  badges_por_participante: Dict[str, List[Dict]],
                  perfil_selector_html: str = "",
-                 hof_panel_html: str = "",
-                 analisis_html: str = "",
                  final_html: str = "") -> str:
 
     proxima_carrera, proxima_iso = obtener_proxima_carrera()
@@ -178,9 +175,6 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
     graf_evol_html = grafico_evol or ''
     fecha_actual     = datetime.now(timezone(timedelta(hours=-3))).strftime("%d/%m/%Y · %H:%M")
 
-    # ---- Nuevos paneles ----
-    # perfil_selector_html y hof_panel_html ya llegan como params
-
     return _plantilla().render(
         SPRITE=_leer_asset("sprite.svg"),
         CAL_CSS=_leer_asset("calendario.css"),
@@ -199,10 +193,7 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         calendario_html=calendario_html,
         graf_barras_html=graf_barras_html,
         graf_evol_html=graf_evol_html,
-        stats_adicionales=stats_adicionales,
         perfiles_html=perfiles_html,
         perfil_selector_html=perfil_selector_html,
-        hof_panel_html=hof_panel_html,
-        analisis_html=analisis_html,
         fecha_actual=fecha_actual,
     )
