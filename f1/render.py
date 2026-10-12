@@ -42,7 +42,8 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
                  badges_por_participante: Dict[str, List[Dict]],
                  perfil_selector_html: str = "",
                  hof_panel_html: str = "",
-                 analisis_html: str = "") -> str:
+                 analisis_html: str = "",
+                 final_html: str = "") -> str:
 
     proxima_carrera, proxima_iso = obtener_proxima_carrera()
 
@@ -187,6 +188,9 @@ def generar_html(rankings_por_carrera: List[pd.DataFrame],
         ANIM_CSS=_leer_asset("anim.css"),
         LOGROS_JS=_leer_asset("logros.js"),
         ANIM_JS=_leer_asset("anim.js"),
+        FINAL_CSS=_leer_asset("final.css"),
+        FINAL_JS=_leer_asset("final.js"),
+        final_html=final_html,
         proxima_carrera=proxima_carrera,
         proxima_iso=proxima_iso,
         ranking_acumulado_html=ranking_acumulado_html,
