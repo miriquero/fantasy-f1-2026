@@ -7,18 +7,12 @@ import re
 
 import pandas as pd
 
-from .analisis import generar_panel_analisis
 from .final import generar_panel_final
 from .badges import calcular_badges
 from .graficos import grafico_barras_acumulado, grafico_evolucion
 from .config import ARCHIVO_RESULTADOS, CALENDARIO, CARPETA_RESPUESTAS
 from .normalizacion import normalizar_nombre_carrera, normalizar_resultados_api
-from .perfiles import (
-    generar_estadisticas_adicionales,
-    generar_hof_panel_html,
-    generar_perfil_selector_html,
-    generar_perfiles_html,
-)
+from .perfiles import generar_perfil_selector_html, generar_perfiles_html
 from .render import generar_html
 from .scoring import (
     calcular_cambios_posiciones,
@@ -112,11 +106,8 @@ def main():
     grafico_barras         = grafico_barras_acumulado(ranking_acumulado)
     grafico_evol           = grafico_evolucion(
         all_rankings, calcular_historial_posiciones(all_rankings))
-    stats_adicionales      = generar_estadisticas_adicionales(all_dfs, ranking_acumulado)
     perfiles_html          = generar_perfiles_html(all_rankings, all_dfs, ranking_acumulado, badges_por_participante)
     perfil_selector_html   = generar_perfil_selector_html(ranking_acumulado)
-    hof_panel_html         = generar_hof_panel_html()
-    analisis_html          = generar_panel_analisis(ranking_acumulado, all_rankings)
     final_html             = generar_panel_final(ranking_acumulado, all_rankings,
                                                  all_dfs, badges_por_participante)
 
@@ -124,11 +115,9 @@ def main():
         rankings_por_carrera, ranking_acumulado,
         grafico_barras,
         grafico_evol,
-        stats_adicionales, perfiles_html,
+        perfiles_html,
         badges_por_participante,
         perfil_selector_html=perfil_selector_html,
-        hof_panel_html=hof_panel_html,
-        analisis_html=analisis_html,
         final_html=final_html,
     )
 
