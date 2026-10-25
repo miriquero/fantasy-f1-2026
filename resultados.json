@@ -304,5 +304,23 @@
     "vuelta_rapida": "Charles Leclerc",
     "colapinto": "21",
     "_actualizado": "2026-10-11T17:26:28.220517+00:00"
+  },
+  "Austin": {
+    "resultado_carrera": [
+      "Andrea Kimi Antonelli",
+      "Charles Leclerc",
+      "Max Verstappen",
+      "Lewis Hamilton",
+      "Lando Norris",
+      "Isack Hadjar",
+      "Oscar Piastri",
+      "George Russell",
+      "Liam Lawson",
+      "Pierre Gasly",
+      "Nico Hülkenberg"
+    ],
+    "vuelta_rapida": "Charles Leclerc",
+    "colapinto": "21",
+    "_actualizado": "2026-10-25T23:40:10.191578+00:00"
   }
 }
