@@ -322,5 +322,23 @@
     "vuelta_rapida": "Charles Leclerc",
     "colapinto": "21",
     "_actualizado": "2026-10-25T23:40:10.191578+00:00"
+  },
+  "Mexico": {
+    "resultado_carrera": [
+      "Max Verstappen",
+      "Lewis Hamilton",
+      "Andrea Kimi Antonelli",
+      "Charles Leclerc",
+      "Lando Norris",
+      "George Russell",
+      "Oscar Piastri",
+      "Franco Colapinto",
+      "Liam Lawson",
+      "Pierre Gasly",
+      "Gabriel Bortoleto"
+    ],
+    "vuelta_rapida": "Lewis Hamilton",
+    "colapinto": "8",
+    "_actualizado": "2026-11-02T01:06:16.981146+00:00"
   }
 }
