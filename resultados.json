@@ -340,5 +340,23 @@
     "vuelta_rapida": "Lewis Hamilton",
     "colapinto": "15",
     "_actualizado": "2026-11-02T20:16:19.047717+00:00"
+  },
+  "Brasil": {
+    "resultado_carrera": [
+      "Lando Norris",
+      "Max Verstappen",
+      "Isack Hadjar",
+      "George Russell",
+      "Andrea Kimi Antonelli",
+      "Oscar Piastri",
+      "Liam Lawson",
+      "Charles Leclerc",
+      "Lewis Hamilton",
+      "Nico Hülkenberg",
+      "Arvid Lindblad"
+    ],
+    "vuelta_rapida": "Andrea Kimi Antonelli",
+    "colapinto": "13",
+    "_actualizado": "2026-11-09T00:12:32.524775+00:00"
   }
 }
