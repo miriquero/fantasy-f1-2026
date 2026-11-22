@@ -358,5 +358,23 @@
     "vuelta_rapida": "Andrea Kimi Antonelli",
     "colapinto": "13",
     "_actualizado": "2026-11-09T00:12:32.524775+00:00"
+  },
+  "Las Vegas": {
+    "resultado_carrera": [
+      "Max Verstappen",
+      "Lando Norris",
+      "Oscar Piastri",
+      "Andrea Kimi Antonelli",
+      "Pierre Gasly",
+      "Franco Colapinto",
+      "Lewis Hamilton",
+      "Carlos Sainz",
+      "George Russell",
+      "Charles Leclerc",
+      "Nico Hülkenberg"
+    ],
+    "vuelta_rapida": "Liam Lawson",
+    "colapinto": "6",
+    "_actualizado": "2026-11-22T16:15:15.021605+00:00"
   }
 }
